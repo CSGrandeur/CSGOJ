@@ -1,5 +1,8 @@
 # bash release.sh 0.0.1 build push web judge
-
+if [[ ! $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "第一个参数应为 x.x.x 格式的版本号"
+    exit 1
+fi
 TAG_VERSION=$1
 FLAG_BUILD=false
 FLAG_CACHE=""
