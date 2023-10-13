@@ -1,0 +1,23 @@
+{
+    "name": "php-angular/php-angular",
+    "description": "php angular view engine",
+    "homepage": "http://kancloud.cn/shuai/php-angular",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "玩具机器人",
+            "email": "zhaishuaigan@qq.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/php-angular/php-angular/issues"
+    },
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "classmap": {
+            "PHPAngular\\Angular": "src/Angular.php"
+        }
+    }
+}

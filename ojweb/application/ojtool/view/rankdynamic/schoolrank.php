@@ -1,0 +1,1 @@
+{include file="rankdynamic/rank_page_base" /}

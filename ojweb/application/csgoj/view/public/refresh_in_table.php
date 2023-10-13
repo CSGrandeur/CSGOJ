@@ -1,0 +1,1 @@
+{js href='__JS__/refresh_in_table.js' /}

@@ -1,0 +1,24 @@
+{
+    "name": "topthink/think-angular",
+    "description": "think angular view engine",
+    "homepage": "http://kancloud.cn/shuai/php-angular",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "玩具机器人",
+            "email": "zhaishuaigan@qq.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/top-think/think-angular/issues"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "php-angular/php-angular": "2.0.*"
+    },
+    "autoload": {
+        "classmap": {
+            "think\\view\\driver\\Angular": "src/Driver.php"
+        }
+    }
+}

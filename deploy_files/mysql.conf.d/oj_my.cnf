@@ -1,0 +1,4 @@
+[mysqld]
+max_connections=2000
+mysqlx_max_connections=800
+default-time-zone='+8:00'

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg enable-background="new 0 0 800 800" version="1.1" viewBox="0 0 800 800" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:#118BCE;}
+	.st2{fill:none;stroke:#B7BCBF;stroke-width:7.8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st3{fill:#B7BCBF;}
+	.st4{fill:none;stroke:#B7BCBF;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st5{fill:none;stroke:#B7BCBF;stroke-width:7.8;stroke-linecap:round;stroke-miterlimit:10;}
+</style>
+<switch>
+	<foreignObject width="1" height="1" requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/">
+		
+	</foreignObject>
+	<g>
+		<path class="st0" d="M800,400c0-106.1-42.2-207.8-117.2-282.8S506.1,0,400,0S192.2,42.2,117.2,117.2S0,293.9,0,400    s42.2,207.8,117.2,282.8S293.9,800,400,800s207.8-42.2,282.8-117.2S800,506.1,800,400z"/>
+		<path class="st1" d="M719.7,400c0-84.8-33.7-166.1-93.6-226.1S484.8,80.3,400,80.3S233.9,114,173.9,173.9S80.3,315.2,80.3,400    s33.7,166.1,93.6,226.1s141.3,93.6,226.1,93.6s166.1-33.7,226.1-93.6S719.7,484.8,719.7,400z"/>
+		<path class="st2" d="M719.7,400c0-84.8-33.7-166.1-93.6-226.1S484.8,80.3,400,80.3S233.9,114,173.9,173.9S80.3,315.2,80.3,400    s33.7,166.1,93.6,226.1s141.3,93.6,226.1,93.6s166.1-33.7,226.1-93.6S719.7,484.8,719.7,400z"/>
+		<path class="st2" d="M795,400c0-104.8-41.6-205.2-115.7-279.3S504.8,5,400,5S194.8,46.6,120.7,120.7S5,295.2,5,400    s41.6,205.2,115.7,279.3S295.2,795,400,795s205.2-41.6,279.3-115.7S795,504.8,795,400z"/>
+		<path class="st2" d="m611.3 400c0-56.1-22.3-109.8-61.9-149.4s-93.4-61.9-149.4-61.9-109.8 22.3-149.4 61.9-61.9 93.4-61.9 149.4 22.3 109.8 61.9 149.4 93.4 61.9 149.4 61.9 109.8-22.3 149.4-61.9 61.9-93.3 61.9-149.4z"/>
+		<path class="st2" d="m611.3 400h108.4"/>
+		<path class="st2" d="M188.7,400H80.3"/>
+		<path class="st2" d="m400 147.6v41"/>
+		<path class="st2" d="m400 652.4v-41"/>
+		<path class="st3" d="M400,370.3V400H188.7L400,370.3z"/>
+		<path class="st3" d="M400,429.7V400h211.3L400,429.7z"/>
+		<path class="st0" d="M400,429.7V400H188.7L400,429.7z"/>
+		<path class="st0" d="M400,370.3V400h211.3L400,370.3z"/>
+		<path class="st2" d="M400,370.3L611.3,400L400,429.7L188.7,400L400,370.3"/>
+		<path class="st4" d="M611.3,400H188.7"/>
+		<path class="st3" d="m552 282c-30.7-5.6-62.1-6.8-93.1-3.5-12.6 1.3-25.2 3.4-37.1 8-3.3 1.3-6.5 3.2-6.5 6.5v299h-30.5v-298.9c0-3.3-3.3-5.3-6.5-6.5-16.2-6.2-33.6-8-50.9-8h-51.9v-29.7c41-8.7 82.8-13.1 124.7-13.1 53.9 0 106.8 16.1 151.8 46.2z"/>
+		<path class="st4" d="m552 282c-30.7-5.6-62.1-6.8-93.1-3.5-12.6 1.3-25.2 3.4-37.1 8-3.3 1.3-6.5 3.2-6.5 6.5v299h-30.5v-298.9c0-3.3-3.3-5.3-6.5-6.5-16.2-6.2-33.6-8-50.9-8h-51.9v-29.7c41-8.7 82.8-13.1 124.7-13.1 53.9 0 106.8 16.1 151.8 46.2"/>
+		<path class="st5" d="m513.5 126.5c44.7 41.3 80.1 91.6 104 147.6 17 39.9 27.9 82.4 27.9 125.8"/>
+		<path class="st5" d="m286.5 126.5c-44.7 41.3-80.1 91.6-104 147.6-17 39.9-27.9 82.4-27.9 125.8"/>
+		<path class="st5" d="m286.5 673.5c-44.7-41.3-80.1-91.6-104-147.6-17-39.9-27.9-82.4-27.9-125.8"/>
+		<path class="st5" d="m513.5 673.5c44.7-41.3 80.1-91.6 104-147.6 17-39.9 27.9-82.4 27.9-125.8"/>
+		<path class="st5" d="m582.5 289.9c11.8-4.8 23.5-10.1 34.9-15.7 20.1-9.9 39.7-21 58.5-33.2"/>
+		<path class="st5" d="m217.5 289.9c-11.8-4.8-23.5-10.1-34.9-15.7-20.1-9.9-39.7-21-58.5-33.2"/>
+		<path class="st5" d="m217.5 510.1c-11.8 4.8-23.5 10.1-34.9 15.7-20.1 9.9-39.7 21-58.5 33.2"/>
+		<path class="st5" d="m582.5 510.1c11.8 4.8 23.5 10.1 34.9 15.7 20.1 9.9 39.7 21 58.5 33.2"/>
+		<path class="st5" d="m400 147.6c23.5-0.5 46.8-3.1 69.8-7.9 14.9-3.1 29.7-7 43.6-13.2 9-4 17.5-8.9 25.5-14.5"/>
+		<path class="st5" d="m400 147.6c-23.5-0.5-46.8-3.1-69.8-7.9-14.9-3.1-29.7-7-43.6-13.2-9-4-17.5-8.9-25.5-14.5"/>
+		<path class="st5" d="m400 652.4c-23.5 0.5-46.8 3.1-69.8 7.9-14.9 3.1-29.7 7-43.6 13.2-9 4-17.5 8.9-25.5 14.5"/>
+		<path class="st5" d="m400 652.4c23.5 0.5 46.8 3.1 69.8 7.9 14.9 3.1 29.7 7 43.6 13.2 9 4 17.5 8.9 25.5 14.5"/>
+		<path class="st5" d="m469.8 139.8c26.7 29.6 48.9 62.9 66.2 98.8"/>
+		<path class="st5" d="m330.2 139.8c-26.7 29.6-48.9 62.9-66.2 98.8"/>
+		<path class="st5" d="m330.2 660.2c-26.7-29.6-48.9-62.9-66.2-98.8"/>
+		<path class="st5" d="m469.8 660.2c26.7-29.6 48.9-62.9 66.2-98.8"/>
+		<g transform="matrix(4.9253 -6.3041 3.1521 2.4627 98 160)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m1.8 0.3h-1.4c0 0.6 0.1 1.5 0.1 3h-4.9v3.2c0 1.4 0 2.3-0.1 3h1.4v-0.9h3.5v2.5c0 1 0 1.7-0.1 2.4h1.5c-0.1-1.6-0.1-2.4-0.1-2.6v-2.3h3.5v0.9h1.4c0-0.7-0.1-1.6-0.1-3s0-2.3 0.1-3.2h-4.9c0.1-1.2 0.1-2.1 0.1-3m3.5 7.2h-3.5v-3.2h3.5m-4.9 3.2h-3.5v-3.2h3.5"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(6.7845 -4.2394 2.1197 3.3922 145 100)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-8.7 6.4h-0.1v0.1h0.1v-0.1 0m0 0.2-0.1-0.1h0.1m-0.1 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(7.7274 -2.0706 1.0353 3.8637 218 63)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-10.1 4.3"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(7.7274 2.0706 -1.0353 3.8637 308 40)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-10.2 11.5s0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(6.7845 4.2394 -2.1197 3.3922 385 59)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-9.5 6.3s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.9253 6.3041 -3.1521 2.4627 455 98)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-9.3 7.9s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(-1.196 4.8549 -4.8549 -1.196 47.498 197.3)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-38.8-74.2s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(-.47996 4.9769 -4.9769 -.47996 37.926 234.66)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.9-2"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(.022507 4.9999 -4.9999 .022507 34.392 272.26)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.6-0.8"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(.52452 4.9724 -4.9724 .52452 34.555 287.93)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-3.2-0.3"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(1.2389 4.8441 -4.8441 1.2389 38.791 326.26)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.7-1.1"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(1.7195 4.6951 -4.6951 1.7195 65.307 356.57)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.6 2.9"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(2.1824 4.4986 -4.4986 2.1824 54.208 377.27)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-2.8-3.8s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(2.8106 4.1353 -4.1353 2.8106 70.718 412.12)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.6-1.2"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(3.2119 3.8319 -3.8319 3.2119 92.019 443.3)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.6-0.8"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(3.5612 3.5097 -3.5097 3.5612 102.09 455.18)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-3.2-0.3"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(3.9988 3.0016 -3.0016 3.9988 127.58 480.07)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.1-0.9"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.3781 2.4151 -2.4151 4.3781 156.26 501.38)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.2-1s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.6719 1.7812 -1.7812 4.6719 190.23 519.3)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.7-0.9s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.8199 1.3299 -1.3299 4.8199 222.7 532.18)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7-0.8"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.9195 .89378 -.89378 4.9195 237.63 536.22)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-3.2-0.3"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.9935 .25513 -.25513 4.9935 269.88 541.93)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-6.5-0.8"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.9951 -.22011 .22011 4.9951 303.96 525.47)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7 3"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.9436 -.74852 .74852 4.9436 320.43 542.29)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-2.8-3.8s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.7911 -1.4301 1.4301 4.7911 361.27 536.48)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-8.2-1.3"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.6442 -1.8526 1.8526 4.6442 385.22 510.36)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-6.5 3.1"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.4216 -2.3344 2.3344 4.4216 406.31 520.82)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-2.8-3.8s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(4.0367 -2.9504 2.9504 4.0367 443.04 501.83)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-8.2-1.3"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(3.5665 -3.5043 3.5043 3.5665 471.48 480.14)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.2-0.9s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(3.0212 -3.984 3.984 3.0212 500.78 451.08)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-8.2-1.2s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(2.4367 -4.3661 4.3661 2.4367 522.19 422.57)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.1-1s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(1.9854 -4.5889 4.5889 1.9854 541 389.82)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.6-0.9"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(1.5408 -4.7567 4.7567 1.5408 547.1 375.49)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-3.2-0.3"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(.86304 -4.9249 4.9249 .86304 557.95 341.44)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.1-1"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(.14046 -4.998 4.998 .14046 563.86 303.41)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.7-1s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(-.55702 -4.9689 4.9689 -.55702 565.32 264.97)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.7-1.2"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(-1.217 -4.8496 4.8496 -1.217 560.65 229.71)">
+			
+				<g transform="scale(.009963)">
+					<path class="st3" d="m-7.1-0.8s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+		<g transform="matrix(3 -0 -0 1.8 268 483)">
+			
+				<g transform="scale(.009963)">
+					<path class="st0" d="m97.6-140.5"/>
+				</g>
+			
+			
+				<g transform="scale(.009963)">
+					<path class="st0" d="m1-1.4s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+			
+				<g transform="scale(.009963)">
+					<path class="st0" d="m0 0s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+			
+				<g transform="scale(.009963)">
+					<path class="st0" d="m0 0s0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+				</g>
+			
+		</g>
+	</g>
+</switch>
+
+</svg>

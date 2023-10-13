@@ -1,0 +1,10 @@
+runtime
+.idea
+**/.idea
+.vscode
+*/CONTEST_SUMMARY
+*/PROBLEM_EXPORT
+*/PROBLEM_EXPORT
+*/QUESTION_EXPORT
+*/runtime
+/tests

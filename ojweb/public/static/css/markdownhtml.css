@@ -1,0 +1,108 @@
+﻿/*
+.md_display_div p,
+.md_display_div li,
+.md_display_div table,
+.md_display_div span,
+.md_display_div div,
+.md_display_div pre{
+    font-size: 14px;
+}
+*/
+pre, code
+{
+    -moz-tab-size:4;
+    -o-tab-size:4;
+    tab-size:4;
+}
+.md_display_div:not(.math)
+{
+    max-width: 900px;
+    text-align: justify;
+    font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Noto Sans CJK SC,WenQuanYi Micro Hei,Arial,sans-serif;
+    font-size: 15px;
+    line-height: 27px;
+}
+.indentation_article p
+{
+    /*设置此标签后段首自动缩进*/
+    text-indent:2em;
+}
+/*.md_display_div p*/
+/*{*/
+    /*text-indent:2em;*/
+/*}*/
+.md_display_div pre
+.md_display_div code
+{
+    font-size: 14px;
+}
+.sampledata
+{
+    background-color: rgba(245, 245, 245, 0.5) !important;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    padding: 10px;
+    line-height: 1.5;
+}
+.md_display_div pre:not(.sampledata),
+.md_display_div code:not(.sampledata)
+{
+    background: none !important;
+    border: none !important;
+    background-color: rgba(245, 245, 245, 0.5) !important;
+}
+.md_display_div table{
+    margin-bottom: 5px !important;
+    border-collapse: collapse !important;
+}
+.md_display_div code
+{
+    /*姑且用这个作markdown文章里code的样式，中英混编等宽*/
+    font-family: 'Simsun', 'Microsoft Yahei Mono', 'PCMyungjo', 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif !important;
+}
+.md_display_div table,
+.md_display_div table td,
+.md_display_div table th
+{
+    padding-left: 10px;
+    padding-right: 10px;
+    line-height: 30px;
+    width: auto !important;
+
+}
+.md_display_div table>thead>tr
+{
+    border-top: 2px solid #aaaaaa;
+    /*border-bottom: 1px solid #aaaaaa;*/
+}
+.md_display_div table>tbody tr:first-child
+{
+    border-top: 2px solid #aaaaaa;
+}
+.md_display_div table>tbody tr:last-child
+{
+    border-bottom: 2px solid #aaaaaa;
+}
+.md_display_div table td,
+.md_display_div table th
+{
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+}
+.md_display_div table tr td:first-child,
+.md_display_div table tr th:first-child
+{
+    border-left: none;
+}
+.md_display_div table tr td:last-child,
+.md_display_div table tr th:last-child
+{
+    border-right: none;
+}
+.md_display_div blockquote
+{
+    font-size: 100%;
+}
+.math {
+    font-family: "Cambria Math", "STIX", "XITS", "TeX Gyre Termes", "Latin Modern Math", "Asana Math";
+}

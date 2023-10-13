@@ -1,0 +1,240 @@
+body {
+    height: 100%;
+    background-image: url(/static/image/global/badge_background.png);
+    background-attachment:fixed;
+}
+main {
+    position: relative;
+    max-width:1280px;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 10px;
+}
+header{
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+}
+.cpc-navbar
+{
+    display: block;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding-top: 25px;
+    width: 100%;
+    height: 100px;
+}
+.cpc-brand,
+.cpc-brand:hover,
+.cpc-brand:focus,
+.cpc-brand:active,
+.cpc-brand:visited{
+    text-decoration:none;
+    color: #EEEEEE;
+    background: none;
+    opacity: 1;
+}
+.cpc-brand
+{
+    margin-left: 20px;
+    font-size: 28px;
+    color: #EEEEEE;
+}
+.cpc-brand-subtitle
+{
+    float:right;
+    margin-right: 30px;
+    font-size: 14px;
+    color: #EEEEEE;
+}
+
+.sidebar {
+    display: block;
+    padding-top: 10px;
+    padding-left: 0;
+    padding-right: 0;
+    width:100%;
+    height: 100% !important;
+    z-index: 1000;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #fafafa;
+    border-right: 1px solid #eee;
+}
+#user_panel
+{
+    padding-left: 15px;
+    padding-right: 20px;
+}
+.cpc-navbar.cpc-navbar-csgoj {
+    background-color: #428BCA;
+}
+.cpc-navbar.cpc-navbar-expsys {
+    background-color: #5F338A;
+}
+.cpc-navbar.cpc-navbar-cr {
+    background-color: #5cb85c;
+}
+.cpc-navbar.cpc-navbar-index {
+    background-color: #222222;
+}
+.cpc-navbar.cpc-navbar-cpcsys {
+    background-color: #f0ad4e;
+}
+.cpc-navbar.cpc-navbar-admin {
+    background-color: #d9534f;
+}
+.cpc-navbar.cpc-navbar-tt {
+    background-color: #023692;
+}
+.cpc-navbar.cpc-navbar-ojtool {
+    background-color: #20c997;
+}
+@media (max-width: 768px)
+{
+    /*窄页面菜单toggle按钮样式*/
+    .icon-bar {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background-color: #cccccc;
+        border-radius: 1px;
+    }
+    .cpc-nav-toggle
+    {
+        /* background-color: #eee; */
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        height: 30px;
+        border: 1px solid #eee;
+    }
+    /*窄页面navbar置顶横向占满*/
+    .cpc-navbar
+    {
+        display: block;
+        padding-top: 5px;
+        width: 100%;
+        height: 45px;
+    }
+    .cpc-brand
+    {
+        float: left;
+        width:150px;
+        display: inline-block;
+        margin-left: auto;
+        text-align: center;
+        font-size: 24px;
+    }
+    .cpc-brand-subtitle
+    {
+        float: left;
+        display: inline-block;
+        margin-left: 5px;
+        text-align: center;
+        font-size: 24px;
+    }
+
+    .sidebar
+    {
+        display: none;
+    }
+    .show {
+        display: block !important;
+    }
+    main {
+        margin-top: 40px;
+    }
+    .cpc-brand-img{
+        display: none;
+    }
+}
+@media (min-width: 768px)
+{
+    .cpc-nav-toggle {
+        display: none;
+    }
+    .cpc-navbar
+    {
+        overflow: hidden;
+        position: relative;
+    }
+    .sidebar {
+        display: block !important;
+    }
+    header
+    {
+        left: 0;
+        width: 200px;
+        height: 100%;
+    }
+    main
+    {
+        margin-left: 200px;
+    }
+    .cpc-brand-img
+    {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0.15;
+    }
+}
+@media (min-width: 1730px)
+{
+    header
+    {
+        left: 150px;
+    }
+    main
+    {
+        margin-left: 350px;
+    }
+    .sidebar
+    {
+        background-color: #ffffff;
+        border-right: 1px solid #eee;
+        border-left: 1px solid #eee;
+    }
+}
+
+@media (min-width: 2230px)
+{
+    header
+    {
+        left: 350px;
+    }
+    main
+    {
+        margin-left: 550px;
+    }
+}
+
+@media (min-width: 2500px)
+{
+    header
+    {
+        left: 550px;
+    }
+    main
+    {
+        margin-left: 750px;
+    }
+}
+
+@media (min-width: 2700px)
+{
+    header
+    {
+        left: calc(50% - 740px);
+    }
+    main
+    {
+        margin-left: calc(50% - 540px);
+    }
+}
+.nav-flush .nav-link {
+    border-radius: 0;
+}

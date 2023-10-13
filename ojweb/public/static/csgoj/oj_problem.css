@@ -1,0 +1,48 @@
+.sample_div>div:not(:last-child) {
+    margin-bottom: 10px;
+}
+.sample_item_div {
+    background-color: #FAFAFA;
+    border: 1px dashed gray;
+    border-radius: 5px;
+    padding: 0 10px;
+}
+.sample_header {
+    width: 100%;
+
+}
+.sample_row {
+    display: flex;
+}
+.sample_row>div:not(:last-child) {
+    margin-right: 20px;
+}
+.sample_col {
+    width: 50%;
+    overflow: auto;
+}
+.sample_title_div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.sample_copy {
+    --bs-btn-padding-y: .25rem; 
+    --bs-btn-padding-x: .5rem; 
+    --bs-btn-font-size: .75rem;
+}
+
+#real_sample_textarea {
+    display: none;
+}
+.sample_text_input {
+    margin-bottom: 10px;
+}
+.sample_operator_btn {
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+}
+.sample_operator_btn .btn {
+    flex-grow: 1;
+}

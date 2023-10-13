@@ -1,0 +1,4 @@
+post_max_size = 80M
+upload_max_filesize = 80M
+request_terminate_timeout = 128
+pm.max_children = 200

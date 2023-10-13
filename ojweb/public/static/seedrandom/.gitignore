@@ -1,0 +1,5 @@
+node_modules
+bower_components
+/coverage
+/test/lib
+/.nyc_output

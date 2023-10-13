@@ -1,0 +1,124 @@
+﻿/*全局字体相关*/
+body{
+	font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Noto Sans CJK SC,WenQuanYi Micro Hei,Arial,sans-serif;
+	background-color: #fff !important;
+}
+h1,h2,h3,h4,h5{
+	font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Noto Sans CJK SC,WenQuanYi Micro Hei,Arial,sans-serif;
+}
+h1,h2{
+	font-weight: bold;
+}
+textarea{
+	/*为了编辑器中英文混编等宽*/
+	font-family: 'Simsun', 'Microsoft Yahei Mono', 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
+	/*font-family: Consolas, Courier, sans-serif;*/
+}
+.text-red
+{
+	color: red;
+}
+.font-equal-width {
+	font-family: "PingFang SC", 'Microsoft Yahei Mono', "Microsoft YaHei", 'Simsun', 'Lato', sans-serif;
+}
+/*红色链接，目前主要用于列表中标注special judge题目*/
+.red-link,
+.red-link:visited
+{
+	color: #d9534f;
+}
+.red-link:hover,
+.red-link:focus,
+.red-link:active
+{
+	color: red;
+}
+
+/*表格中的文章标题，限制宽度和隐藏*/
+.article-title-in-table
+{
+	display: inline-block;
+	max-width: 500px;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+/*表格中的文章tags*/
+.tags-in-table
+{
+	display: inline-block;
+	width: 120px;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+/*首页新闻列表中标题和time的左右位置*/
+.news-left
+{
+	max-width: calc(100% - 200px);
+	display: inline-block;
+	white-space:nowrap;
+	float: left;
+	margin-left: 15px;
+	overflow:hidden;
+	text-overflow:ellipsis;
+
+}
+.news-new{
+	display: block;
+	white-space: nowrap;
+	float: right;
+	padding-right: 10px;
+	overflow-x: hidden;
+}
+.news-right {
+	width: 120px;
+	display: block;
+	white-space: nowrap;
+	float: right;
+	margin-right: 10px;
+	overflow-x: hidden;
+}
+/*没有下划线的 <a href... */
+.a_noline:hover
+{
+	text-decoration:none;
+}
+/*不换行的span*/
+.inline_span
+{
+	display: inline-block;
+}
+/*首页carousel*/
+#indexCarousel .carousel-inner,
+#indexCarousel .item
+{
+	height: 0;
+	padding-bottom:26%;
+}
+/*首页文章，控制文章标题与内容限制在一定范围内，以显示摘要*/
+.limit_header
+{
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+.limit_content
+{
+	overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+	text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
+}
+.index_news_content
+{
+	max-height:500px;
+	white-space:normal;
+}
+.login_div .logout_div
+{
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.tooltip_templates {
+	display: none;
+}

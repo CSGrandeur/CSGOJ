@@ -1,0 +1,39 @@
+{
+  "name": "tableexport.jquery.plugin",
+  "version": "1.27.0",
+  "description": "html table export",
+  "main": "tableExport.js",
+  "authors": [
+    "hhurz"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "html5",
+    "javascript",
+    "jquery",
+    "export",
+    "table"
+  ],
+  "homepage": "https://github.com/hhurz/tableExport.jquery.plugin",
+  "dependencies": {
+    "jquery": ">=1.9.1",
+    "file-saver": ">=2.0.1",
+    "html2canvas": "*",
+    "jspdf": ">=2.0.0",
+    "pdfmake": "^0.1.71"
+  },
+  "moduleType": [
+    "globals"
+  ],
+  "ignore": [
+    ".git",
+    ".idea",
+    "package.json",
+    "package-lock.json",
+    "libs",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tools"
+  ]
+}

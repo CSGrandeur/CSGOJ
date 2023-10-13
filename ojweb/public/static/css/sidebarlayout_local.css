@@ -1,0 +1,12 @@
+@import url(sidebarlayout.css);
+
+.cpc-navbar.cpc-navbar-csgoj,
+.cpc-navbar.cpc-navbar-expsys,
+.cpc-navbar.cpc-navbar-cr,
+.cpc-navbar.cpc-navbar-index,
+.cpc-navbar.cpc-navbar-cpcsys,
+.cpc-navbar.cpc-navbar-admin,
+.cpc-navbar.cpc-navbar-tt
+{
+    background-color: darkgray
+}

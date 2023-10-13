@@ -1,0 +1,1 @@
+{include file="status/status_page" /}
