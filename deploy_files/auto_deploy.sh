@@ -22,11 +22,15 @@ source parse_args.sh
 parse_args "$@"
 
 bash install_docker.sh
-bash start_db.sh "$@"
+if [ "$WITH_MYSQL" = "true" ]; then
+    bash start_db.sh "$@"
+fi
 bash start_myadmin.sh "$@"
 bash start_oj.sh "$@"
 bash start_nginx.sh "$@"
-bash start_judge.sh "$@"
+if [ "$WITH_JUDGE" = "true" ]; then
+    bash start_judge.sh "$@"
+fi
 
-echo "容器已启动，第一次初始化需要一定时间，可用 docker logs <容器名> 查看启动状态"
+echo "容器已启动，初始化需要一定时间，可用 docker logs <容器名> 查看启动状态"
 echo "例如： docker logs php-$OJ_NAME"

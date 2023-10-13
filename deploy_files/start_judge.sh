@@ -1,7 +1,9 @@
 #!/bin/bash
 # nginx and mysql should be started ahead, and baseoj should be inited
-# bash start_judge.sh --OJ_NAME=csg --OJ_HTTP_BASEURL='http://nginx-server:20080' --PASS_JUDGER='987654321'  \
-# other parameter
+# bash start_judge.sh \
+# --OJ_NAME=csgoj \
+# --OJ_HTTP_BASEURL='http://nginx-server:20080' \
+# --PASS_JUDGER='999999'  \
 # --PATH_DATA=`pwd`/csgoj_data \
 # --JUDGE_DOCKER_CPUS=2 \
 # --JUDGE_DOCKER_MEMORY=4g \
@@ -41,7 +43,7 @@ if [ "$WITH_JUDGE" = "true" ]; then
             CHANGE_ETC="etc"
             CONTAINER_NAME=judge-$OJ_NAME
         fi
-
+        docker pull csgrandeur/csgoj-judge:$CSGOJ_VERSION   # 先pull以确保镜像最新
         docker run -dit $LINK_LOCAL \
             --name $CONTAINER_NAME \
             -e OJ_HTTP_BASEURL="$OJ_HTTP_BASEURL" \
