@@ -1,6 +1,7 @@
 #!/bin/bash
 # simple run:  bash auto_deploy.sh
 # parameter run: # bash auto_deploy.sh --<PARAM>=<your param>  # see parse_args.sh
+# 如果 --WITH_JUDGE=true，且PORT_OJ不是默认值，则要提供 --OJ_HTTP_BASEURL 参数告诉评测机 OJ在哪
 # 例:
 # bash auto_deploy.sh \
 #     --PATH_DATA=`pwd`/csgoj_data \
