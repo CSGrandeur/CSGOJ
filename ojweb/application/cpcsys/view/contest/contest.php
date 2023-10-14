@@ -27,7 +27,7 @@
                     {
                         rules: {
                             team_id: {
-                                minlength: 5,
+                                minlength: 3,
                                 maxlength: 20
                             },
                             password: {

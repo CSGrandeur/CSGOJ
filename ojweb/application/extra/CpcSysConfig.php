@@ -14,7 +14,7 @@ return [
     ],
     // userinfo_rule、userinfo_msg用于验证用户注册信息的预定义规则
     'teaminfo_rule'    => [
-        'team_id'    => ['require', 'min:4', 'max:30', '/^[a-zA-Z0-9_]+$/'],
+        'team_id'    => ['require', 'min:3', 'max:30', '/^[a-zA-Z0-9_]+$/'],
         'name'         => 'max:64',
         'tmember'     => 'max:100',
         'school'     => 'max:64',

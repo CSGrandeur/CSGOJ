@@ -272,10 +272,6 @@ class Admin extends Contestbase
                                 $tmpTeamPrefix = '';
                             }
                         }
-                        else if(!$flagAddStaff && !is_numeric($field) || strlen($field) > 16) {
-                            $validateNotList .= "<br/>[$teamStr] team_id not valid.";
-                        }
-                        $field = $flagAddStaff ? $field : ($teamPrefix . $field);
                         $field = $flagAddStaff ? $field : ($tmpTeamPrefix . $field);
                         $nowTeam['team_id'] = $field;
                         break;
