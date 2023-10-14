@@ -50,7 +50,6 @@ else
         -e OJ_HTTP_PASSWORD=$PASS_JUDGER \
         -e JUDGE_PROCESS_NUM=$JUDGE_PROCESS_NUM \
         -v $PATH_DATA/var/data/judge-$OJ_NAME:/volume $SIDE_ETC \
-        --cpus=$JUDGE_DOCKER_CPUS \
         --memory=$JUDGE_DOCKER_MEMORY \
         --cap-add=SYS_PTRACE  \
         --restart unless-stopped \
