@@ -192,7 +192,7 @@ class Admin extends Contestbase
             $this->ClearTeam();
         }
         $CpcTeam = db('cpc_team');
-        $teamPrefix = "team";
+        $teamPrefix = "team";   // 如果提供了个性化team编号（带字母），则不再带这个前缀
         $teamDescription = trim(input('team_description'), "\n\r");
         if(strlen(trim($teamDescription)) == 0) {
             $teamList = [];
@@ -262,13 +262,21 @@ class Admin extends Contestbase
                 switch($fieldList[$j])
                 {
                     case 'team_id':
+                        $tmpTeamPrefix = $teamPrefix;
                         if($field == '') {
                             $field = str_pad($i, 4, '0', STR_PAD_LEFT);
+                        } else if(!$flagAddStaff) {
+                            if(strlen($field) > 16) {
+                                $validateNotList .= "<br/>[$teamStr] team_id too long.";
+                            } else if(!is_numeric($field)) {
+                                $tmpTeamPrefix = '';
+                            }
                         }
                         else if(!$flagAddStaff && !is_numeric($field) || strlen($field) > 16) {
                             $validateNotList .= "<br/>[$teamStr] team_id not valid.";
                         }
                         $field = $flagAddStaff ? $field : ($teamPrefix . $field);
+                        $field = $flagAddStaff ? $field : ($tmpTeamPrefix . $field);
                         $nowTeam['team_id'] = $field;
                         break;
                     case 'name':
