@@ -375,6 +375,7 @@ $(document).on('click', function (e) {
         }
     }
 });
+let flag_forbid_f5 = false;
 
 window.onkeydown = (e) => {
     if (!e || !e.isTrusted || !e.cancelable) {
