@@ -51,6 +51,7 @@ else
         -e JUDGE_PROCESS_NUM=$JUDGE_PROCESS_NUM \
         -e JUDGE_IGNORE_ESOL=$JUDGE_IGNORE_ESOL \
         -v $PATH_DATA/var/data/judge-$OJ_NAME:/volume $SIDE_ETC \
+        --cpus=$JUDGE_DOCKER_CPUS \
         --memory=$JUDGE_DOCKER_MEMORY \
         --cap-add=SYS_PTRACE  \
         --restart unless-stopped \
