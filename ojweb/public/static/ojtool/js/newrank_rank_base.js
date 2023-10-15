@@ -221,12 +221,14 @@ function LoadData() {
         loading_div.hide();
     });
 }
-function StopAutoRefresh() {
+function StopAutoRefresh(flag_msg=true) {
     if(interval_id != null) {
         clearInterval(interval_id);
         interval_id = null;
     }
-    alertify.message("关闭自动更新");
+    if(flag_msg) {
+        alertify.message("关闭自动更新");
+    }
 }
 function TryStopInterval() {
     if(typeof(interval_id) != 'undefined' && interval_id != null && TimeLocal() > cdata.contest.end_time) {
@@ -383,6 +385,17 @@ window.onkeydown = (e) => {
             StartAutoRefresh();
         } else {
             StopAutoRefresh();
+        }
+    } else if(e.keyCode == 116 && !e.ctrlKey) {
+        e.preventDefault();
+        if(flag_forbid_f5) {
+            alertify.warning("不需要太频繁刷新呦~")
+        } else {
+            flag_forbid_f5 = true;
+            setTimeout(()=>{flag_forbid_f5=false;}, 5000);
+            alertify.success("更新数据...")
+            StopAutoRefresh(false);
+            InitData(true);
         }
     }
 }
