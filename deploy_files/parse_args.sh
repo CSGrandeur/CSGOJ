@@ -26,6 +26,7 @@ BELONG_TO=false
 JUDGE_DOCKER_CPUS=2
 JUDGE_DOCKER_MEMORY=4g
 JUDGE_PROCESS_NUM=2
+JUDGE_IGNORE_ESOL=0
 OJ_HTTP_BASEURL='http://nginx-server:20080'
 JUDGER_TOTAL=1
 OJ_MOD=0
@@ -62,6 +63,7 @@ parse_args() {
     JUDGE_DOCKER_CPUS:, \
     JUDGE_DOCKER_MEMORY:, \
     JUDGE_PROCESS_NUM:, \
+    JUDGE_IGNORE_ESOL:, \
     OJ_HTTP_BASEURL:, \
     JUDGER_TOTAL:, \
     OJ_MOD:, \
@@ -103,6 +105,7 @@ parse_args() {
         --JUDGE_DOCKER_CPUS)            JUDGE_DOCKER_CPUS="$2"; shift 2;;           # docker限制judge的内核数
         --JUDGE_DOCKER_MEMORY)          JUDGE_DOCKER_MEMORY="$2"; shift 2;;         # docker限制judge的内存
         --JUDGE_PROCESS_NUM)            JUDGE_PROCESS_NUM="$2"; shift 2;;           # judge并行判题进程数
+        --JUDGE_IGNORE_ESOL)            JUDGE_IGNORE_ESOL="$2"; shift 2;;           # judge 1忽略/0不忽略 输出的行末空格，0为严格模式，易PE
         --OJ_HTTP_BASEURL)              OJ_HTTP_BASEURL="$2"; shift 2;;             # judge访问的OJ地址
         --JUDGER_TOTAL)                 JUDGER_TOTAL="$2"; shift 2;;                # judge多pod判题的机器数
         --OJ_MOD)                       OJ_MOD="$2"; shift 2;;                      # judge多pod判题的本机编号
