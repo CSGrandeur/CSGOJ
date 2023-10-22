@@ -61,57 +61,6 @@
 #define OJ_TR 13     //测试运行结束
 #define OJ_MC 14     // 等待裁判手工确认
 
-#ifdef __arm__             // arm 的寄存器结构
-struct user_regs_struct {
-        long uregs[18];
-};
-#define ARM_r7          uregs[7]
-#define ARM_ORIG_r0     uregs[17]
-
-#define REG_SYSCALL ARM_r7
-#endif
-
-#ifdef __aarch64__          //arm64的寄存器结构  
-#define NT_PRSTATUS	1
-#define NT_ARM_SYSTEM_CALL	0x404
-#define ARM_cpsr	uregs[16]
-#define ARM_pc		uregs[15]
-#define ARM_lr		uregs[14]
-#define ARM_sp		uregs[13]
-#define ARM_ip		uregs[12]
-#define ARM_fp		uregs[11]
-#define ARM_r10		uregs[10]
-#define ARM_r9		uregs[9]
-#define ARM_r8		regs[8]
-#define ARM_r7		uregs[7]
-#define ARM_r6		uregs[6]
-#define ARM_r5		uregs[5]
-#define ARM_r4		uregs[4]
-#define ARM_r3		uregs[3]
-#define ARM_r2		uregs[2]
-#define ARM_r1		uregs[1]
-#define ARM_r0		uregs[0]
-#define ARM_ORIG_r0	uregs[17]
-#define PTRACE_GETREGS PTRACE_GETREGSET
-#define PTRACE_SETREGS PTRACE_SETREGSET
-#define REG_SYSCALL regs[18]
-
-#endif 
-
-#ifdef __mips__                 //mips 龙芯的寄存器结构
-	typedef unsigned long long uint64_t;
-	struct user_regs_struct{
-		uint64_t uregs[38];
-	};
-
-
-	#define REG_V0 2
-	#define REG_A0 4
-
-	#define mips_REG_V0 uregs[REG_V0]
-	#define REG_SYSCALL mips_REG_V0
-
-#endif
 
 #ifdef __i386          //32位x86寄存器
 #define REG_SYSCALL orig_eax
@@ -447,12 +396,9 @@ void init_syscalls_limits(int lang)      //白名单初始化
 		for (i = 0; i == 0 || LANG_CBV[i]; i++)
 			call_counter[LANG_CBV[i]] = HOJ_MAX_LIMIT;
 	}
-#ifdef __aarch64__
-	if (lang==3)call_counter[220]= 100;
-	else call_counter[220]= 1;
-#else
+
 	call_counter[SYS_execve %  call_array_size ]= 1;
-#endif
+
 	printf("SYS_execve:%d\n",SYS_execve  % call_array_size );
 }
 
@@ -1139,14 +1085,7 @@ int compile(int lang, char *work_dir)
 
 		if (lang == 2 || lang == 3 || lang == 17)
 		{
-#ifdef __mips__
-			LIM.rlim_max = STD_MB << 12;
-			LIM.rlim_cur = STD_MB << 12;
-#endif
-#ifdef __arm__
-			LIM.rlim_max = STD_MB << 11;
-			LIM.rlim_cur = STD_MB << 11;
-#endif
+
 #ifdef __i386__
 			LIM.rlim_max = STD_MB << 11;
 			LIM.rlim_cur = STD_MB << 11;
@@ -1465,28 +1404,6 @@ void copy_shell_runtime(char *work_dir)
 	execute_cmd("/bin/mkdir %s/lib", work_dir);
 	execute_cmd("/bin/mkdir %s/lib64", work_dir);
 	execute_cmd("/bin/mkdir %s/bin", work_dir);
-#ifdef __mips__
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/  %s/lib/mips64el-linux-gnuabi64",work_dir);
-	execute_cmd("mkdir -p %s/lib/mips64el-linux-gnuabi64/",work_dir);
-	execute_cmd("/bin/cp -a /lib64/ld.so.1  %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/libdl.so.2  %s/lib/mips64el-linux-gnuabi64", work_dir);
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/libutil.so.1  %s/lib/mips64el-linux-gnuabi64", work_dir);
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/libz.so.1  %s/lib/mips64el-linux-gnuabi64", work_dir);
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/libm.so.6  %s/lib/mips64el-linux-gnuabi64", work_dir);
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/libc.so.6  %s/lib/mips64el-linux-gnuabi64", work_dir);
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/libtinfo.so.5  %s/lib/mips64el-linux-gnuabi64", work_dir);
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/ld-2.24.so  %s/lib/mips64el-linux-gnuabi64", work_dir);
-	execute_cmd("/bin/cp -a /lib/mips64el-linux-gnuabi64/libc-2.24.so  %s/lib/mips64el-linux-gnuabi64", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libc.so.6 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libtinfo.so.6  %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/ld-2.27.so  %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libc-2.27.so %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libdl-2.27.so %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libtinfo.so.6.1 %s/lib64/", work_dir);
-	execute_cmd("cp  /lib/mips64el-linux-gnuabi64/libpthread.so.0 %s/lib/mips64el-linux-gnuabi64/",work_dir);
-	execute_cmd("/bin/cp -a /bin/bash %s/bin/", work_dir);
-
-#endif
 
 #ifdef __i386
 	execute_cmd("/bin/cp /lib/ld-linux* %s/lib/", work_dir);
@@ -1661,11 +1578,7 @@ void copy_python_runtime(char *work_dir)
 	execute_cmd("cp /usr/bin/python3* %s/usr/bin", work_dir);
 	execute_cmd("cp -a /usr/lib/python3* %s/usr/lib/", work_dir);
 	execute_cmd("cp -a /usr/lib64/python3*  %s/usr/lib64/", work_dir);
-#if (defined __mips__)
-	execute_cmd("cp -a /usr/lib64/python3* %s/usr/lib64/", work_dir);
-	execute_cmd("mkdir -p  %s/usr/local/lib/", work_dir);
-	execute_cmd("cp -a /usr/local/lib/python3* %s/usr/local/lib/", work_dir);
-#endif
+
 
 	execute_cmd("cp /usr/lib/lapack/* %s/usr/lib/liblapack.so.3", work_dir);
 	execute_cmd("cp /usr/lib/libblas/* %s/usr/lib/libblas.so.3", work_dir);
@@ -1674,18 +1587,7 @@ void copy_python_runtime(char *work_dir)
 	execute_cmd("cp /usr/lib/x86_64-linux-gnu/blas/* %s/usr/lib", work_dir);
 	execute_cmd("cp /usr/lib/x86_64-linux-gnu/liblapack.so* %s/usr/lib", work_dir);
 	execute_cmd("cp /usr/lib/x86_64-linux-gnu/libgfortran.so.4 %s/usr/lib", work_dir);
-#ifdef __mips__
-	execute_cmd("/bin/cp -a /lib64/libpthread.so.0 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libutil.so.1 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libm.so.6 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libc.so.6 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libpthread-2.27.so %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libutil-2.27.so %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libc-2.27.so %s/lib64/", work_dir);
-	execute_cmd("/bin/cp -a /lib64/libm-2.27.so %s/lib64/", work_dir);
 
-
-#endif
 
 	/*execute_cmd("/bin/mkdir -p %s/lib/x86_64-linux-gnu", work_dir);
 	execute_cmd("/bin/cp -a /lib/x86_64-linux-gnu/libpthread* %s/lib/x86_64-linux-gnu/", work_dir);
@@ -1807,15 +1709,7 @@ void copy_sql_runtime(char *work_dir)
 	copy_shell_runtime(work_dir);
 	execute_cmd("mkdir -p %s/usr/bin", work_dir);
 	execute_cmd("/bin/cp /usr/bin/sqlite3 %s/usr/bin", work_dir);
-#ifdef __mips__
-	execute_cmd("/bin/cp /lib64/libedit.so.0 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp /lib64/libm.so.6 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp /lib64/libdl.so.2 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp /lib64/libz.so.1 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp /lib64/libpthread.so.0 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp /lib64/libc.so.6 %s/lib64/", work_dir);
-	execute_cmd("/bin/cp /lib64/libtinfo.so.6 %s/lib64/", work_dir);
-#endif
+
 #ifdef __i386__
 	execute_cmd("/bin/cp /usr/lib/i386-linux-gnu/libsqlite3.so.0*   %s/lib/", work_dir);
 	execute_cmd("/bin/cp /lib/i386-linux-gnu/libreadline.so.6*   %s/lib/", work_dir);
@@ -2584,30 +2478,7 @@ void watch_solution(pid_t pidApp, char *infile, int &ACflg, int spj,
 		ptrace(PTRACE_SYSCALL, pidApp, NULL, NULL);
 		continue;
 	}
-#ifdef __mips__
-//		if(exitcode!=5&&exitcode!=133){
-	//https://github.com/strace/strace/blob/master/linux/mips/syscallent-n32.h#L344
-		ptrace(PTRACE_GETREGS, pidApp, NULL, &reg);
-		call_id=(unsigned int)reg.REG_SYSCALL;
-		if( (call_id > 1000 && call_id <5000 )|| (lang == LANG_PYTHON && call_id < 5500)  || call_id> 6500){
-		    // not a valid syscall
-			ptrace(PTRACE_SYSCALL, pidApp, NULL, NULL);
-			continue;
-		}else{
-			call_id = call_id % call_array_size;
-			//printf("call_id:%x\n",call_id);
-#endif
-#ifdef __arm__
-		call_id=ptrace(PTRACE_GETREGS, pidApp, NULL, &reg);
-		call_id = ((unsigned int)reg.REG_SYSCALL) % call_array_size;
-#endif
-#ifdef __aarch64__
-		call_id=ptrace(PTRACE_GETREGS, pidApp, (void *)NT_ARM_SYSTEM_CALL, &reg);
-		print_arm_regs(reg.regs);
-		printf("return call_id:%d\n",call_id);
-		call_id = ((unsigned int)reg.REG_SYSCALL) % call_array_size;
-		printf("regist call_id:%d\n",call_id);
-#endif
+
 #ifdef __i386__
 		call_id=ptrace(PTRACE_GETREGS, pidApp, NULL, &reg);
 			call_id = ((unsigned int)reg.REG_SYSCALL) % call_array_size;
@@ -2643,10 +2514,7 @@ void watch_solution(pid_t pidApp, char *infile, int &ACflg, int spj,
 		
 			}
 			call_id=0;
-#ifdef __mips__
 
-		}
-#endif
 		ptrace(PTRACE_SYSCALL, pidApp, NULL, NULL);    // 继续等待下一次的系统调用或其他中断
 		first = false;
 		//usleep(1);
