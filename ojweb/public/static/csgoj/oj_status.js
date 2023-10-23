@@ -1,6 +1,8 @@
 let status_page_information = $('#status_page_information');
 let status_ajax_url = status_page_information.attr('status_ajax_url');
 let show_code_url = status_page_information.attr('show_code_url');
+let rejudge_url = status_page_information.attr('rejudge_url');
+let status_page_where = status_page_information.attr('status_page_where');
 let module = status_page_information.attr('module');
 let user_id = status_page_information.attr('user_id');
 let OJ_MODE = status_page_information.attr('OJ_MODE');
@@ -59,6 +61,15 @@ function FormatterLanguage(value, row, index, field) {
         return "<button class='btn btn-primary' solution_id='" + row['solution_id'] + "' >" + value + "</button>";
     } else {
         return value;
+    }
+}
+function FormatterRejudge(value, row, index, field) {
+    if("contest_id" in row && row.contest_id != 0 && status_page_where != 'contest') {
+        row.allow_rejudge = false;
+        return "IN CONTEST"
+    } else {
+        row.allow_rejudge = row.result != 4;
+        return row.result == 4 ? '-' : `<button class='btn btn-warning'>Rejudge</button>`;
     }
 }
 function FormatterSim(value, row, index, field) {
@@ -134,7 +145,11 @@ $('.fake-form').on('keypress', function(e){
     }
 });
 var timer_ids = [];
+let flg_auto_refresh_status=false;
 function auto_refresh_results(time_cnt=2) {
+    if(!flg_auto_refresh_status) {
+        return;
+    }
     // refresh results which are running.
     let status_data = $table.bootstrapTable('getData')
     let solution_id_list = [];
@@ -159,11 +174,16 @@ function auto_refresh_results(time_cnt=2) {
                         finish_flag = false;
                     }
                 }
-                if(!finish_flag) {
+                if(finish_flag) {
+                    flg_auto_refresh_status = false;
+                }
+                if(flg_auto_refresh_status) {
                     setTimeout(function(){auto_refresh_results(time_cnt * 2);}, time_cnt * 1000);
                 }
             }
         )
+    } else {
+        flg_auto_refresh_status = false;
     }
 }
 function BtnCodeShow(td, row) {
@@ -221,13 +241,37 @@ function BtnResultShow(td, row) {
         }
     );
 }
-function CellInfoShowSet() {
+function SetStatusButton() {
     // show running information and code.
     $table.on('click-cell.bs.table', function(e, field, td, row){
         if(field == 'language') {
             BtnCodeShow(td, row)
         } else if(field == 'result') {
             BtnResultShow(td, row);
+        } else if(field == 'rejudge' && row.allow_rejudge) {
+            alertify.confirm(`Confirm to rejudge solution [RunID=<strong class='text-danger'>${row.solution_id}</strong>]?`, function() {
+                $.post(rejudge_url, {solution_id: row.solution_id, rejudge_res_check: ['any']}, function(ret) {
+                    if(ret.code == 1) {
+                        $table.bootstrapTable('updateByUniqueId', {
+                            id: row.solution_id,
+                            row: {
+                                result: 0,
+                                memory: 0,
+                                time: 0,
+                                res_text: 'Pending Rejudging'
+                            }
+                        });
+                        if(!flg_auto_refresh_status) {
+                            flg_auto_refresh_status = true;
+                            auto_refresh_results();
+                        }
+                        alertify.success(`[RunID=${row.solution_id}]<br/>rejudge start.`);
+                    } else {
+                        alertify.err(`[RunID=${row.solution_id}]<br/>rejudge failed.<br/>${ret.msg}`);
+                    }
+
+                })
+            });
         }
     });
 }
@@ -261,7 +305,7 @@ function SetFilter(clear=false) {
 }
 $(document).ready(function(){
     SetFilter();
-    CellInfoShowSet();
+    SetStatusButton();
     $table.on('post-body.bs.table', function(){
         //处理rank宽度
         if($table[0].scrollWidth > status_table_div.width())
@@ -274,6 +318,7 @@ $(document).ready(function(){
         }
     });
     $table.on('load-success.bs.table', function(){
+        flg_auto_refresh_status = true;
         auto_refresh_results();
     });
 });

@@ -14,9 +14,13 @@ else
   if [ -z "$NGINX_PORT_RANGS" ]; then
     NGINX_PORT_RANGS="-p $PORT_OJ:$PORT_OJ -p $PORT_MYADMIN:$PORT_MYADMIN"
   fi
+  PUBLIC_MOUNT=""
+  if [ "$CSGOJ_DEV" = "1" ];then
+    PUBLIC_MOUNT="-v `pwd`/../ojweb/public:/var/www/baseoj/public"
+  fi
   docker run --name nginx-server $LINK_LOCAL \
     $NGINX_PORT_RANGS \
-    -v $PATH_DATA/var/www:/var/www \
+    -v $PATH_DATA/var/www:/var/www $PUBLIC_MOUNT \
     -v $PATH_DATA/dataspace:$PATH_DATA/dataspace \
     -v $PATH_DATA/var/log/nginx:/var/log/nginx \
     -v $PATH_DATA/nginx/nginx_conf.d:/etc/nginx/conf.d \

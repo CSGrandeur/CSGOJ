@@ -311,14 +311,22 @@ class Problem extends Adminbase
                 $rejudge_res_check = [];
             }
             $map = [$item => $id];
-            $map['result'] = ['in', $rejudge_res_check];
+            if(!in_array('any', $rejudge_res_check)) {
+                $map['result'] = ['in', $rejudge_res_check];
+            }
             db('solution')
                 ->where($map)
                 ->where(function($query){
                     $query->whereNull('contest_id')
                         ->whereOr('contest_id', 0);
                 })
-                ->setField('result', 1);
+                ->update([
+                    'result'    => 1,
+                    'memory'    => 0,
+                    'time'      => 0,
+                    'pass_rate' => 0
+                ]);
+
             return $id;
         }
         return false;

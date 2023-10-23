@@ -83,6 +83,9 @@
             <th class='status_language'     data-field="language"       data-align="center" data-valign="middle"  data-sortable="false" data-width="80" data-formatter="FormatterLanguage">Language</th>
             <th class='status_code_length'  data-field="code_length"    data-align="right" data-valign="middle"  data-sortable="false" data-width="80">Code Length</th>
             <th class='status_in_date'      data-field="in_date"        data-align="center" data-valign="middle"  data-sortable="false"  data-width="160">Submit Time</th>
+            {if IsAdmin() || isset($contest) && IsAdmin('contest', $contest['contest_id']) }
+                <th data-field="rejudge" data-align="center" data-valign="middle"  data-sortable="false" data-formatter="FormatterRejudge" >Rejudge</th>
+            {/if}
             {if(isset($contest) && (IsAdmin('contest', $contest['contest_id']) || IsAdmin('source_browser'))) }
                 <th data-field="sim" data-align="center" data-valign="middle"  data-sortable="false" data-formatter="FormatterSim" >Similar</th>
             {/if}
@@ -99,6 +102,8 @@
         show_res_url="{$show_res_url}"
         user_id="{$user_id}"
         status_ajax_url="/{$module}/{$controller}/status_ajax{if isset($contest)}?cid={$contest['contest_id']}{/if}"
+        rejudge_url="{if $controller=='contest'}/{$module}/admin/contest_rejudge_ajax?cid={$contest['contest_id']}{else /}/admin/problem/problem_rejudge_ajax{/if}"
+        status_page_where="{if $controller=='contest'}contest{else /}problemset{/if}"
         module="{$module}"
         OJ_MODE="{$OJ_MODE}"
         OJ_STATUS="{$OJ_STATUS}"
