@@ -636,12 +636,12 @@ const char *getFileNameFromPath(const char *path)
 void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,const char * infile,const char * userfile)
 {
     execute_cmd("echo '========[%s]========='>>diff.out", getFileNameFromPath(path));
-    execute_cmd("echo  '\\n------test in top 100 bytes------'>>diff.out");
-    execute_cmd("head -c 100 %s >>diff.out",infile);
-    execute_cmd("echo  '\\n------test out top 100 bytes-----'>>diff.out");
-    execute_cmd("head -c 100 '%s'>>diff.out", path);
-    execute_cmd("echo  '\\n------user out top 100 bytes-----'>>diff.out");
-    execute_cmd("head -c 100 %s >>diff.out",userfile);
+    execute_cmd("echo  '\\n------test in top 200 bytes------'>>diff.out");
+    execute_cmd("head -c 200 %s >>diff.out",infile);
+    execute_cmd("echo  '\\n------test out top 200 bytes-----'>>diff.out");
+    execute_cmd("head -c 200 '%s'>>diff.out", path);
+    execute_cmd("echo  '\\n------user out top 200 bytes-----'>>diff.out");
+    execute_cmd("head -c 200 %s >>diff.out",userfile);
     execute_cmd("echo  '\\n------diff out 2000 bytes-----'>>diff.out");
     execute_cmd("diff '%s' %s -y --strip-trailing-cr|grep \\||head -c 2000>>diff.out", path,userfile);
     execute_cmd("echo  '\\n=============================='>>diff.out");
