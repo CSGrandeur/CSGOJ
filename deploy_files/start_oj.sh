@@ -26,7 +26,9 @@ fi
 if [ "$(docker ps -aq -f name=/php-$OJ_NAME$)" ]; then
     echo "php-$OJ_NAME ready"
 else
-    docker pull csgrandeur/csgoj-web:$CSGOJ_VERSION # 先pull以确保镜像最新
+    if [ -z "$CSGOJ_DEV" ] || [ "$CSGOJ_DEV" != "1" ]; then
+        docker pull csgrandeur/csgoj-web:$CSGOJ_VERSION # 先pull以确保镜像最新
+    fi
     docker run -dit $LINK_LOCAL \
         --name php-$OJ_NAME \
         -e DB_HOSTNAME=$SQL_HOST \

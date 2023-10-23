@@ -43,17 +43,26 @@ else
         CHANGE_ETC="etc"
         CONTAINER_NAME=judge-$OJ_NAME
     fi
-    docker pull csgrandeur/csgoj-judge:$CSGOJ_VERSION   # 先pull以确保镜像最新
+    SHM_CONFIG=""
+    if [ "$OJ_SHM_RUN" != "0" ]; then
+        SHM_CONFIG="--shm-size $JUDGE_SHM_SIZE"
+    fi
+    
+    if [ -z "$CSGOJ_DEV" ] || [ "$CSGOJ_DEV" != "1" ]; then
+        docker pull csgrandeur/csgoj-judge:$CSGOJ_VERSION   # 先pull以确保镜像最新
+    fi
+
     docker run -dit $LINK_LOCAL \
         --name $CONTAINER_NAME \
         -e OJ_HTTP_BASEURL="$OJ_HTTP_BASEURL" \
         -e OJ_HTTP_PASSWORD=$PASS_JUDGER \
         -e JUDGE_PROCESS_NUM=$JUDGE_PROCESS_NUM \
         -e JUDGE_IGNORE_ESOL=$JUDGE_IGNORE_ESOL \
+        -e JUDGE_SHM_RUN=$JUDGE_SHM_RUN \
         -v $PATH_DATA/var/data/judge-$OJ_NAME:/volume $SIDE_ETC \
         --cpus=$JUDGE_DOCKER_CPUS \
         --memory=$JUDGE_DOCKER_MEMORY \
-        --cap-add=SYS_PTRACE  \
+        --cap-add=SYS_PTRACE $SHM_CONFIG \
         --restart unless-stopped \
         csgrandeur/csgoj-judge:$CSGOJ_VERSION
 
