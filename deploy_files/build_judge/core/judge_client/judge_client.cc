@@ -642,15 +642,15 @@ void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,con
     execute_cmd("head -c 100 '%s'>>diff.out", path);
     execute_cmd("echo  '\\n------user out top 100 bytes-----'>>diff.out");
     execute_cmd("head -c 100 %s >>diff.out",userfile);
-    execute_cmd("echo  '\\n------diff out 200 bytes-----'>>diff.out");
-    execute_cmd("diff '%s' %s -y|grep \\||head -c 200>>diff.out", path,userfile);
+    execute_cmd("echo  '\\n------diff out 2000 bytes-----'>>diff.out");
+    execute_cmd("diff '%s' %s -y --strip-trailing-cr|grep \\||head -c 2000>>diff.out", path,userfile);
     execute_cmd("echo  '\\n=============================='>>diff.out");
 }
 void make_diff_out_simple(FILE *f1, FILE *f2, int c1, int c2, const char *path,const char * userfile )
 {
     execute_cmd("echo '========[%s]========='>>diff.out", getFileNameFromPath(path));
     execute_cmd("echo 'Expected                              |    Yours'>>diff.out");
-    execute_cmd("diff '%s' %s -y|head -c 100>>diff.out", path,userfile);
+    execute_cmd("diff '%s' %s -y --strip-trailing-cr|head -c 100>>diff.out", path,userfile);
     execute_cmd("echo '\n=============================='>>diff.out");
 }
 
@@ -920,11 +920,11 @@ void _addreinfo_http(int solution_id, const char *filename)
     FILE *fp = fopen(filename, "re");
 
     rend = reinfo;
-    while (fgets(rend, 1024, fp))
-    {
+    while (fgets(rend, 1024, fp)) {
         rend += strlen(rend);
-        if (rend - reinfo > 16384)
+        if (rend - reinfo > 16384) {
             break;
+        }
     }
     *rend = '\0';
     fclose(fp);
@@ -946,11 +946,8 @@ void addreinfo(int solution_id) {
     }
 }
 
-void adddiffinfo(int solution_id)
-{
-
-    if (http_judge)
-    {
+void adddiffinfo(int solution_id) {
+    if (http_judge) {
         _addreinfo_http(solution_id, "diff.out");
     }
 }
