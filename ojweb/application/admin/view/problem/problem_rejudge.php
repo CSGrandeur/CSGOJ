@@ -21,44 +21,40 @@
 					maxlength: 10
 				}
 			},
-			submitHandler: function(form)
-			{
+			submitHandler: function(form) {
 				var solution_id = $.trim($('#solution_id').val());
 				var contest_id = $.trim($('#contest_id').val());
 				var problem_id = $.trim($('#problem_id').val());
-				if((solution_id.length > 0) + (problem_id.length > 0) + (contest_id.length > 0) > 1)
-				{
-					alertify.alert('Please only fill in one input');
+                let ac_alertify = "";
+                if(document.querySelector('#rejudge_res_check_ac').checked) {
+                    ac_alertify = "<strong class='text-danger'>请慎重重判AC的提交</strong><br/>"
+                }
+				if((solution_id.length > 0) + (problem_id.length > 0) + (contest_id.length > 0) > 1) {
+					alertify.alert('请在题号和提交号之间选择一项.<br/>Please only fill in one input');
 				}
-				else if(solution_id.length > 0)
-				{
-					SubmitRejudge(form);
-				}
-				else if(contest_id.length > 0)
-				{
-					alertify.confirm("Rejudge by contest_id may make the players unhappy, sure to rejudge?",
-						function(){
+				else if(solution_id.length > 0){
+					if(ac_alertify != '') {
+						alertify.confirm(ac_alertify, function() {
 							SubmitRejudge(form);
-						},
-						function(){
-							return;
-						}
-					);
+						});
+					} else {
+						SubmitRejudge(form);
+					}
 				}
 				else if(problem_id.length > 0)
 				{
-					alertify.confirm("Rejudge by problem_id may take a long time, sure to rejudge?",
+					alertify.confirm(`${ac_alertify}基于题号评测时间较久，确认？<br/>Rejudge by problem_id may take a long time, sure to rejudge?`,
 						function(){
 							SubmitRejudge(form);
 						},
 						function(){
 							return;
 						}
-					);
+					).set('title', 'confirm');
 				}
 				else
 				{
-					alertify.alert('Please give an ID for rejudging.')
+					alertify.alert('请提供题目ID.<br/>Please give an ID for rejudging.')
 				}
 				return false;
 			}

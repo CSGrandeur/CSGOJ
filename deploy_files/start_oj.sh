@@ -26,8 +26,11 @@ fi
 if [ "$(docker ps -aq -f name=/php-$OJ_NAME$)" ]; then
     echo "php-$OJ_NAME ready"
 else
+    WEB_MOUNT=""
     if [ -z "$CSGOJ_DEV" ] || [ "$CSGOJ_DEV" != "1" ]; then
         docker pull csgrandeur/csgoj-web:$CSGOJ_VERSION # 先pull以确保镜像最新
+    else
+        WEB_MOUNT="-v `pwd`/../ojweb/application:/ojweb/application -v `pwd`/../ojweb/extend:/ojweb/extend"
     fi
     docker run -dit $LINK_LOCAL \
         --name php-$OJ_NAME \
@@ -47,7 +50,7 @@ else
         -e PASS_JUDGER=$PASS_JUDGER \
         -e OJ_UPDATE_STATIC=$OJ_UPDATE_STATIC \
         -e BELONG_TO=$BELONG_TO \
-        -v $PATH_DATA/var/www:/var/www \
+        -v $PATH_DATA/var/www:/var/www $WEB_MOUNT \
         -v $PATH_DATA/var/data/judge-$BELONG_TO:/home/judge \
         -v $PATH_DATA/nginx/nginx_conf.d:/etc/nginx/conf.d \
         --restart=unless-stopped \

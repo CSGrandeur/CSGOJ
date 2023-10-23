@@ -288,8 +288,7 @@ class Problem extends Adminbase
         ]);
         return $this->fetch();
     }
-    private function Rejudge($item)
-    {
+    protected function Rejudge($item) {
         if(input('?'.$item) && strlen(trim(input($item))) > 0)
         {
             $id = intval(trim(input($item)));
@@ -307,10 +306,12 @@ class Problem extends Adminbase
                 if(!IsAdmin($this->privilegeStr, $id))
                     $this->error('You cannot rejudge problem ' . $id);
             }
-            $map = [$item => $id];
-            if(input('post.all_rejudge_check') != 'on') {
-                $map['result'] = ['neq', 4];
+            $rejudge_res_check = input('rejudge_res_check/a');
+            if($rejudge_res_check === null) {
+                $rejudge_res_check = [];
             }
+            $map = [$item => $id];
+            $map['result'] = ['in', $rejudge_res_check];
             db('solution')
                 ->where($map)
                 ->where(function($query){

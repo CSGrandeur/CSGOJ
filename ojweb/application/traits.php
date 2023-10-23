@@ -168,7 +168,12 @@ trait ContestAdminTrait {
         }
         $solution_id = trim(input('solution_id'));
         $problem_alphabet_id = trim(input('problem_id'));
+        $rejudge_res_check = input('rejudge_res_check/a');
         $map = ['contest_id' => $this->contest['contest_id']];
+        if($rejudge_res_check === null) {
+            $rejudge_res_check = [];
+        }
+        $map['result'] = ['in', $rejudge_res_check];
         $addUrl = '';
         $Solution = db('solution');
         $contestKind = $this->contest['private'] % 10;
@@ -205,9 +210,6 @@ trait ContestAdminTrait {
             }
             $map['problem_id'] = ['in', $problemIdList];
             $addUrl = '#problem_id=' . $problemAlphabetIdList[0];
-        }
-        if(input('post.all_rejudge_check') != 'on') {
-            $map['result'] = ['neq', 4];
         }
         $Solution->where($map)->setField('result', 1);
         $jumpurl = '/' . ($this->OJ_MODE == 'online' ? 'csgoj' : 'cpcsys') . '/contest/status?cid=' . $this->contest['contest_id'] . $addUrl;
