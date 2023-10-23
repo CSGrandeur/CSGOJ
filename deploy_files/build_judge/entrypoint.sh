@@ -23,13 +23,6 @@ rm -rf /home/judge/etc
 ln -s /volume/data   /home/judge/data   
 ln -s /volume/etc    /home/judge/etc
 
-RUNNING=`cat /home/judge/etc/judge.conf | grep OJ_RUNNING`
-RUNNING=${RUNNING:11}
-for i in `seq 1 $RUNNING`; do
-    mkdir -p    /home/judge/run`expr ${i} - 1`;
-    chown judge /home/judge/run`expr ${i} - 1`;
-done
-
 /usr/bin/judged
 # judged /home/judge debug
 sleep infinity

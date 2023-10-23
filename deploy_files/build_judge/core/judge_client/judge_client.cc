@@ -636,21 +636,21 @@ const char *getFileNameFromPath(const char *path)
 void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,const char * infile,const char * userfile)
 {
     execute_cmd("echo '========[%s]========='>>diff.out", getFileNameFromPath(path));
-    execute_cmd("echo  '\\n------test in top 100 lines------'>>diff.out");
-    execute_cmd("head -100 %s >>diff.out",infile);
-    execute_cmd("echo  '\\n------test out top 100 lines-----'>>diff.out");
-    execute_cmd("head -100 '%s'>>diff.out", path);
-    execute_cmd("echo  '\\n------user out top 100 lines-----'>>diff.out");
-    execute_cmd("head -100 %s >>diff.out",userfile);
-    execute_cmd("echo  '\\n------diff out 200 lines-----'>>diff.out");
-    execute_cmd("diff '%s' %s -y|grep \\||head -200>>diff.out", path,userfile);
+    execute_cmd("echo  '\\n------test in top 100 bytes------'>>diff.out");
+    execute_cmd("head -c 100 %s >>diff.out",infile);
+    execute_cmd("echo  '\\n------test out top 100 bytes-----'>>diff.out");
+    execute_cmd("head -c 100 '%s'>>diff.out", path);
+    execute_cmd("echo  '\\n------user out top 100 bytes-----'>>diff.out");
+    execute_cmd("head -c 100 %s >>diff.out",userfile);
+    execute_cmd("echo  '\\n------diff out 200 bytes-----'>>diff.out");
+    execute_cmd("diff '%s' %s -y|grep \\||head -c 200>>diff.out", path,userfile);
     execute_cmd("echo  '\\n=============================='>>diff.out");
 }
 void make_diff_out_simple(FILE *f1, FILE *f2, int c1, int c2, const char *path,const char * userfile )
 {
     execute_cmd("echo '========[%s]========='>>diff.out", getFileNameFromPath(path));
     execute_cmd("echo 'Expected                              |    Yours'>>diff.out");
-    execute_cmd("diff '%s' %s -y|head -100>>diff.out", path,userfile);
+    execute_cmd("diff '%s' %s -y|head -c 100>>diff.out", path,userfile);
     execute_cmd("echo '\n=============================='>>diff.out");
 }
 
@@ -2425,11 +2425,11 @@ void watch_solution(pid_t pidApp, char *infile, int &ACflg, int spj,
                     default:
                         ACflg = OJ_RE;
                         if(DEBUG) {
-                            printf("[OJ_RE(%d)] exitcode not recognize: %d\n", exitcode);
+                            printf("[OJ_RE(%d)] exitcode not recognize: %d\n", OJ_RE, exitcode);
                         }
                 }
                 print_runtimeerror(infile+strlen(oj_home)+5,strsignal(exitcode));
-                sprintf(buf,"adding: ' white_code[%d]=1; ' after judge_client:2836 for ", exitcode);
+                sprintf(buf,"adding: ' white_code[%d]=1; ' after judge_client for ", exitcode);
                 print_runtimeerror(buf, strsignal(exitcode));
 
             }
