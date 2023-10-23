@@ -44,7 +44,7 @@ else
         CONTAINER_NAME=judge-$OJ_NAME
     fi
     SHM_CONFIG=""
-    if [ "$OJ_SHM_RUN" != "0" ]; then
+    if [ -n "$JUDGE_SHM_RUN" ] && [ "$JUDGE_SHM_RUN" != "0" ]; then
         SHM_CONFIG="--shm-size $JUDGE_SHM_SIZE"
     fi
     

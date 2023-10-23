@@ -51,6 +51,6 @@ chmod 777 /var/www/public
 # init judge data folder
 mkdir -p /home/judge/data
 chown www-data:www-data /home/judge/data
-chmod 777 /home/judge/data
+chmod 777 -R /home/judge/data
 
 exec docker-php-entrypoint "$@"
