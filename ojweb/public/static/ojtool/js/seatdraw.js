@@ -519,7 +519,6 @@ function GetTeamAccordRoom() {
     return team_full;
 }
 function ExportCsv(btype) {
-    console.log(btype);
     if(data_team == null || data_room == null) {
         alertify.error("未正确录入队伍或房间/区域");
         return;

@@ -125,7 +125,10 @@ ranktable.on('refresh.bs.table', function() {
 });
 $(document).ready(function() {
     rank_config = $('#rank_config');
-    InitIndexedDb('ranktable', function(db) {rank_db = db; flag_db_ready = true; ReadyFlag();})
+    
+    if(typeof InitIndexedDb === 'function') {
+        InitIndexedDb('ranktable', function(db) {rank_db = db; flag_db_ready = true; ReadyFlag();})
+    }
 
     auto_refresh_box.bootstrapSwitch();
     auto_refresh_time_span.text(auto_refresh_time);
