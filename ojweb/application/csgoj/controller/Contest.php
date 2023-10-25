@@ -1491,7 +1491,7 @@ class Contest extends Csgojbase
                 $rankDataList[$s['user_id']] = [
                     //solved和penalty放在前两个，sort的时候就很方便不需要额外写comp函数了。
                     'solved'  => 0,         // AC题数
-                    'penalty' => 0,         // 罚时（分钟, minutes）
+                    'penalty' => 0,         // 罚时（XCPC规则的总时长，秒）
                     'team_id' => $s['user_id'],
                     'pass_rate' => [],      // 各题 pass_rate，取最大值
                     'pass_score'=> [],      // 如果不使用 pass_rate作为分数，而是增加额外算法，记录得分

@@ -14,7 +14,7 @@ if(typeof(now_time) == 'undefined' || now_time == null || now_time.length == 0) 
 } else {
     now_time *= 1000;
 }
-now_time = TimestampToTime(now_time);
+now_time = Timestamp2Time(now_time);
 function FormatterTitle(value, row, index, field) {
     let contest_controller = row.private % 10 == 4 ? 'contestexp' : 'contest';
     return `<a href='/csgoj/${contest_controller}/problemset?cid=${row.contest_id}' class="contest_title" title="${row.title}">${row.title}</a>`;

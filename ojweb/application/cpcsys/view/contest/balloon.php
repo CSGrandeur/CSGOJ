@@ -104,7 +104,7 @@
         let title = '';
         let fb = 0;
         if(`${field}_bal_info` in row) {
-            title = `sender: ${row[`${field}_bal_info`].asu} &#10;&#13;fb: ${row[`${field}_bal_info`].fb} &#10;&#13;task_time: ${TimestampToTime(row[`${field}_bal_info`].ast)}`;
+            title = `sender: ${row[`${field}_bal_info`].asu} &#10;&#13;fb: ${row[`${field}_bal_info`].fb} &#10;&#13;task_time: ${Timestamp2Time(row[`${field}_bal_info`].ast)}`;
             fb = row[`${field}_bal_info`].fb;
         }
         return `<span pstatus="${row[field + '_pstatus']}" rstatus="${row[field + '_rstatus']}" title="${title}" fb="${fb}">

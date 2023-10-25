@@ -182,15 +182,24 @@ function DateFormat(date, fmt='yyyy-MM-dd HH:mm:ss') {
     };
     return fmt;
 }
-function TimestampToTime(timestamp, fmt='yyyy-MM-dd HH:mm:ss') {
+function Timestamp2Time(timestamp, fmt='yyyy-MM-dd HH:mm:ss') {
     if(timestamp.toString().length < 13) {
         timestamp *= 1000;
     }
     let date = new Date(timestamp);
     return DateFormat(date, fmt);
 }
-function TimeLocal(timestr=null, fmt='yyyy-MM-dd HH:mm:ss')
-{
+function Timestr2Sec(timestr) {
+    // xx:xx:xx 的时间转为秒
+    let time_item = timestr.split(':');
+    let res = 0;
+    for(let i = 0; i < time_item.length; i ++) {
+        res *= 60;
+        res += parseInt(time_item[i]);
+    }
+    return res;
+}
+function TimeLocal(timestr=null, fmt='yyyy-MM-dd HH:mm:ss') {
     let date;
     if(timestr === null) {
         date = new Date();

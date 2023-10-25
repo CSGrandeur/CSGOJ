@@ -60,7 +60,7 @@
 </main>
 <script>
 function FormatterTaskTime(value, row, index, field) {
-    return `<button class="btn btn-danger" >${TimestampToTime(value)}</button>`
+    return `<button class="btn btn-danger" >${Timestamp2Time(value)}</button>`
 }
 function FormatterPro(value, row, index, field) {
     return `<strong class="text-danger">${value}</strong>`;

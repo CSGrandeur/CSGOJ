@@ -61,8 +61,8 @@ function ResetTime() {
     now.setMinutes(halfHour);
     now.setSeconds(0);
     now.setMilliseconds(0);
-    info_map['start_time'] = TimestampToTime(now.getTime(), 'yyyy-MM-dd HH:mm:00');
-    info_map['end_time'] = TimestampToTime(now.getTime() + 7200000, 'yyyy-MM-dd HH:mm:00');
+    info_map['start_time'] = Timestamp2Time(now.getTime(), 'yyyy-MM-dd HH:mm:00');
+    info_map['end_time'] = Timestamp2Time(now.getTime() + 7200000, 'yyyy-MM-dd HH:mm:00');
 }
 function GetInfo() {
     let input_list = csg.getdom('.tp_cls_input');
@@ -74,7 +74,7 @@ function GetInfo() {
         } else {
             if(tid == 'start_time' || tid == 'end_time') {
                 if(info_map[tid] == null || info_map[tid] == '') {
-                    // info_map[tid] = TimestampToTime(new Date().getTime() + (tid == 'start_time' ? 3600000 : 10800000), 'yyyy-MM-dd HH:00:00');
+                    // info_map[tid] = Timestamp2Time(new Date().getTime() + (tid == 'start_time' ? 3600000 : 10800000), 'yyyy-MM-dd HH:00:00');
                     ResetTime();
                 }
             } else if(tid == 'pt') {

@@ -28,7 +28,7 @@
             <th data-field="tkind" data-align="left" data-valign="middle"  data-sortable="false" data-width="10"  data-formatter="FormatterTkind"></th>
             {/if}
             <th data-field="solved" data-align="center" data-valign="middle"  data-sortable="false" data-width="60">Solved</th>
-            <th data-field="penalty" data-align="center" data-valign="middle"  data-sortable="false" data-width="80">Penalty</th>
+            <th data-field="penalty" data-align="center" data-valign="middle"  data-sortable="false" data-width="100" data-formatter="FormatterPenalty">Penalty</th>
             {foreach($problemIdMap['abc2id'] as $apid=>$pid)}
             <th data-field="{$apid}" data-align="center" data-valign="middle"  data-sortable="false" data-width="90" data-cell-style="acCellStyle" data-formatter="FormatterRankPro">
                 <a href="problem?cid={$contest['contest_id']}&pid={$apid}">

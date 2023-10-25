@@ -174,7 +174,7 @@ function GetInfo() {
         }
         if(tid == 'start_time' || tid == 'end_time') {
             if(info_map[tid] == null || info_map[tid] == '') {
-                info_map[tid] = TimestampToTime(new Date().getTime() + (tid == 'start_time' ? 3600000 : 10800000), 'yyyy-MM-dd HH:00:00');
+                info_map[tid] = Timestamp2Time(new Date().getTime() + (tid == 'start_time' ? 3600000 : 10800000), 'yyyy-MM-dd HH:00:00');
             }
             show_list[i].innerHTML = TimeLocal(info_map[tid], info_map['show_date'] == 'true' ? 'yyyy-MM-dd HH:mm:ss' : 'HH:mm:ss');
         } else if(tid == 'nf') {
@@ -283,7 +283,7 @@ function MathjaxRender(selector_str, dom_range=document) {
 }
 
 function contest_clock(target_dom, time_diff) {
-    target_dom.textContent = TimestampToTime(new Date().getTime()+time_diff, info_map['show_date'] == 'true' ? 'yyyy-MM-dd HH:mm:ss' : 'HH:mm:ss');
+    target_dom.textContent = Timestamp2Time(new Date().getTime()+time_diff, info_map['show_date'] == 'true' ? 'yyyy-MM-dd HH:mm:ss' : 'HH:mm:ss');
     setTimeout(() => {
         contest_clock(target_dom, time_diff);
     }, 1000);

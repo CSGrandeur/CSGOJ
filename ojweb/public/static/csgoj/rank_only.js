@@ -53,7 +53,10 @@ function RankLoadSuccessCallback(data) {
         valid_team_num = 0;
         star_team_num = 0;
         star_valid_team_num = 0;
+        let last_team = -1, rank_mi_now = 0, rank_mi_cnt = 0;
         for(var i = 0; i < data.length; i ++) {
+            data[i].rank_sec = data[i].rank;    // 留存总罚时按秒的rank
+            data[i].penalty_mi = Math.floor(Timestr2Sec(data[i].penalty) / 60 + 0.00000001);
             if(data[i].solved > 0) {
                 valid_team_num ++;;
                 if(data[i]['tkind'] == 2) {
@@ -62,13 +65,22 @@ function RankLoadSuccessCallback(data) {
             }
             if(data[i]['tkind'] == 2) {
                 star_team_num ++;
+                data[i].rank_mi = '*';
+            } else {
+                rank_mi_cnt ++;
+                console.log(1, data[i], 2, data[last_team]);
+                if(last_team == -1 || data[i].solved < data[last_team].solved || data[i].penalty_mi > data[last_team].penalty_mi) {
+                    rank_mi_now = rank_mi_cnt;
+                }
+                data[i].rank_mi = rank_mi_now;
+                last_team = i;
             }
-            if(typeof(data[i]['school']) != 'undefined')
-            {
+            if(typeof(data[i]['school']) != 'undefined') {
                 var school = $.trim(data[i]['school']);
                 if(school != '')
                     schoolDict[data[i]['school']] = true;
             }
+            data[i].rank = data[i].rank_mi; // 名次按总罚时近似到分钟以减少偶然性误差，暂不做配置项。
         }
         formalValidTeamNum = valid_team_num - star_valid_team_num;
         UpdateAwardInfo();
@@ -203,6 +215,25 @@ function UpdateFilterRank() {
 function FormatterRank(value, row, index, field) {
     return `<span acforprize='${row.solved}'>${value}</span>`;
 }
+function FormatterPenalty(value, row, index, field) {
+    return `<span class="penalty_span d-inline-block" time_str="${value}" time_mi="${row.penalty_mi}" style="min-width:60px;">${row.penalty_mi}</span>`
+}
+
+document.addEventListener('mouseover', function(event) {
+    if (event.target.classList.contains('penalty_span')) {
+        event.target.textContent = event.target.getAttribute('time_str');
+        event.stopPropagation();
+
+    }
+});
+
+document.addEventListener('mouseout', function(event) {
+    if (event.target.classList.contains('penalty_span')) {
+        event.target.textContent = event.target.getAttribute('time_mi');
+        event.stopPropagation();
+
+    }
+});
 function rankCellStyle(value, row, index) {
     if(row.solved == 0) {
         return {

@@ -238,7 +238,7 @@ function ProcessData() {
     stack_judge = [];
     // time_start = cdata.contest.start_time;
     // time_end = cdata.contest.end_time;
-    // time_frozen = TimestampToTime(new Date(time_end).getTime() - parseInt(cdata.contest.frozen_minute) * 60 * 1000);
+    // time_frozen = Timestamp2Time(new Date(time_end).getTime() - parseInt(cdata.contest.frozen_minute) * 60 * 1000);
     
     time_start = Str2Sec(cdata.contest.start_time);
     time_end = Str2Sec(cdata.contest.end_time);
