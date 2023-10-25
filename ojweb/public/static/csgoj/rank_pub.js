@@ -55,6 +55,27 @@ function LoadRankRemote(set_cache) {
         }
     });
 }
+function RankDataPreprocess(data) {
+    // 在rank数据被各类功能使用前，统一按需进行预处理
+    if(typeof(data) != 'undefined') {
+        let last_team = -1, rank_mi_now = 0, rank_mi_cnt = 0;
+        for(var i = 0; i < data.length; i ++) {
+            data[i].rank_sec = data[i].rank;    // 留存总罚时按秒的rank
+            data[i].penalty_mi = Math.floor(Timestr2Sec(data[i].penalty) / 60 + 0.00000001);
+            if(data[i]['tkind'] == 2) {
+                data[i].rank_mi = '*';
+            } else {
+                rank_mi_cnt ++;
+                if(last_team == -1 || data[i].solved < data[last_team].solved || data[i].penalty_mi > data[last_team].penalty_mi) {
+                    rank_mi_now = rank_mi_cnt;
+                }
+                data[i].rank_mi = rank_mi_now;
+                last_team = i;
+            }
+            data[i].rank = data[i].rank_mi; // 名次按总罚时近似到分钟以减少偶然性误差，暂不做配置项。
+        }
+    }
+}
 function LoadRankData(flag_init=false) {
     let rank_url = rank_config.attr('url');
     if(rank_config.attr('use_cache') == 1) {
