@@ -1,6 +1,6 @@
 <h1 style="overflow: ellipsis;white-space: nowrap;max-width:1200px;">队伍照片：{$contest['title']}</h1>
 
-<strong class="text-danger">批量上传文件名需与队伍ID一一对应，图片建议长:宽=3:2</strong>
+<strong class="text-danger">批量上传文件名需与队伍ID一一对应，图片建议长:宽=3:2. 如更换图片请务必清理缓存.</strong>
 <div class="input-group input-group-lg mb-3">
   <button id="team_image_batch_btn" class="btn btn-primary" disabled>批量上传</button>
   <input class="form-control" type="file" id="team_image_batch" multiple accept="image/jpg,image/png,image/jpeg,image/bmp">
@@ -200,7 +200,8 @@ function FileProcess(file, team_id, loading_show=true) {
 }
 function TeamImagePreview(btn_obj) {
     let team_id = btn_obj.getAttribute('team_id');
-    alertify.alert(`队伍图片预览：${team_id}`, `<div id="img_preview_div" style="width:720px;height:480px;overflow:hidden; margin:auto;"><img style="width:100%;height:auto;" src="${btn_obj.getAttribute('url')}?t=${new Date().getTime()}" onerror="TeamPhotoUriOnError(this)" ></div>`).set('resizable',true).resizeTo(900, 650); 
+    let tparam = '';    // `?t=${new Date().getTime()}` 是否允许缓存图片
+    alertify.alert(`队伍图片预览：${team_id}`, `<div id="img_preview_div" style="width:720px;height:480px;overflow:hidden; margin:auto;"><img style="width:100%;height:auto;" src="${btn_obj.getAttribute('url')}${tparam}" onerror="TeamPhotoUriOnError(this)" ></div>`).set('resizable',true).resizeTo(900, 650); 
     //     alertify.set('resizable', true);
     // // 调整窗口的宽度和高度
     // alertify.resizeTo('50%', '50%');

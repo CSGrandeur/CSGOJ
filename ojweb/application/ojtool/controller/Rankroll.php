@@ -37,6 +37,7 @@ class Rankroll extends Ojtoolbase {
     }
     public function rankroll() {
         $this->assign('contest', $this->contest);
+        $this->assign("pagetitle", "滚榜-" . $this->contest['title']);
         return $this->fetch();
     }
     public function contest_list_ajax() {
