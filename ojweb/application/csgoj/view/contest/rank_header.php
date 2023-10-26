@@ -43,8 +43,8 @@
         {if $action == "balloon" }
         <span>Wating: <strong class="text-danger" id="balloon_waiting_num_span" style="font-size: 18px;">1</strong>&nbsp;&nbsp;</span>
         <span>Assigned: <strong class="text-danger" id="balloon_assign_num_span" style="font-size: 18px;">0</strong>&nbsp;&nbsp;</span>
-        <strong class="text-warning task_assign" style="display:none">Task Assign Mode</strong>
-        <strong class="text-primary task_finish">Task Finish Mode</strong>
+        <strong class="text-warning task_assign">Task Assign Mode</strong>
+        <strong class="text-primary task_finish" style="display:none">Task Finish Mode</strong>
         {/if}
         <!-- <div class="form-group">
             <label for="fb_include_star_box">FB with Star：</label>
@@ -53,9 +53,12 @@
         </div> -->
     </div>
 </div>
-<input type="hidden" id="page_info_input" cid="{$contest['contest_id']}" ckind="{$module}"/>
+<input type="hidden" id="page_info_input" cid="{$contest['contest_id']}" ckind="{$module}" contest_user="{$contest_user}" controller="{$controller}" module="{$module}" />
 <script type="text/javascript">
     let page_info_input = $('#page_info_input');
     let cid = parseInt(page_info_input.attr('cid'));
     let ckind = page_info_input.attr('ckind');  // OJ目前所处模式
+    let oj_controller = page_info_input.attr('controller');
+    let oj_module = page_info_input.attr('module');
+    let contest_user = page_info_input.attr('contest_user');
 </script>

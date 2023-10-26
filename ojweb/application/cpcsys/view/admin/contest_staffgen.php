@@ -7,11 +7,12 @@
 </div>
 <div class="container">
     <article id="staff_gen_help_div" class="md_display_div alert alert-info collapse">
-        <p>每行由“#”或“\t”隔开的账号、姓名、密码组成、权限。例如<code>admin01#郭大侠#123456#admin</code>。可用权限如下：</p>
+        <p>每行由“#”或“\t”隔开的账号、姓名、密码、权限、房间组成。例如<code>admin01#郭大侠#123456#admin#A区</code>。可用权限如下：</p>
         <li><code>admin</code>: 监考员，可管理部分比赛配置</li>
         <li><code>printer</code>: 打印管理员，负责打印机</li>
         <li><code>balloon_manager</code>: 气球管理员，建议只设置一名</li>
         <li><code>balloon_sender</code>: 气球配送员，可查看气球队列和领取气球任务</li>
+        对于printer和balloon_sender，如不指定房间，则由使用者自己进行过滤。如指定房间，则使用者只能处理对应房间的数据。
     </article>
     <div>
     <div class="form-group">
@@ -46,6 +47,7 @@
         <th data-field="name" data-align="left" data-valign="middle" >Name</th>
         <th data-field="password" data-align="center" data-valign="middle"  data-width="60" >Password</th>
         <th data-field="privilege" data-align="center" data-valign="middle"  data-width="60" >Privilege</th>
+        <th data-field="room" data-align="center" data-valign="middle"  data-width="60" >Room</th>
         <th data-field="delete" data-align="center" data-valign="middle"  data-width="60" data-formatter="FormatterDel">Del(Dbl Click)</th>
     </tr>
     </thead>
@@ -101,19 +103,15 @@ $(document).ready(function() {
                 alertify.error(`${line} 内容不完整.`);
                 return;
             }
-            if(info_list[0].trim().length < 5) {
-                alertify.error(`${line} 账号至少5个字符.`);
+            if(info_list[0].trim().length < 3) {
+                alertify.error(`${line} 账号至少3个字符.`);
                 return;
             }
-            // if(info_list[2].trim().length < 6) {
-            //     alertify.error(`${line} 密码至少6个字符.`);
-            //     return;
-            // }
             if(!staff_name.has(info_list[3].trim())) {
                 alertify.error(`${line} 权限不在可选范围内.`);
                 return;
             }
-            info_submit += `${D(0, info_list)}#${D(1, info_list)}######${D(2, info_list)}##${D(3, info_list)}\n`;
+            info_submit += `${D(0, info_list)}#${D(1, info_list)}####${D(4, info_list)}##${D(2, info_list)}##${D(3, info_list)}\n`;
         }
         $.post(staff_submit_button.attr("post_url"), {'team_description': info_submit, 'staff': 1}, function(ret){
             if(ret.code == 1) {                

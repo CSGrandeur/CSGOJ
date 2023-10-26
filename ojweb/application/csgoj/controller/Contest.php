@@ -1105,12 +1105,13 @@ class Contest extends Csgojbase
                 $lastSolved = $rankData['solved'];
             }
             $row = [
-                'rank'        => $star_team ? "*" : $i,
-                'nick'        => htmlspecialchars($rankData['userinfo']['nick']),    //要转换html标签，以防用户使用特殊标签做nick
-                'tkind'       => intval($rankData['userinfo']['tkind']),
-                'solved'      => $rankData['solved'],
-                'penalty'     => $this->sec2str(-$rankData['penalty']), //前面用负数方便sort，此时反过来
-                'school'      => htmlspecialchars($rankData['userinfo']['school']),    //要转换html标签，以防用户使用特殊标签做nick
+                'rank'      => $star_team ? "*" : $i,
+                'nick'      => htmlspecialchars($rankData['userinfo']['nick']),    //要转换html标签，以防用户使用特殊标签做nick
+                'tkind'     => intval($rankData['userinfo']['tkind']),
+                'solved'    => $rankData['solved'],
+                'penalty'   => $this->sec2str(-$rankData['penalty']), //前面用负数方便sort，此时反过来
+                'school'    => htmlspecialchars($rankData['userinfo']['school']),    //要转换html标签，以防用户使用特殊标签做nick
+                'room'      => array_key_exists('room', $rankData['userinfo']) ? $rankData['userinfo']['room'] : null
             ];
             if($this->module == 'cpcsys') {
                 $row['school'] = htmlspecialchars($rankData['userinfo']['school']);

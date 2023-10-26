@@ -488,285 +488,116 @@ class Contest extends Contestbase
             'expire' => $flag ? 5 : 0,
         ];
     }
-    public function BalloonAuth()
-    {
+    protected function BalloonAuth() {
         if(!$this->balloonManager && !$this->balloonSender && !$this->isContestAdmin) {
             $this->error('Permission denied to manage balloon', '/', '', 1);
         }
-        
-        $cacheOption = $this->BalloonCacheOption(false);
-        $cacheName = $this->OJ_MODE . '_balloon_'.$this->contest['contest_id'];
-        $balloonCache = cache($cacheName, '', $cacheOption);
-        $info = [
-            'cacheOption'      => $cacheOption,
-            'cacheName'        => $cacheName,
-            'cache'         => $balloonCache,
-        ];
-        if(!$info['cache']) {
-            $info['cache'] = [];
-        }
-        return $info;
     }
-    public function BalloonCacheFlag($occupy_flag=null) {
-        if($occupy_flag === null) {
-            return;
-        }
-        $cacheOption = $this->BalloonCacheOption(true);
-        $cacheName = $this->OJ_MODE . '_ballooncacheflag_'.$this->contest['contest_id'];
-        $cacheFlag = cache($cacheName, '', $cacheOption);
-        if($cacheFlag === null) {
-            cache($cacheName, $cacheFlag, $cacheOption);
-        } else if($cacheFlag == true && $occupy_flag == true) {
-            $this->error("cache busy. wait some seconds.");
-        }
-        cache($cacheName, $occupy_flag, $cacheOption);
-        return true;
-    }
-    public function balloon()
-    {
-        $balloon = $this->BalloonAuth();
-        $this->assign('balloon', $balloon);
+    public function balloon() {
+        $this->BalloonAuth();
         return $this->fetch();
     }
-    public function balloon_ajax() {
-        $balloon = $this->BalloonAuth();
-        $balloonStatus = $balloon['cache'];
-        $data = $this->GetRankData();
-        $firstBlood = &$data[0];
-        $rankDataList = &$data[1];
-        $retList = [];
-        $i = 1;
-        foreach($rankDataList as $key=>&$rankData)
-        {
-            if(!isset($rankData['userinfo'])) {
-                // 没有 userinfo，不合法数据
-                continue;
+    public function balloon_task_ajax() {
+        $this->BalloonAuth();
+        $map = ['contest_id' => $this->contest['contest_id']];
+        $FILTER_KEY_LIST = ['solution_id', 'room', 'balloon_sender'];
+        foreach($FILTER_KEY_LIST as $key) {
+            if($item = input($key . '/s')) {
+                $map[$key] = ['in', explode($item, ',')];
             }
-            if(!array_key_exists($key, $balloonStatus)) {
-                $balloonStatus[$key] = [];
-            }
-            $bal = &$balloonStatus[$key];
-            $row = [
-                'rank'        => $i,
-                'solved'      => $rankData['solved'],
-                'balloon'      => $rankData['solved'] - count($bal),
-            ];
-            $row['school'] = htmlspecialchars($rankData['userinfo']['school']);
-            $row['tmember'] = htmlspecialchars($rankData['userinfo']['tmember']);
-            $row['nick'] = htmlspecialchars($rankData['userinfo']['nick']);
-            if(array_key_exists('room', $rankData['userinfo'])) {
-                $row['room'] = htmlspecialchars($rankData['userinfo']['room']);
-            }
-            $row['user_id'] = $key;
-            // 每道题的显示内容
-            foreach($this->problemIdMap['id2abc'] as $pid => $apid) {
-                //pstatus 3为fb， 2 为ac， 1为没ac， 4为气球任务已分发，5为气球发出已确认
-                $problemstatus = 0;
-                $realstatus = 0;
-                if(array_key_exists($pid, $firstBlood) && in_array($key, $firstBlood[$pid]['userlist'])) {
-                    $problemstatus = 3; $realstatus = 3;
-                }
-                else if(array_key_exists($pid, $rankData['ac_sec'])) {
-                    $problemstatus = 2; $realstatus = 2;
-                }
-                else if(array_key_exists($pid, $rankData['wa_num'])) {
-                    $problemstatus = 1; $realstatus = 1;
-                }
-                if(array_key_exists($pid, $bal)) {
-                    $problemstatus = $bal[$pid]['st'];
-                }
-                $row[$apid] = $apid;
-                $row[$apid . '_ac_sec'] = array_key_exists($pid, $rankData['ac_sec']) ? $rankData['ac_sec'][$pid] : null;
-                $row[$apid . '_wa_num'] = array_key_exists($pid, $rankData['wa_num']) ? $rankData['wa_num'][$pid] : null;
-                $row[$apid . '_pstatus'] = $problemstatus;
-                $row[$apid . '_rstatus'] = $realstatus;
-                if($problemstatus == 4 || $problemstatus == 5) {
-                    $row[$apid . '_bal_info'] = $bal[$pid];
-                }
-            }
-            $retList[] = $row;
-            $i ++;
         }
-        return $retList;
+        if(!$this->IsContestAdmin('balloon_manager')) {
+            $map['balloon_sender'] = $this->contest_user;
+        }
+        $res = db('contest_balloon')->where($map)->select();
+        $this->success('ok', null, [
+            'balloon_task_list'  => $res,
+            'problem_id_map'    => $this->problemIdMap,
+        ]);
     }
     public function balloon_sender_list_ajax() {
+        $this->BalloonAuth();
         if(!$this->balloonManager && !$this->balloonSender && !$this->proctorAdmin && !$this->isContestAdmin) {
             $this->error("No permission to view balloon senders");
         }
         return db('cpc_team')->where(['contest_id' => $this->contest['contest_id'], 'privilege' => 'balloon_sender'])->field('password', true)->select();
     }
     public function balloon_change_status_ajax() {
-        $this->BalloonCacheFlag(true);
-        $balloon = $this->BalloonAuth();
-        $user_id        = trim(input('user_id', ''));
-        $apid           = trim(input('apid', ''));
-        $change_to      = input('change_to/d');
-        $balloonStatus  = $balloon['cache'];
-        if(!array_key_exists($apid, $this->problemIdMap['abc2id'])) {   
-            $this->BalloonCacheFlag(false);
+        $this->BalloonAuth();
+        $team_id        = trim(input('team_id/s', ''));
+        $apid           = trim(input('apid/s', ''));
+        if($team_id == '' || $apid == '') {
+            $this->error("需要提供队伍ID与字母题号");
+        }
+        $task_new = ['bst'=> input('bst/d')];
+        if($task_new['bst'] === null) {
+            $this->error("需要提供参数：气球状态bst");
+        }
+        if(!array_key_exists($apid, $this->problemIdMap['abc2id'])) {
             $this->error('No such problem');
         }
         $pid = $this->problemIdMap['abc2id'][$apid];
-        if($change_to != 2 && $change_to != 3)
-        {
-            if(array_key_exists($user_id, $balloonStatus) && array_key_exists($pid, $balloonStatus[$user_id]) && 
-                $balloonStatus[$user_id][$pid]['st'] != 2 && $balloonStatus[$user_id][$pid]['st'] != 3) {
-                $this->BalloonCacheFlag(false);
-                $this->error("Not right status. Please refresh.");
+        $ContestBalloon = db('contest_balloon');
+        $map = [
+            'contest_id'    => $this->contest['contest_id'],
+            'problem_id'    => $pid,
+            'team_id'       => $team_id
+        ];
+        $item = $ContestBalloon->where($map)->find();
+        if(!$item) {
+            // 新增任务
+            $task_new['pst']                = input('pst/d');
+            $task_new['room']               = input('room/s');
+            $task_new['ac_time']            = input('ac_time/d');
+            if($task_new['bst'] == 4) {
+                $task_new['balloon_sender']     = input('balloon_sender/s');
+                if(!$task_new['balloon_sender'] || trim($task_new['balloon_sender']) == '') {
+                    $this->error("需要设置气球配送员balloon_sender");
+                }
             }
-            //2、3是AC状态，目标是非AC颜色说明需要记录，否则balloon缓存没有这条记录即可。
-            if(!array_key_exists($user_id, $balloonStatus)) {
-                $balloonStatus[$user_id] = [];
+            if($task_new['pst'] === null || $task_new['ac_time'] === null) {
+                $this->error("需要提供参数：题目状态pst，ac时间 ac_time");
             }
-            $balloonStatus[$user_id][$pid] = [
-                'st'    => $change_to,                      // 目标状态
-                'asu'   => trim(input('assign_user/s')),    // 分配的配送员
-                'fb'    => input('fb/d'),                   // 是否一血
-                'ast'   => time()                           // 分配时间
-            ];
-        }
-        else if(array_key_exists($user_id, $balloonStatus) && array_key_exists($pid, $balloonStatus[$user_id])) {
-            //取消标记状态，需要有这个条目，没有的话就无所谓了。
-            if($balloonStatus[$user_id][$pid]['st'] != 4 && $balloonStatus[$user_id][$pid]['st'] != 5) {
-                $this->BalloonCacheFlag(false);
-                $this->error("Not right status. Please refresh.");
+            $ContestBalloon->insert(array_merge($map, $task_new));
+        } else {
+            // 更新任务
+            if($item['balloon_sender'] != $this->contest_user && !$this->IsContestAdmin('balloon_manager')) {
+                $this->error("没有权限更改此任务");
             }
-            // $balloonStatus[$user_id][$pid] = $change_to;
-            unset($balloonStatus[$user_id][$pid]);
-        }
-        cache($balloon['cacheName'], $balloonStatus, $balloon['cacheOption']);
-        $this->BalloonCacheFlag(false);
-        $this->success("Successful", null, [
-            'balloon' => count($balloonStatus[$user_id]), 
-            // 'test'=>$balloon['cacheOption']
-        ]);
-    }
-    public function balloon_queue() {
-        return $this->fetch();
-    }
-    public function balloon_queue_ajax() {
-        $balloon = $this->BalloonAuth();
-        $balloonStatus = $balloon['cache'];
-        $sender_id = $this->GetSession('team_id');
-        $ret = [];
-        foreach($balloonStatus as $team_id=>$team) {
-            foreach($team as $pro_id=>$pro) {
-                if(array_key_exists('asu', $pro) && $pro['asu'] === $sender_id) {
-                    $ret[] = [
-                        'team_id'           => $team_id,
-                        'problem_id'        => $pro_id,
-                        'team_pro'          => $team_id . '_' . $pro_id,    # 用于做唯一key
-                        'problem_id_alpha'  => $this->problemIdMap['id2abc'][$pro_id],
-                        'ast'               => $pro['ast'],
-                        'st'                => $pro['st'],
-                        'fb'                => $pro['fb'],
-                    ];
+            if($this->IsContestAdmin('balloon_manager')) {
+                if(input('?pst')) {
+                    $task_new['pst'] = input('pst/d');
+                }
+                if(input('?room')) {
+                    $task_new['room'] = input('room/s');
+                }
+                if(input('?ac_time')) {
+                    $task_new['ac_time'] = input('ac_time/d');
+                }
+                if(input('?balloon_sender')) {
+                    $task_new['balloon_sender'] = input('balloon_sender/s');
+                }
+            }
+            if($task_new['bst'] < 4) {
+                $ContestBalloon->where($map)->delete();
+            } else {
+                $update_ret = $ContestBalloon->where($map)->update($task_new);
+                if($update_ret === 0) {
+                    return $this->error("0 updated");
                 }
             }
         }
-        usort($ret, function ($a, $b) {
-            return $a['st'] == $b['st'] ? $a['ast'] - $b['ast'] : $a['st'] - $b['st'];
-        });
-        return $ret;
+        $this->success('ok');
+    }
+    public function balloon_queue() {
+        return $this->fetch();
     }
     public function balloon_team_list_ajax() {
         $this->BalloonAuth();
         return db('cpc_team')->where(['contest_id' => $this->contest['contest_id'], 'privilege' => ['exp', Db::raw('is null')]])->field(['team_id', 'room'])->select();
     }
     public function balloon_queue_get_ajax() {
-        if(!$this->BalloonCacheFlag(true));
-        $balloon = $this->BalloonAuth();
-        $balloonStatus = $balloon['cache'];
-        $data = $this->GetRankData();
-        $firstBlood = &$data[0];
-        $rankDataList = &$data[1];
-        $sender_id = $this->GetSession('team_id');
-        $team_start = trim(input('team_start/s'));
-        $team_end = trim(input('team_end/s'));
-        $room_list = ',' . trim(input('room_list/s')) . ',';
-        $i = 1;
-        $cnt = 0;
-        // 每道题的显示内容
-        foreach($this->problemIdMap['id2abc'] as $pid => $apid) {
-            foreach($rankDataList as $key=>&$rankData) {
-                if(!isset($rankData['userinfo'])) {
-                    continue;
-                }
-                if($team_start != '' && $rankData['userinfo']['user_id'] < $team_start) {
-                    continue;
-                }
-                if($team_end != '' && $rankData['userinfo']['user_id'] > $team_end) {
-                    continue;
-                }
-                if($room_list != ',,' && $rankData['userinfo']['room'] != null && strpos($room_list, ',' . $rankData['userinfo']['room'] . ',') === false) {
-                    continue;
-                }
-                if(!array_key_exists($key, $balloonStatus)) {
-                    $balloonStatus[$key] = [];
-                }
-                $bal = &$balloonStatus[$key];
-                //pstatus 3为fb， 2 为ac， 1为没ac， 4为气球任务已分发，5为气球发出已确认
-                $problemstatus = 0;
-                if(array_key_exists($pid, $firstBlood) && in_array($key, $firstBlood[$pid]['userlist'])) {
-                    $problemstatus = 3;
-                }
-                else if(array_key_exists($pid, $rankData['ac_sec'])) {
-                    $problemstatus = 2;
-                }
-                else if(array_key_exists($pid, $rankData['wa_num'])) {
-                    $problemstatus = 1;
-                }
-                if(array_key_exists($pid, $bal)) {
-                    $problemstatus = $bal[$pid]['st'];
-                }
-                if($problemstatus == 3 || $problemstatus == 2) {
-                    $bal[$pid] = [
-                        'st'    => 4,
-                        'asu'   => $sender_id,
-                        'fb'    => $problemstatus == 3 ? 1 : 0,
-                        'ast'   => time()
-                    ];
-                    $cnt ++;
-                    if($cnt >= 3) {
-                        $this->BalloonCacheFlag(false);
-                        cache($balloon['cacheName'], $balloonStatus, $balloon['cacheOption']);
-                        $this->success('ok', null, ['new_num' => 3]);
-                    }
-                }
-            }
-            $i ++;
-        }
-        $this->BalloonCacheFlag(false);
-        cache($balloon['cacheName'], $balloonStatus, $balloon['cacheOption']);
-        $this->success('finished', null, ['new_num' => $cnt]);        
-    }
-    public function balloon_send_change_ajax() {
-        $balloon = $this->BalloonAuth();
-        $balloonStatus = $balloon['cache'];
-        $sender_id = $this->GetSession('team_id');
-        $team_id = input('team_id/s');
-        $pro_id = input('pro_id/d');
-        $rtn = input('rtn/d');
-        if(!array_key_exists($team_id, $balloonStatus) || !array_key_exists($pro_id, $balloonStatus[$team_id])) {
-            $this->error("No such task");
-        }
-        if($balloonStatus[$team_id][$pro_id]['asu'] != $sender_id) {
-            $this->error("This is not your task");
-        }
-        $st = $balloonStatus[$team_id][$pro_id]['st'];
-        if($rtn == 1) {
-            // 退还任务
-            unset($balloonStatus[$team_id][$pro_id]);
-            // $balloonStatus[$team_id][$pro_id]['st'] = $balloonStatus[$team_id][$pro_id]['fb'] == 1 ? 3 : 2;
-        }
-        else if($st == 4) {
-            $balloonStatus[$team_id][$pro_id]['st'] = 5;
-        } else if($st == 5) {
-            $balloonStatus[$team_id][$pro_id]['st'] = 4;
-        } else {
-            $this->error("Status not valid");
-        }
-        cache($balloon['cacheName'], $balloonStatus, $balloon['cacheOption']);
-        $this->success('ok', null, ['st_now' => $rtn ? null : $balloonStatus[$team_id][$pro_id]['st']]);
+        $this->BalloonAuth();
+        
     }
 }

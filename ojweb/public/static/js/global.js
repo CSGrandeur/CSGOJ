@@ -199,6 +199,12 @@ function Timestr2Sec(timestr) {
     }
     return res;
 }
+function Timeint2Str(sec_int) {
+    let hour = Math.floor(sec_int / 3600 + 0.00000001);
+    let mi = Math.floor(sec_int / 60 + 0.00000001) % 60;
+    let sec = sec_int % 60;
+    return `${pad0left(hour, 2, '0')}:${pad0left(mi, 2, '0')}:${pad0left(sec, 2, '0')}`;
+}
 function TimeLocal(timestr=null, fmt='yyyy-MM-dd HH:mm:ss') {
     let date;
     if(timestr === null) {
