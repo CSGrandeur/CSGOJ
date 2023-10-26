@@ -1,4 +1,4 @@
-<h3>Contest Notification:</h3>
+<h3>公告(Notification):</h3>
 <article class="md_display_div">
     {if $contestStatus == -1}
         <span class="alert alert-info" style="display: inline-block;">This contest is not started yet.</span>
@@ -6,7 +6,7 @@
     {if $needAuth /}
         <form id="contest_auth_form" method='post' action="/{$module}/contest/contest_auth_ajax">
             <div class="form-group">
-                <span class="alert alert-warning" style="display: inline-block;">You need to log in with the contest account.</span>
+                <span class="alert alert-warning" style="display: inline-block;">请登录比赛账号<br/>You need to log in with the contest account.</span>
                 <input type="hidden" class="form-control" name="cid" value="{$contest['contest_id']}">
                 
                 <input type="text" id="cpc_team_id" name="team_id" class="form-control cpc_login" placeholder="Team ID" required autofocus />

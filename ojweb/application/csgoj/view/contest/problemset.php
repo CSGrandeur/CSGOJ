@@ -31,9 +31,9 @@
     <div class="col-md-4 col-sm-4">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title" style"float: left; display:inline-block;>Notification:
+                <h3 class="panel-title" style"float: left; display:inline-block;>公告(Notification):
                 {if $isContestAdmin}
-                <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#page_modal">Change</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-sm btn-default" data-toggle="modal" data-target="#page_modal">Change</button>
                 {include file="../../csgoj/view/contest/change_notification" /}
                 {/if}
                 </h3>
