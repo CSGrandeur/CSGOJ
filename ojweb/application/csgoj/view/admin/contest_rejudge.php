@@ -17,7 +17,7 @@
                 var problem_id = $.trim($('#problem_id').val());
                 let ac_alertify = "";
                 if(document.querySelector('#rejudge_res_check_ac').checked) {
-                    ac_alertify = "<strong class='text-danger'>请慎重重判AC的提交</strong><br/>"
+                    ac_alertify = "<strong class='text-danger'>请慎重重判AC的提交，确认？</strong><br/>"
                 }
 
                 if(solution_id.length > 0 && problem_id.length > 0) {
