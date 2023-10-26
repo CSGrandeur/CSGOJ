@@ -409,6 +409,15 @@ window.onkeydown = (e) => {
         } else {
             StopAutoRefresh();
         }
+    } else if(e.key == 'B' || e.key == 'b') {
+        flag_auto_scroll = !flag_auto_scroll;
+        if(flag_auto_scroll) {
+            alertify.success("开启自动滚动");
+            AutoScroll(1000, 10000, true);
+        } else {
+            alertify.message("关闭自动滚动");
+        }
+
     } else if(e.keyCode == 116 && !e.ctrlKey) {
         e.preventDefault();
         if(flag_forbid_f5) {
