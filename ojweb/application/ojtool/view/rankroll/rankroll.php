@@ -728,7 +728,6 @@ function JudgeAward() {
         return;
     }
     let award_modal_show_flag = false;
-    console.log(judging_team_id, real_rank_map[judging_team_id], now_rank[judging_team_id], map_team_sol[judging_team_id]);
     if(real_rank_map[judging_team_id].rank != '*' && now_rank[judging_team_id].ith == real_rank_map[judging_team_id].ith && Object.keys(map_team_sol[judging_team_id].frozen).length == 0) {
         let award = null;
         if(real_rank_map[judging_team_id].rank <= rank_gold) {
