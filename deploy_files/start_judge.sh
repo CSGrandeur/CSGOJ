@@ -5,7 +5,6 @@
 # --OJ_NAME=csgoj \
 # --OJ_HTTP_BASEURL='http://nginx-server:20080' \
 # --PASS_JUDGER='999999'  \
-# --PATH_DATA=`pwd`/csgoj_data \
 # --JUDGE_DOCKER_CPUS=6 \
 # --JUDGE_DOCKER_MEMORY=6g \
 # --JUDGE_PROCESS_NUM=2 \
@@ -58,6 +57,7 @@ else
         --name $CONTAINER_NAME \
         -e OJ_HTTP_BASEURL="$OJ_HTTP_BASEURL" \
         -e OJ_HTTP_PASSWORD=$PASS_JUDGER \
+        -e OJ_HTTP_USERNAME=$JUDGE_USER_NAME \
         -e JUDGE_PROCESS_NUM=$JUDGE_PROCESS_NUM \
         -e JUDGE_IGNORE_ESOL=$JUDGE_IGNORE_ESOL \
         -e JUDGE_SHM_RUN=$JUDGE_SHM_RUN \

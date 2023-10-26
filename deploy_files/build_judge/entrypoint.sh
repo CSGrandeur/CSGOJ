@@ -9,6 +9,7 @@ if [ ! -f /volume/etc/judge.conf ]; then
 fi
 if [ $OJ_HTTP_BASEURL ];    then sed -i "s#OJ_HTTP_BASEURL=.*#OJ_HTTP_BASEURL=$OJ_HTTP_BASEURL#g"       /volume/etc/judge.conf; fi
 if [ $OJ_HTTP_PASSWORD ];   then sed -i "s#OJ_HTTP_PASSWORD=.*#OJ_HTTP_PASSWORD=$OJ_HTTP_PASSWORD#g"    /volume/etc/judge.conf; fi
+if [ $OJ_HTTP_USERNAME ];   then sed -i "s#OJ_HTTP_USERNAME=.*#OJ_HTTP_USERNAME=$OJ_HTTP_USERNAME#g"    /volume/etc/judge.conf; fi
 if [ $JUDGE_PROCESS_NUM ];  then sed -i "s#OJ_RUNNING=.*#OJ_RUNNING=$JUDGE_PROCESS_NUM#g"               /volume/etc/judge.conf; fi
 if [ $JUDGE_IGNORE_ESOL ];  then sed -i "s#OJ_IGNORE_ESOL=.*#OJ_IGNORE_ESOL=$JUDGE_IGNORE_ESOL#g"       /volume/etc/judge.conf; fi
 if [ $JUDGE_SHM_RUN ];      then sed -i "s#OJ_SHM_RUN=.*#OJ_SHM_RUN=$JUDGE_SHM_RUN#g"                   /volume/etc/judge.conf; fi
