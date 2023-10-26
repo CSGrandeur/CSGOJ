@@ -1,9 +1,26 @@
 # bash release.sh 0.0.1 build push web judge
+# 读取版本文件
+current_version=$(cat version)
+
+# 检查参数是否为版本号
 if [[ ! $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "第一个参数应为 x.x.x 格式的版本号"
+    IFS='.' read -ra ADDR <<< "$current_version"
+    minor_version=${ADDR[2]}
+    minor_version=$((minor_version+1))
+    TAG_VERSION="${ADDR[0]}.${ADDR[1]}.$minor_version"
+else
+    TAG_VERSION=$1
+fi
+
+# 版本号比较函数
+function version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
+
+# 比较新旧版本号
+if version_gt $current_version $TAG_VERSION; then
+    echo "参数版本号 $TAG_VERSION 低于现有版本号 $current_version"
     exit 1
 fi
-TAG_VERSION=$1
+
 FLAG_BUILD=false
 FLAG_CACHE=""
 FLAG_PUSH=false
@@ -53,3 +70,5 @@ if [ "$FLAG_PUSH" = "true" ]; then
         docker push csgrandeur/csgoj-judge:$TAG_VERSION
     fi
 fi
+
+echo $TAG_VERSION > version
