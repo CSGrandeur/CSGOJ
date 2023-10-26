@@ -345,28 +345,32 @@ class Contest extends Contestbase
     public function print_status() {
         $this->PrintCodeAuth(true);
         $this->assign([
-            'cid'             => $this->contest['contest_id'],
-            'pagetitle'     => 'Print Code Status',
-            'search_team_id'=> input('team_id', ''),
-            'team_id'         => $this->contest_user,
-            'printStatus'    => config('CpcSysConfig.PRINT_STATUS'),
-            'show_code_url'    => 'print_code_show_ajax',
-            'room_ids'        => cookie('room_ids_c' . $this->contest['contest_id']),
+            'cid'               => $this->contest['contest_id'],
+            'pagetitle'         => 'Print Code Status',
+            'search_team_id'    => input('team_id', ''),
+            'team_id'           => $this->contest_user,
+            'printStatus'       => config('CpcSysConfig.PRINT_STATUS'),
+            'show_code_url'     => 'print_code_show_ajax',
+            'room_ids'          => cookie('room_ids_c' . $this->contest['contest_id']),
         ]);
         return $this->fetch();
     }
     public function print_status_ajax()
     {
         $this->PrintCodeAuth(true);
-        $offset        = intval(input('offset'));
-        $limit        = intval(input('limit'));
-        $sort        = trim(input('sort'));
-        $order        = input('order');
-        $search        = trim(input('search/s'));
-        $room_ids   = trim(input('room_ids'));
+        $offset     = intval(input('offset'));
+        $limit      = intval(input('limit'));
+        $sort       = trim(input('sort'));
+        $order      = input('order');
+        $search     = trim(input('search/s'));
+        $room_ids   = trim(input('room_ids/s'));
 
         //为了打开页面时即过滤room_ids，目前得在server端设置cookie，因为前端幺蛾子多
-        cookie('room_ids_c' . $this->contest['contest_id'], $room_ids);
+        if($room_ids === '') {
+            cookie('room_ids_c' . $this->contest['contest_id'], null);
+        } else {
+            cookie('room_ids_c' . $this->contest['contest_id'], $room_ids);
+        }
         $team_id        = trim(input('team_id'));
         $print_status     = input('print_status');
         $map = [];

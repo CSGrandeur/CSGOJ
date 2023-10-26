@@ -28,7 +28,7 @@
         <input id="team_end" placeholder="team100(team end)" class="form-control task_filter" type="text" value="" style="max-width:200px;">
         {if $login_teaminfo['room'] !== null && $login_teaminfo['room'] != '' }
         <div id="room_limit" title="{$login_teaminfo['room']}">ROOM:{$login_teaminfo['room']}</div>
-        <input id="room_list_str" type="hidden" placeholder="room list by ','" class="form-control task_filter" type="text" value="{$login_teaminfo['room']}" style="max-width:200px;">
+        <input id="room_list_str" type="hidden" placeholder="room list by ','" class="form-control task_filter" value="{$login_teaminfo['room']}" style="max-width:200px;">
         {else /}
         <input id="room_list_str" placeholder="room list by ','" class="form-control task_filter" type="text" value="" style="max-width:200px;">
         {/if}

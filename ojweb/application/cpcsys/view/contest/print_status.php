@@ -16,7 +16,13 @@ Chrome94之后禁止了本地网络请求设置，需<strong><a href="__IMG__/tu
             style="max-width:180px;">
             &nbsp;&nbsp;
             <span>Room:</span>
+            
+            {if $printManager && $login_teaminfo['room'] !== null && $login_teaminfo['room'] != '' }
+            <input id="room_limit" class="form-control task_filter" title="{$login_teaminfo['room']}" value="{$login_teaminfo['room']}" disabled >
+            <input id="room_ids" name="room_ids" type="hidden" class="form-control task_filter" value="{$login_teaminfo['room']}">
+            {else /}
             <input id="room_ids" name="room_ids" class="form-control print_status_filter" placeholder="Use ',' to split multiple rooms" type="text" {if isset($room_ids)}value="{$room_ids}" {/if} style="width:220px;">
+            {/if}
             &nbsp;&nbsp;
             <span>Status:</span>
             <select name="print_status" class="form-control print_status_filter">

@@ -76,10 +76,15 @@ function getLodop(oOBJECT,oEMBED){
     var strHtm64_Update="<br><span class='alert alert-warning'>打印控件需要升级!点击这里<a href='/static/lodop/install_lodop64.exe' target='_self'>执行升级</a>,升级后请重新进入。</span>";
     var strHtmFireFox="<br><br><span class='alert alert-warning'>（注意：如曾安装过Lodop旧版附件npActiveXPLugin,请在【工具】->【附加组件】->【扩展】中先卸它）</span>";
     var strHtmChrome="<br><br><span class='alert alert-warning'>(如果此前正常，仅因浏览器升级或重安装而出问题，需重新执行以上安装）</span>";
-    var strCLodopInstall_1 = "<br/><span class='alert alert-warning'>Web打印服务CLodop未安装启动，点击这里<a href='/static/lodop/CLodop_Setup_for_Win32NT.exe' target='_self'>下载执行安装</a>";
+    var lodop_setup_url = `
+        <a href='/static/lodop/CLodop_Setup_for_Win32NT.exe' target='_self'>32位Windows</a>；
+        <a href='/static/lodop/CLodop_Setup_for_Win64NT.exe' target='_self'>64位Windows</a>；
+        <a href='/static/lodop/Lodop7.064_Linux_X86_64_CN.deb' target='_self'>Linux</a>
+    `;
+    var strCLodopInstall_1 = `<br/><span class='alert alert-warning' style="display:block; margin-top: 10px;">Web打印服务CLodop未安装启动，点击下载安装：${lodop_setup_url}`;
     var strCLodopInstall_2 = "（若此前已安装过，可<a href='CLodop.protocol:setup' target='_self'>点这里直接再次启动</a>）";
     var strCLodopInstall_3 = "，成功后请刷新或重启浏览器。</span>";
-    var strCLodopUpdate = "<br><span class='alert alert-warning'>Web打印服务CLodop需升级!点击这里<a href='/static/lodop/CLodop_Setup_for_Win32NT.exe' target='_self'>执行升级</a>,升级后请刷新或重启浏览器。</span>";
+    var strCLodopUpdate = `<br><span class='alert alert-warning'>Web打印服务CLodop需升级!点击下载升级：${lodop_setup_url},升级后请刷新或重启浏览器。</span>`;
     var LODOP;
     try {
         var ua = navigator.userAgent;
