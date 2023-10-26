@@ -1,6 +1,10 @@
 #!/bin/bash
 PASSWORD_DEFAULT=987654321
+CONFIG_LOG='./config_log'
+DEFAULT_CONFIG='./csgoj_config.cfg'
+mkdir -p $CONFIG_LOG
 # 输入参数：
+CONFIG_FILE=0
 CSGOJ_VERSION=latest
 PATH_DATA=`pwd`/csgoj_data
 WITH_JUDGE='false'
@@ -40,6 +44,7 @@ LINK_LOCAL="--network $DOCKER_NET_NAME"
 parse_args() {
   shortopts=""
   longopts="
+    CONFIG_FILE:, \
     CSGOJ_VERSION:, \
     PATH_DATA:, \
     WITH_JUDGE:, \
@@ -84,6 +89,7 @@ parse_args() {
   eval set -- "$opts"
   while true; do
     case "$1" in
+        --CONFIG_FILE)                  CONFIG_FILE="$2"; shift 2;;                 # 指定一个配置文件
         --CSGOJ_VERSION)                CSGOJ_VERSION="$2"; shift 2;;               # docker hub 中CSGOJ 版本号（tag）
         --PATH_DATA)                    PATH_DATA="$2"; shift 2;;                   # 所有系统文件与数据的存放目录，用绝对路径
         --WITH_JUDGE)                   WITH_JUDGE="$2"; shift 2;;                  # true / false
@@ -123,7 +129,14 @@ parse_args() {
         *) echo "Internal error!"; exit 1;; 
     esac
   done
-  
+
+  if [ -f "$DEFAULT_CONFIG" ]; then
+    source $DEFAULT_CONFIG
+  fi
+  if [ -n "$CONFIG_FILE" ] && [ -f "$CONFIG_FILE" ]; then
+    source $CONFIG_FILE
+  fi
+
   if [ -z "$(docker network ls | grep $DOCKER_NET_NAME)" ]; then
       docker network create $DOCKER_NET_NAME
   fi
@@ -137,4 +150,26 @@ parse_args() {
       BELONG_TO=$OJ_NAME
   fi
 }
+
+write_config_if_changed() {
+  latest_config_file=$(ls -t ${CONFIG_LOG}/csgoj_config_*.cfg | head -n 1)
+  temp_file=$(mktemp)
+  for arg in "$@"
+  do
+      if [[ $arg == --* ]] && [[ ${arg%%=*} != "--CONFIG_FILE" ]]
+      then
+          echo ${arg:2} >> $temp_file
+      fi
+  done
+  if [[ -s $temp_file ]] && ! diff -q $temp_file $latest_config_file > /dev/null 2>&1
+  then
+      timestamp=$(date +%s)
+      new_config_file="${CONFIG_LOG}/csgoj_config_${timestamp}.cfg"
+      mv $temp_file $new_config_file
+      echo "New config file has been created: $new_config_file"
+  else
+      rm $temp_file
+  fi
+}
+write_config_if_changed "$@"
 echo "arguments: $@"
