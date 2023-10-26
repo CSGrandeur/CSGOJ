@@ -212,6 +212,9 @@ trait ContestAdminTrait {
             }
             $map['problem_id'] = ['in', $problemIdList];
             $addUrl = '#problem_id=' . $problemAlphabetIdList[0];
+        } else {
+            // 避免误操作或网络请求问题导致重判整个比赛的严重后果
+            $this->error("请提供提交号或题目号<br/>Please provide solution_id or problem_id.");
         }
         $Solution->where($map)->update([
             'result'    => 1,

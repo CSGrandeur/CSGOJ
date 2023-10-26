@@ -48,15 +48,18 @@
                         alertify.alert(`比赛中请使用字母题号<br/>Problem ID in contest should be in alphabet type.`);
                     }
                 } else {
-                    alertify.confirm(`${ac_alertify}<strong class='text-danger'>未填写题号与提交号，将重判整个比赛所有题目，确认？</strong><br/>Rejudge the whole contest may make the players unhappy, sure to rejudge?`,
-                        function(){
-                            SubmitRejudge(form);
-                        },
-                        function(){
-                            return;
-                        }
-                    );
+                        alertify.error('请填写提交号或题目号<br/>Please provide solution_id or problem_id.');
                 }
+                // else {
+                //     alertify.confirm(`${ac_alertify}<strong class='text-danger'>未填写题号与提交号，将重判整个比赛所有题目，确认？</strong><br/>Rejudge the whole contest may make the players unhappy, sure to rejudge?`,
+                //         function(){
+                //             SubmitRejudge(form);
+                //         },
+                //         function(){
+                //             return;
+                //         }
+                //     );
+                // }
                 return false;
             }
         });
