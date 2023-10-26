@@ -55,6 +55,23 @@ CREATE TABLE `contest` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `contest_balloon`
+--
+
+CREATE TABLE `contest_balloon` (
+  `contest_id` int NOT NULL,
+  `problem_id` int NOT NULL,
+  `team_id` varchar(64) NOT NULL,
+  `room` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `ac_time` int NOT NULL,
+  `pst` tinyint NOT NULL COMMENT 'problem status，2 ac、3 fb',
+  `bst` tinyint NOT NULL COMMENT 'balloon status, 4分配,5已发',
+  `balloon_sender` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='比赛的气球任务管理表';
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `contest_md`
 --
 
@@ -434,7 +451,11 @@ ALTER TABLE `compileinfo`
 --
 ALTER TABLE `contest`
   ADD PRIMARY KEY (`contest_id`);
-
+--
+-- 表的索引 `contest_balloon`
+--
+ALTER TABLE `contest_balloon`
+  ADD PRIMARY KEY (`contest_id`,`problem_id`,`team_id`);
 --
 -- 表的索引 `contest_md`
 --
