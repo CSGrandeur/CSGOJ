@@ -304,7 +304,8 @@ function ProcessData() {
     }
 }
 function TeamPhotoUri(team_id) {
-    return `/upload/contest_attach/${contest_attach}/team_photo/${team_id}.jpg?t=${new Date().getTime()}`;
+    // return `/upload/contest_attach/${contest_attach}/team_photo/${team_id}.jpg?t=${new Date().getTime()}`;
+    return `/upload/contest_attach/${contest_attach}/team_photo/${team_id}.jpg`;
 }
 function TeamPhotoUriOnError(img_obj) {
     let ic;
