@@ -642,7 +642,6 @@ function JudgeDo() {
             }
         }
         let team_item = map_item[judging_team_id];
-        console.log('#####', team_item);
         let pro_div = team_item.dom.find(`.g_pro[problem_id="${judging_pro_id}"]`);
         judging_ac_flag = false;
         if(ac) {
