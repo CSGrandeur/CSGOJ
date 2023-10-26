@@ -21,7 +21,7 @@
         <div class="h_td h_logo">图标</div>
         <div class="h_td h_team_content">队伍</div>
         <div class="h_td h_solve">题数</div>
-        <div class="h_td h_time">罚时(s)</div>
+        <div class="h_td h_time">罚时</div>
     </div>
     <div class="grid" id="rank_grid_div">
             
@@ -326,6 +326,15 @@ function SolTime(in_date, mi=true) {
     }
     return ret;
 }
+function PostprocessDataItem(team_line_item) {
+    if('penalty' in team_line_item) {
+        // 处理penalty的单位
+        team_line_item.penalty_mi = Math.floor(team_line_item.penalty / 60 + 0.00000001);
+        team_line_item.penalty_sec = team_line_item.penalty;
+        team_line_item.penalty = team_line_item.penalty_mi;
+    }
+    return team_line_item;
+}
 function TeamItemRes(team_id) {
     let solved = 0;
     let penalty = 0;
@@ -355,11 +364,11 @@ function TeamItemRes(team_id) {
         </div>
         `
     }
-    return {
+    return PostprocessDataItem({
         'solved': solved,
         'penalty': penalty,
         'pro_list_dom': pro_list_dom
-    }
+    });
 }
 function DomSantize(st) {
     return st

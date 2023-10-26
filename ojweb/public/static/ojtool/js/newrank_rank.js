@@ -68,7 +68,8 @@ function TeamItemRes(team_id) {
     for(let i = 0; i < map_num2p.length; i ++) {
         let pro_status = '';
         let submit_num = map_num2p[i] in sol ? sol[map_num2p[i]].length : '';
-        let last_submit = map_num2p[i] in sol ? SolTime(sol[map_num2p[i]][sol[map_num2p[i]].length - 1].in_date) : '';
+        let last_submit_mi = map_num2p[i] in sol ? SolTime(sol[map_num2p[i]][sol[map_num2p[i]].length - 1].in_date) : '';
+        let last_submit_sec = map_num2p[i] in sol ? SolTime(sol[map_num2p[i]][sol[map_num2p[i]].length - 1].in_date, false, false) : '';
         let pro_idx = String.fromCharCode('A'.charCodeAt(0) + i);
         if(map_num2p[i] in sol.ac) {
             solved ++;
@@ -85,15 +86,15 @@ function TeamItemRes(team_id) {
         <div class="g_pro ${pro_status}" problem_id="${map_num2p[i]}">
             <span class="g_pro_lspan">${submit_num}</span>
             <span class="g_pro_mspan">${pro_idx}</span>
-            <span class="g_pro_rspan">${last_submit}</span>
+            <span class="g_pro_rspan" title="${last_submit_sec}">${last_submit_mi}</span>
         </div>
         `
     }
-    return {
+    return PostprocessDataItem({
         'solved': solved,
         'penalty': penalty,
         'pro_list_dom': pro_list_dom
-    }
+    });
 }
 function ProcessItem() {
     // map_item = {};
@@ -197,7 +198,7 @@ function SetAwardRank(re_calc=false) {
                     }
                 }
             }
-            real_rank_list.push(item);
+            real_rank_list.push(PostprocessDataItem(item));
         }
         real_rank_list.sort((a, b) => {
             if(a.sol == b.sol) {

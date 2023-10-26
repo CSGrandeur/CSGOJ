@@ -115,11 +115,11 @@ function SchoolTeamItemRes(team_id) {
             'pro_status': pro_status
         }
     }
-    return {
+    return PostprocessDataItem({
         'solved': solved,
         'penalty': penalty,
         'pro_map': pro_map
-    }
+    });
 }
 function SchoolItem(school_str) {
     let sorted_school_team = Object.entries(map_school[school_str].school_team_map).sort((a, b) => {

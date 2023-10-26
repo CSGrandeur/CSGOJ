@@ -34,7 +34,7 @@
         <div class="h_td h_logo">图标</div>
         <div class="h_td h_team_content">{if $action == 'rank'}队伍{else /}学校{/if}</div>
         <div class="h_td h_solve">题数</div>
-        <div class="h_td h_time">罚时(s)</div>
+        <div class="h_td h_time">罚时</div>
     </div>
     <div class="grid" id="rank_grid_div">
             
