@@ -84,8 +84,8 @@
             <th class='status_code_length'  data-field="code_length"    data-align="right" data-valign="middle"  data-sortable="false" data-width="80">Code Length</th>
             <th class='status_in_date'      data-field="in_date"        data-align="center" data-valign="middle"  data-sortable="false"  data-width="160">Submit Time</th>
             {if IsAdmin() || isset($contest) && IsAdmin('contest', $contest['contest_id']) }
-                <th data-field="rejudge" data-align="center" data-valign="middle"  data-sortable="false" data-formatter="FormatterRejudge" >Rejudge</th>
                 <th data-field="judger" data-align="center" data-valign="middle"  data-sortable="false" >Judger</th>
+                <th data-field="rejudge" data-align="center" data-valign="middle"  data-sortable="false" data-formatter="FormatterRejudge" >Rejudge</th>
             {/if}
             {if(isset($contest) && (IsAdmin('contest', $contest['contest_id']) || IsAdmin('source_browser'))) }
                 <th data-field="sim" data-align="center" data-valign="middle"  data-sortable="false" data-formatter="FormatterSim" >Similar</th>
