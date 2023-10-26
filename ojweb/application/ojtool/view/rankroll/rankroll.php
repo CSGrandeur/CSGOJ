@@ -389,6 +389,8 @@ function TeamItem(team_id) {
     return {
         'solved': pro_res.solved,
         'penalty': pro_res.penalty,
+        'penalty_sec': pro_res.penalty_sec,
+        'penalty_mi': pro_res.penalty_mi,
         'dom': `<div class="item" id="g_${team_id}" team_id="${team_id}" tkind="${map_team[team_id].tkind}">
             <div class="item-content" solved="${pro_res.solved}" penalty="${pro_res.penalty}" team_id="${team_id}">
                 <div class="g_td g_rank"></div>
@@ -499,7 +501,7 @@ function SetAwardRank(re_calc=false) {
                     }
                 }
             }
-            real_rank_list.push(item);
+            real_rank_list.push(PostprocessDataItem(item));
         }
         real_rank_list.sort((a, b) => {
             if(a.sol == b.sol) {
@@ -640,6 +642,7 @@ function JudgeDo() {
             }
         }
         let team_item = map_item[judging_team_id];
+        console.log('#####', team_item);
         let pro_div = team_item.dom.find(`.g_pro[problem_id="${judging_pro_id}"]`);
         judging_ac_flag = false;
         if(ac) {
@@ -647,7 +650,9 @@ function JudgeDo() {
             change_solved = 1;
             change_penalty = ProPenalty(judging_team_id, judging_pro_id, submit_num - 1);
             team_item.solved += change_solved;
-            team_item.penalty += change_penalty;
+            team_item.penalty_sec += change_penalty;
+            team_item.penalty_mi = Math.floor(team_item.penalty_sec / 60 + 0.00000001);
+            team_item.penalty = team_item.penalty_mi;
             team_sol.ac[judging_pro_id] = last_submit_time;
             pro_div.children()[0].innerText = submit_num;
             pro_div.children()[2].innerText = SolTime(last_submit_time);
@@ -724,6 +729,7 @@ function JudgeAward() {
         return;
     }
     let award_modal_show_flag = false;
+    console.log(judging_team_id, real_rank_map[judging_team_id], now_rank[judging_team_id], map_team_sol[judging_team_id]);
     if(real_rank_map[judging_team_id].rank != '*' && now_rank[judging_team_id].ith == real_rank_map[judging_team_id].ith && Object.keys(map_team_sol[judging_team_id].frozen).length == 0) {
         let award = null;
         if(real_rank_map[judging_team_id].rank <= rank_gold) {
@@ -767,7 +773,9 @@ function JudgeUndo() {
         let change_penalty = 0;
         
         team_item.solved -= judge_record.change_solved;
-        team_item.penalty -= judge_record.change_penalty;
+        team_item.penalty_sec -= judge_record.change_penalty;
+        team_item.penalty_mi = Math.floor(team_item.penalty_sec / 60 + 0.00000001);
+        team_item.penalty = team_item.penalty_mi;
         if(judge_record.pro_id in team_sol.ac) {
             delete team_sol.ac[judge_record.pro_id];
         }
