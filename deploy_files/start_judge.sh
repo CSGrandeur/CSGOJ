@@ -5,6 +5,7 @@
 # --OJ_NAME=csgoj \
 # --OJ_HTTP_BASEURL='http://nginx-server:20080' \
 # --PASS_JUDGER='999999'  \
+# --JUDGE_USER_NAME='judger' \
 # --JUDGE_DOCKER_CPUS=6 \
 # --JUDGE_DOCKER_MEMORY=6g \
 # --JUDGE_PROCESS_NUM=2 \

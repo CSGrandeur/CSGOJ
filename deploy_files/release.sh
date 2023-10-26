@@ -21,6 +21,8 @@ if version_gt $current_version $TAG_VERSION; then
     exit 1
 fi
 
+echo "即将处理版本号：$TAG_VERSION"
+
 FLAG_BUILD=false
 FLAG_CACHE=""
 FLAG_PUSH=false
