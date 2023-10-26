@@ -87,7 +87,7 @@ class Filebase extends Adminbase
         $files = request()->file("upload_file");
         // 移动到框架应用根目录/public/uploads/ 目录下
         if(count($files) > $this->maxFileNum)
-            $this->error('Do not upload more than '.$this->maxFileNum.' files one time');
+            $this->error('单次文件数量限制(Number of files limit once): ' . $this->maxFileNum);
         $infolist = '';
         $atLeastOneFile = 0;
         foreach($files as $file)
@@ -95,12 +95,12 @@ class Filebase extends Adminbase
             $filename = $file->getinfo('name');
             if(!preg_match($this->filenameRe, $filename))
             {
-                $infolist .= "<br/>File \"".$filename."\": Name not valid";
+                $infolist .= "<br/>" . $filename . ": 文件名不合法(Name not valid)";
                 continue;
             }
             $info = $file->validate($this->validateRule)->move($this->inputInfo['path'], '');
             if (!$info) {
-                $infolist .= "<br/>File \"".$filename."\": ".($file->getError());
+                $infolist .= "<br/>" . $filename . ": " . ($file->getError());
             }
             else {
                 $atLeastOneFile++;
@@ -109,7 +109,7 @@ class Filebase extends Adminbase
         if($infolist == '')
             $this->success('OK');
         else
-            $this->error('Some file upload failed' . $infolist);
+            $this->error('存在文件上传失败(Some files upload failed)' . $infolist);
     }
     public function file_delete_ajax()
     {

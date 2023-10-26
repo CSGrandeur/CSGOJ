@@ -11,7 +11,7 @@ class Judge extends Filebase
         $this->AdminInit();
         $this->FilebaseInit();
 
-        $this->filenameRe = "/^(spj|tpj|([0-9a-zA-Z-_\\. \\(\\)]+\\.(zip|in|out|cpp|cc|c|c\\+\\+)))$/i";
+        $this->filenameRe = "/^(spj.cc|tpj.cc|([0-9a-zA-Z-_\\. \\(\\)]+\\.(zip|in|out)))$/i";
         $this->filenameReMsg = "";
         $this->maxFileSize = config('CsgojConfig.OJ_UPLOAD_TESTDATA_MAXSIZE');
         $this->assign('maxfilesize', $this->maxFileSize);
@@ -86,7 +86,7 @@ class Judge extends Filebase
             $filename = $file->getinfo('name');
             if(!preg_match($this->filenameRe, $filename))
             {
-                $infolist .= "<br/>File \"".$filename."\": Name not valid";
+                $infolist .= "<br/>" . $filename . ": 文件名不合法(Name not valid)";
                 continue;
             }
             //$fileExt处理类似 spj 这样没有扩展名的文件。ThinkPHP的move这里会给没后缀名文件自动加一个“.”。
@@ -126,7 +126,7 @@ class Judge extends Filebase
         if($infolist == '')
             $this->success('OK');
         else
-            $this->error('Some file upload failed' . $infolist);
+            $this->error('存在文件上传失败(Some files upload failed)' . $infolist);
     }
     function DecompressZipData($zipFilePath)
     {
