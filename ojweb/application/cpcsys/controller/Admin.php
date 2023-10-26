@@ -325,59 +325,6 @@ class Admin extends Contestbase
         }
         $this->success('Team successfully generated. <br/>See the table below', null, ['rows' => $teamToShow, 'type' => 'teamgen', 'success_num'=> $success_num]);
     }
-    // public function contest_teamgenbyseatdraw_ajax() {
-    //     if($this->contest['private'] % 10 != 2) {
-    //         $this->error("该比赛不支持生成队伍.");
-    //     }
-    //     if(!IsAdmin('contest', $this->contest['contest_id'])) {
-    //         $this->error("没有该比赛管理权限.");
-    //     }
-    //     $team_list = input('team_list/a');
-  
-    //     $team_id_num_len = input('team_id_num_len/d');
-    //     $team_already = db('cpc_team')->where('contest_id', $this->contest['contest_id'])->select();
-    //     $team_already_map = [];
-    //     if($team_already != null) {
-    //         foreach($team_already as &$val) {
-    //             $team_already_map[intval(str_replace("team", "", $val['team_id']))] = $val;
-    //         }
-    //     }
-    //     $team_list_insert = [];
-    //     function Strcut($team, $key, $len) {
-    //         return mb_convert_encoding(array_key_exists($key, $team) ? substr($team[$key], 0, $len) : '', 'UTF-8', 'UTF-8');
-    //     }
-    //     function TeamTkind($team) {
-    //         $tkind = array_key_exists('tkind', $team) ? intval($team['tkind']) : 0;
-    //         if($tkind < 0) $tkind = 0;
-    //         if($tkind > 3) $tkind = 3;
-    //         return $tkind;
-    //     }
-    //     foreach($team_list as &$team) {
-    //         if(array_key_exists('team_num_id', $team)) {
-    //             $team_num_id = intval($team['team_num_id']);
-    //             if($team_num_id > 5000) {
-    //                 $this->error("队伍编号过大");
-    //             }
-    //             $team_list_insert[] = [
-    //                 'team_id'       =>  str_pad($team['team_num_id'], $team_id_num_len, '0', STR_PAD_LEFT),
-    //                 'name'          =>  Strcut($team, 'name', 49),
-    //                 'school'        =>  Strcut($team, 'school', 49),
-    //                 'tmember'       =>  Strcut($team, 'tmember', 63),
-    //                 'coach'         =>  Strcut($team, 'coach', 23),
-    //                 'room'          =>  Strcut($team, 'room', 49),
-    //                 'tkind'         =>  TeamTkind($team),
-    //                 'password'      =>  array_key_exists($team_num_id, $team_already_map) ? $team_already_map[$team_num_id]['password'] : MkPasswd(RandPass(), True),
-    //                 'contest_id'    =>  $this->contest['contest_id'],
-    //                 'privilege'     => ''
-    //             ];
-    //         }
-    //     }
-    //     $CpcTeam = db('cpc_team');
-    //     $CpcTeam->where(['contest_id' => $this->contest['contest_id'], 'team_id' => ['like', 'team%']])->delete();
-    //     $num = $CpcTeam->insertAll($team_list_insert);
-    //     $this->success("ok", null, ['success_num'=>$num]);
-
-    // }
     public function ClearTeam($helperAccounts=false) {
         $CpcTeam = db('cpc_team');
         $map = [
