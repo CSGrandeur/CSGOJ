@@ -279,7 +279,9 @@ function TeamItem(team_id, with_dom=true) {
     return {
         'solved': pro_res.solved,
         'penalty': pro_res.penalty,
-        'dom': with_dom ? `<div class="item" id="g_${team_id}" team_id="${team_id}" tkind="${map_team[team_id].tkind}">
+        'penalty_sec': pro_res.penalty_sec,
+        'penalty_mi': pro_res.penalty_mi,
+        'dom': with_dom ? `<div class="item" id="g_${team_id}" team_id="${team_id}" tkind="${map_team[team_id].tkind}" >
             <div class="item-content" solved="${pro_res.solved}" penalty="${pro_res.penalty}" team_id="${team_id}">
                 <div class="g_td g_rank"></div>
                 <div class="g_td g_logo"><img class="school_logo" school="${map_team[team_id].school}" onerror="SchoolLogoUriOnError(this)"/></div>
@@ -342,11 +344,39 @@ function InitGrid() {
     });
 }
 let interval_id = null;
-function StartAutoRefresh() {
+function StartAutoRefresh(flag_msg=true) {
     interval_id = setInterval(() => {
         InitData(true);
     }, 60000);
-    alertify.success("开启自动更新");
+    if(flag_msg=true) {
+        alertify.success("开启自动更新");
+    }
+}
+let flag_auto_scroll=false;
+let auto_scroll_task_id = [];
+function AutoScroll(duration, delay, first=true) {
+    if(!flag_auto_scroll) {
+        return;
+    }
+    if(first) {
+        window.scrollTo(0, 0);
+        auto_scroll_task_id.push(setTimeout(() => AutoScroll(duration, delay, false), 0));
+    } else {
+        // const perTick = document.body.scrollHeight / duration * 50;
+        const perTick = 500;
+        auto_scroll_task_id.push(setTimeout(function() {
+            window.scrollBy(0, perTick);
+            if(flag_auto_scroll) {
+                if (window.innerHeight + window.scrollY < document.body.scrollHeight) {
+                    AutoScroll(duration, delay, false);
+                } else {
+                    auto_scroll_task_id.push(setTimeout(function() {
+                        AutoScroll(duration, delay, true);
+                    }, 5000));
+                }
+            }
+        }, delay));
+    }
 }
 
 $(document).ready(function() {
@@ -397,6 +427,8 @@ $(document).on('click', function (e) {
         }
     }
 });
+
+
 let flag_forbid_f5 = false;
 
 window.onkeydown = (e) => {
@@ -415,6 +447,12 @@ window.onkeydown = (e) => {
             alertify.success("开启自动滚动");
             AutoScroll(1000, 10000, true);
         } else {
+            for(let i = 0; i < auto_scroll_task_id.length; i ++) {
+                try {
+                    clearTimeout(auto_scroll_task_id[i]);
+                } catch {}
+            }
+            auto_scroll_task_id = [];
             alertify.message("关闭自动滚动");
         }
 
@@ -431,3 +469,4 @@ window.onkeydown = (e) => {
         }
     }
 }
+
