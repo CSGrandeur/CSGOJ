@@ -18,6 +18,10 @@
     {js href="//fastly.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" /}
     {js href="//fastly.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" /}
     {js href="//fastly.jsdelivr.net/npm/bootstrap-table@1.22.1/dist/bootstrap-table.min.js" /}
+    {js href="//fastly.jsdelivr.net/npm/bootstrap-table@1.22.1/dist/extensions/toolbar/bootstrap-table-toolbar.min.js" /}
+    {js href="//fastly.jsdelivr.net/npm/tableexport.jquery.plugin@1.28.0/tableExport.min.js" /}
+    {js href="//fastly.jsdelivr.net/npm/tableexport.jquery.plugin@1.28.0/libs/html2canvas/html2canvas.min.js" /}
+    {js href="//fastly.jsdelivr.net/npm/bootstrap-table@1.22.1/dist/extensions/export/bootstrap-table-export.min.js" /}
     {js href="//fastly.jsdelivr.net/npm/bootstrap-table@1.22.1/dist/extensions/cookie/bootstrap-table-cookie.min.js" /}
     {js href="//fastly.jsdelivr.net/npm/jquery-form@4.3.0/dist/jquery.form.min.js" /}
     {js href="//fastly.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js" /}

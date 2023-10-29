@@ -132,9 +132,10 @@ contest_title="{$contest['title']|htmlspecialchars}"
             function(ret) {
                 RankDataPreprocess(ret);
                 for(let i = 0; i < ret.length; i ++) {
-                    if(ret[i]['user_id'].includes("<a")) {
-                        ret[i]['user_id'] = /<a.*>(.+?)<\/a>/.exec(ret[i]['user_id'])[1];
-                    }
+                    // console.log(ret[i]);
+                    // if(ret[i]['user_id'].includes("<a")) {
+                    //     ret[i]['user_id'] = /<a.*>(.+?)<\/a>/.exec(ret[i]['user_id'])[1];
+                    // }
                     let tmp = {
                         "coach": ret[i]['coach'],
                         "nick": ret[i]['nick'],
