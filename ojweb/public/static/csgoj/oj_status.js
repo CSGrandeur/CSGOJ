@@ -249,7 +249,7 @@ function SetStatusButton() {
         } else if(field == 'result') {
             BtnResultShow(td, row);
         } else if(field == 'rejudge' && row.allow_rejudge) {
-            alertify.confirm(`Confirm to rejudge solution [RunID=<strong class='text-danger'>${row.solution_id}</strong>]?`, function() {
+            alertify.confirm(`确定要重测该提交 [提交号=<strong class='text-danger'>${row.solution_id}</strong>]?<br/>Confirm to rejudge solution [RunID=<strong class='text-danger'>${row.solution_id}</strong>]?`, function() {
                 $.post(rejudge_url, {solution_id: row.solution_id, rejudge_res_check: ['any']}, function(ret) {
                     if(ret.code == 1) {
                         $table.bootstrapTable('updateByUniqueId', {
@@ -271,7 +271,7 @@ function SetStatusButton() {
                     }
 
                 })
-            });
+            }).set('title', '确认重测');
         }
     });
 }
