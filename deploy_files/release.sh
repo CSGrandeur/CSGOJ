@@ -73,4 +73,4 @@ if [ "$FLAG_PUSH" = "true" ]; then
     fi
 fi
 
-echo $TAG_VERSION > version
+cd $PATH_DIR/../ && echo $TAG_VERSION > version
