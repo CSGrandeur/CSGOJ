@@ -1,6 +1,6 @@
 # bash release.sh 0.0.1 build push web judge
 # 读取版本文件
-current_version=$(cat version)
+current_version=$(cat ../version)
 
 # 检查参数是否为版本号
 if [[ ! $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
