@@ -1,4 +1,4 @@
-{include file="../../ojtool/view/public/js_qrcode" /}
+{include file="../../csgoj/view/public/js_qrcode" /}
 
 <!-- <div id="fs_qr_logo" class="fs-4 mb-3"><i class="bi bi-qr-code"></i></div> -->
 <div id="contest_fullscreen_info">
