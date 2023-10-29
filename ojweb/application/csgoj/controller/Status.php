@@ -62,8 +62,11 @@ class Status extends Csgojbase
             ];
         }
         $Solution = db('solution');
+        if(IsAdmin('source_browser')) {
+            $columns[] = 'judger';
+        }
         $solution_fetch_pre = $Solution
-            ->field(implode(",", $columns))
+            ->field($columns)
             ->where($map);
         if(!IsAdmin())//对于非管理员，外部status不显示contest里的提交。
         {
