@@ -241,7 +241,7 @@ function TeamSubmit() {
         let team_item = {};
         let line_warn = [];
         for(let j = 0; j < team_keys.length; j ++) {
-            if(j != 'label' && (j >= line.length || line[j].length == 0)) {
+            if(team_keys[j] != 'label' && (j >= line.length || line[j].length == 0)) {
                 line_warn.push(`缺少[${team_keys[j]}]`);
                 team_item[team_keys[j]] = line[j];
                 continue;
@@ -254,28 +254,28 @@ function TeamSubmit() {
             switch(team_keys[j]) {
                 case "name":
                     if(line[j].length > 49) {
-                        lline_warn.push("队名过长");
+                        line_warn.push("队名过长");
                     }
                     break;
                 case "school":
                     if(line[j].length > 49) {
-                        lline_warn.push("校名过长");
+                        line_warn.push("校名过长");
                     }
                     break;
                 case "tmember":
                     if(line[j].length > 63 || line[j].split('、').length > 10) {
-                        lline_warn.push("成员过多或名字过长");
+                        line_warn.push("成员过多或名字过长");
                     }
                     break;
                 case "coach":
                     if(line[j].length > 24) {
-                        lline_warn.push("教练信息过长");
+                        line_warn.push("教练信息过长");
                     }
                     break;
                 case "tkind":
                     let tkind = parseInt(line[j]);
                     if(isNaN(tkind) || tkind < 0 || tkind > 4) {
-                        lline_warn.push("队伍类型不是本系统格式");
+                        line_warn.push("队伍类型不是本系统格式");
                     }
                     break;
             }
