@@ -155,7 +155,11 @@ parse_args() {
 }
 
 write_config_if_changed() {
-  latest_config_file=$(ls -t ${CONFIG_LOG}/csgoj_config_*.cfg | head -n 1)
+  if [ -d "${CONFIG_LOG}" ] && [ "$(ls -A ${CONFIG_LOG}/csgoj_config_*.cfg 2>/dev/null)" ]; then
+      latest_config_file=$(ls -t ${CONFIG_LOG}/csgoj_config_*.cfg | head -n 1)
+  else
+      latest_config_file=""
+  fi
   temp_file=$(mktemp)
   for arg in "$@"
   do
@@ -164,12 +168,12 @@ write_config_if_changed() {
           echo ${arg:2} >> $temp_file
       fi
   done
-  if [[ -s $temp_file ]] && ! diff -q $temp_file $latest_config_file > /dev/null 2>&1
+  if [[ -s $temp_file ]] && { [ "$latest_config_file" = "" ] || ! diff -q $temp_file $latest_config_file; } > /dev/null 2>&1
   then
       timestamp=$(date +%s)
       new_config_file="${CONFIG_LOG}/csgoj_config_${timestamp}.cfg"
       mv $temp_file $new_config_file
-      echo "New config file has been created: $new_config_file"
+      echo "新建配置记录: $new_config_file"
   else
       rm $temp_file
   fi
