@@ -39,6 +39,7 @@ if [ -f "$PATH_OJWEB_BASE/.env" ] || [ -L "$PATH_OJWEB_BASE/.env" ]; then
     rm "$PATH_OJWEB_BASE/.env"
 fi
 ln -s /var/www/$OJ_NAME/.env $PATH_OJWEB_BASE/.env
+chmod 777 /var/www/$OJ_NAME/.env
 
 chown www-data:www-data $PATH_OJWEB_BASE
 chmod 777 $PATH_OJWEB_BASE
