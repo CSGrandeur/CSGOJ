@@ -47,7 +47,7 @@ chmod 777 $PATH_OJWEB_BASE
 # init upload public
 mkdir -p /var/www/public
 chown www-data:www-data /var/www/public
-chmod 777 /var/www/public
+chmod 777 -R /var/www/public
 
 # init judge data folder
 mkdir -p /home/judge/data

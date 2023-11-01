@@ -95,6 +95,7 @@ static int java_time_bonus = 5;
 static int java_memory_bonus = 512;
 static char java_xms[BUFFER_SIZE_SM];
 static char java_xmx[BUFFER_SIZE_SM];
+static char java_xss[BUFFER_SIZE_SM];
 static int sim_enable = 0;
 static int oi_mode = 0;
 static int full_diff = 0;
@@ -479,6 +480,7 @@ void init_judge_conf()   //读取判题主目录etc中的配置文件judge.conf
     sleep_time = 3;
     strcpy(java_xms, "-Xms32m");
     strcpy(java_xmx, "-Xmx256m");
+    strcpy(java_xss, "-Xss64m");
     strcpy(cc_std,"-std=c99");
     strcpy(cc_opt,"-O2");
     if(__GNUC__ > 9 || (  __GNUC__ == 9 &&  __GNUC_MINOR__ >= 3 ) ){ 
@@ -500,6 +502,7 @@ void init_judge_conf()   //读取判题主目录etc中的配置文件judge.conf
             read_int(buf, "OJ_SIM_ENABLE", &sim_enable);
             read_buf(buf, "OJ_JAVA_XMS", java_xms);
             read_buf(buf, "OJ_JAVA_XMX", java_xmx);
+            read_buf(buf, "OJ_JAVA_XSS", java_xss);
             read_int(buf, "OJ_HTTP_JUDGE", &http_judge);
             read_buf(buf, "OJ_HTTP_BASEURL", http_baseurl);
             read_buf(buf, "OJ_HTTP_APIPATH", http_apipath);
@@ -1052,7 +1055,7 @@ int compile(int lang, char *work_dir)
                  (char * const )"LANGUAGE=zh_CN.UTF-8",
                  (char * const )"LC_ALL=zh_CN.utf-8",NULL};
     char javac_buf[7][32];
-    char *CP_J[7];
+    char *CP_J[8];
 
     for (int i = 0; i < 7; i++)
         CP_J[i] = javac_buf[i];
@@ -1060,10 +1063,11 @@ int compile(int lang, char *work_dir)
     sprintf(CP_J[0], "javac");
     sprintf(CP_J[1], "-J%s", java_xms);
     sprintf(CP_J[2], "-J%s", java_xmx);
-    sprintf(CP_J[3], "-encoding");
-    sprintf(CP_J[4], "UTF-8");
-    sprintf(CP_J[5], "Main.java");
-    CP_J[6] = (char *)NULL;
+    sprintf(CP_J[3], "-J%s", java_xss);
+    sprintf(CP_J[4], "-encoding");
+    sprintf(CP_J[5], "UTF-8");
+    sprintf(CP_J[6], "Main.java");
+    CP_J[7] = (char *)NULL;
 
     pid = fork();
     if (pid == 0)
@@ -1931,7 +1935,7 @@ void run_solution(int &lang, char *work_dir, double &time_lmt, int &usedtime,
         sprintf(java_xmx, "-Xmx%dM", mem_lmt);
         //sprintf(java_xmx, "-XX:MaxPermSize=%dM", mem_lmt);
 
-        execle("/usr/bin/java", "/usr/bin/java",java_xmx , // the security manager has been removed in later java version
+        execle("/usr/bin/java", "/usr/bin/java", java_xmx, java_xms, java_xss, // the security manager has been removed in later java version
                "Main", (char *) NULL,envp);
         break;
     case LANG_RUBY:
