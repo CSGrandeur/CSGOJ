@@ -26,7 +26,7 @@
             <th data-field="school" data-align="left" data-valign="middle"  data-sortable="false" data-width="64" data-formatter="FormatterSchoolLogo" >Logo</th>
             <th data-field="school" data-align="center" data-valign="middle"  data-sortable="true" data-cell-style="schoolCellStyle">School</th>
             <th data-field="solved" data-align="center" data-valign="middle"  data-sortable="false" data-width="60">Solved</th>
-            <th data-field="penalty" data-align="center" data-valign="middle"  data-sortable="false" data-width="80">Penalty</th>
+            <th data-field="penalty" data-align="center" data-valign="middle"  data-sortable="false" data-width="80" data-formatter="FormatterPenalty">Penalty</th>
             {foreach($problemIdMap['abc2id'] as $apid=>$pid)}
             <th data-field="{$apid}" data-align="center" data-valign="middle"  data-sortable="false" data-width="90" data-cell-style="acCellStyle" data-formatter="FormatterRankProSchool">
                 <a href="/{$module}/{$controller}/problem?cid={$contest['contest_id']}&pid={$apid}">

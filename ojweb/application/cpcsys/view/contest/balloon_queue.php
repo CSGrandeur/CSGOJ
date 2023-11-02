@@ -266,6 +266,10 @@ function RefreshBalloonQueue() {
             MakeMapTeamBalloon();
             InitFinishFlag();
             alertify.success(`加载到${balloon_task_list.length}个任务`)
+        } else {
+            alertify.alert("没有访问权限，可能登录超时", function() {
+                location.href = "/";
+            });
         }
     });
 }
