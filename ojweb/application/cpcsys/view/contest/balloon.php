@@ -25,7 +25,7 @@
         data-side-pagination="client"
         data-method="get"
         data-striped="true"
-        data-show-refresh="true"
+        data-show-refresh="false"
         data-buttons-align="left"
         data-toolbar-align="left"
         data-unique-id="user_id"

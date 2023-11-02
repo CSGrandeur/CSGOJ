@@ -269,6 +269,13 @@ function RefreshBalloonQueue() {
         }
     });
 }
+function RemoveTask(row) {
+    // 退回的task
+    balloon_queue_table.bootstrapTable('removeByUniqueId', row.team_pro);
+    if(typeof(map_team_balloon?.[row.team_id]?.[row.problem_id]) !== 'undefined') {
+        delete map_team_balloon[row.team_id][row.problem_id]
+    }
+}
 $('document').ready(function() {
     GetInfoLocal();
     GetRoomMap();
@@ -348,7 +355,7 @@ $('document').ready(function() {
                 'bst': 0
             }, function(ret) {
                 if(ret.code == 1) {
-                    balloon_queue_table.bootstrapTable('removeByUniqueId', row.team_pro);
+                    RemoveTask(row);
                     alertify.warning(`${row.team_id}-${row.apid} 任务已退还`);
                 } else {
                     alertify.error(ret.msg);

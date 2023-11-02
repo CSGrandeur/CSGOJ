@@ -274,6 +274,7 @@ function GetBalloonData() {
         rank_data = ret;
         $.get(`/${oj_module}/contest/balloon_task_ajax?cid=${cid}`, function(ret) {
             if(ret.code == 1) {
+                balloon_waiting_num = 0, balloon_assign_num = 0;
                 balloon_task_list = ret.data.balloon_task_list;
                 problem_id_map = ret.data.problem_id_map;
                 InitFinishFlag();
@@ -287,6 +288,10 @@ function InitFinishFlag() {
     if(flg_init >= 2) {
         InitBalloonTableShow();   
     }
+}
+function DoTableRefresh() {
+    // 覆盖 rank_pub 中的表刷新方式
+    GetBalloonData();
 }
 $(document).ready(function() {
     deleteBalloonKey = false;

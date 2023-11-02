@@ -27,17 +27,6 @@ ranktable.on('post-body.bs.table', function(){
         table_div.width(ranktable[0].scrollWidth + 20);
 });
 //set flag for delete balloon mark, 'D' on keybord or middle key on mouse for backup.
-$(window).keydown(function(e) {
-    //prevent F5 to locally refresh table
-    if (e.keyCode == 116 && !e.ctrlKey) {
-        if(window.event){
-            try{e.keyCode = 0;}catch(e){}
-            e.returnValue = false;
-        }
-        e.preventDefault();
-        ranktable.bootstrapTable('refresh');
-    }
-});
 function LoadRankRemote(set_cache) {
     let rank_url = rank_config.attr('url');
     $.get(rank_url, function(ret) {
@@ -178,12 +167,14 @@ auto_refresh_box.on('switchChange.bootstrapSwitch', function(event, state) {
 //         localStorage.setItem('fb_include_star_box', 'false');
 //     }
 // });
+function DoTableRefresh() {
+    ranktable.bootstrapTable('refresh');
+}
 function RefreshTable()
 {
     auto_refresh_time --;
-    if(auto_refresh_time <= 0)
-    {
-        ranktable.bootstrapTable('refresh');
+    if(auto_refresh_time <= 0) {
+        DoTableRefresh();
         auto_refresh_time = autoRefreshInterval;
     }
     auto_refresh_time_span.text(pad0left(auto_refresh_time, 2, '0'));
@@ -267,5 +258,16 @@ document.addEventListener('keydown', function(e) {
         if(rank_div != null && rank_div.classList.contains('rank_fullscreen')) {
             rank_div.classList.remove('rank_fullscreen');
         }
+    }
+});
+$(window).keydown(function(e) {
+    //prevent F5 to locally refresh table
+    if (e.keyCode == 116 && !e.ctrlKey) {
+        if(window.event){
+            try{e.keyCode = 0;}catch(e){}
+            e.returnValue = false;
+        }
+        e.preventDefault();
+        DoTableRefresh();
     }
 });
