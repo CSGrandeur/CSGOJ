@@ -2,11 +2,12 @@
 namespace app\ojtool\controller;
 class Judge extends Ojtoolbase {
     var $judge_user;
+    var $utf_regex;
     public function _initialize() {
         $this->OJMode();
         $this->JudgeInit();
     }
-    private function Response($data, $is_file=False) {
+    protected function Response($data, $is_file=False) {
         if($is_file) {
 
         } else {
@@ -14,7 +15,7 @@ class Judge extends Ojtoolbase {
             exit();
         }
     }
-    private function JudgeInit() {
+    protected function JudgeInit() {
         if($this->action == 'judge_login') {
             return;
         }
@@ -22,8 +23,9 @@ class Judge extends Ojtoolbase {
             $this->Response("0");
         }
         $this->judge_user = session('user_id');
+        $this->utf_regex = '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/u'; // 用于替换judge信息中的乱码字符
     }
-    private function judge_manual() {
+    protected function judge_manual() {
         // 用于“人工”修改判题结果
         $sid = input('sid/d');
         $result = input('result/d');
@@ -40,7 +42,7 @@ class Judge extends Ojtoolbase {
         }
         $this->Response($sid);
     }
-    private function judge_update_solution() {
+    protected function judge_update_solution() {
         // 更新判题结果
         $sid = input('sid/d');
         $result = input('result/d');
@@ -69,7 +71,7 @@ class Judge extends Ojtoolbase {
         }
         $this->Response('update_solution ok');
     }
-    private function judge_checkout() {
+    protected function judge_checkout() {
         // 检出solution，标记为正在判题. 过滤条件：尚未检出或已检出但80秒未判题的题目
         $sid = input('sid/d');
         $result = input('result/d');
@@ -87,7 +89,7 @@ class Judge extends Ojtoolbase {
         // UPDATE `solution`  SET `result`=4,`time`=0,`memory`=0,`judgetime`='2023-05-23 17:04:12'  WHERE  `solution_id` = 1  AND (  `result` < 2 OR (  `result` < 4  AND `judgetime` <  '2023-05-23 17:03:12' ) );
         $this->Response($ret > 0 ? 1 : 0);
     }
-    private function judge_getpending() {
+    protected function judge_getpending() {
         // 获取pending的题目列表
         $max_running = input('max_running/d');
         $oj_lang_set = input('oj_lang_set/s');
@@ -106,7 +108,7 @@ class Judge extends Ojtoolbase {
         // SELECT `solution_id` FROM `solution` WHERE `language` IN (0,1,2,3,4,5,6,7,8,9,10,11,17) AND ( `result` < 2 OR ( `result` < 4 AND `judgetime` < '2023-05-23 19:38:48' ) ) ORDER BY `result` ASC,`solution_id` ASC LIMIT 3
         $this->Response(implode("\n", $ret) . "\n");
     }
-    private function judge_getsolutioninfo() {
+    protected function judge_getsolutioninfo() {
         // 获取单条solution信息
         $sid = input('sid/d');
         $ret = db('solution')->where('solution_id', $sid)
@@ -116,7 +118,7 @@ class Judge extends Ojtoolbase {
             $this->Response(implode("\n", array_map("strval", array_values($ret))) . "\n");
         }
     }
-    private function judge_getsolution() {
+    protected function judge_getsolution() {
         // 获取提交的代码
         $sid = input('sid/d');
         $ret = db('source_code')->where('solution_id', $sid)
@@ -126,7 +128,7 @@ class Judge extends Ojtoolbase {
             $this->Response($ret['source'] . "\n");
         }
     }
-    private function judge_getcustominput() {
+    protected function judge_getcustominput() {
         // 没啥用，只是对接judge端，或许会删除
         $sid = input('sid/d');
         $ret = db('custominput')->where('solution_id', $sid)
@@ -136,7 +138,7 @@ class Judge extends Ojtoolbase {
             $this->Response($ret['input_text'] . "\n");
         }
     }
-    private function judge_getprobleminfo() {
+    protected function judge_getprobleminfo() {
         // 获取题目的时限内存等信息
         $pid = input('pid/d');
         $ret = db('problem')->where('problem_id', $pid)
@@ -146,10 +148,18 @@ class Judge extends Ojtoolbase {
             $this->Response(implode("\n", array_map("strval", array_values($ret))) . "\n");
         }
     }
-    private function judge_addceinfo() {
+    protected function judge_addceinfo() {
         // 插入/更新CE信息
         $sid = input('sid/d');
         $ceinfo = input('ceinfo/s');
+        if ($ceinfo !== null) {
+            try {
+                $replacement = "?";
+                $ceinfo = preg_replace($this->utf_regex, $replacement, $ceinfo);
+            } catch (\Exception $e) {
+                $ceinfo = "Unrecognized characters exist";
+            }
+        }
         $item = db('compileinfo')->where('solution_id', $sid)->find();
         if($item == null) {
             db('compileinfo')->insert(['solution_id' => $sid, 'error' => $ceinfo]);
@@ -159,10 +169,18 @@ class Judge extends Ojtoolbase {
         }
         $this->Response("addceinfo ok\n");
     }
-    private function judge_addreinfo() {
+    protected function judge_addreinfo() {
         // 插入/更新RE信息
         $sid = input('sid/d');
         $reinfo = input('reinfo/s');
+        if ($reinfo !== null) {
+            try {
+                $replacement = "?";
+                $reinfo = preg_replace($this->utf_regex, $replacement, $reinfo);
+            } catch (\Exception $e) {
+                $reinfo = "Unrecognized characters exist";
+            }
+        }
         $item = db('runtimeinfo')->where('solution_id', $sid)->find();
         if($item == null) {
             db('runtimeinfo')->insert(['solution_id' => $sid, 'error' => $reinfo]);
@@ -172,12 +190,12 @@ class Judge extends Ojtoolbase {
         }
         $this->Response("addreinfo ok\n");
     }
-    private function judge_updateuser() {
+    protected function judge_updateuser() {
         // 更新用户的提交量与刷题量
         // 该数据没必要频繁更新，已在OJ web中低频完成，此处不执行该逻辑
         $this->Response("will update user in web");
     }
-    private function judge_updateproblem() {
+    protected function judge_updateproblem() {
         // 本接口区分contest和非contest状态对题目的ac/submit数更新
         // 由于web端对contest每道题ac数做了查询，此处没有必要为contest题目增加统计值
         $cid = input('cid/d');
@@ -199,10 +217,10 @@ class Judge extends Ojtoolbase {
         $ret = db('problem')->where('problem_id', $pid)->update(['accepted' => $accepted, 'submit' => $submit]);
         $this->Response($ret);
     }
-    private function judge_checklogin() {
+    protected function judge_checklogin() {
         $this->Response(1);
     }
-    private function judge_gettestdatalist() {
+    protected function judge_gettestdatalist() {
         $pid = input('pid/d');
         $time = input('time/d');
 		$path_judge_data_p = config('OjPath.testdata') . DIRECTORY_SEPARATOR . $pid;
@@ -223,7 +241,7 @@ class Judge extends Ojtoolbase {
         }
         $this->Response(implode("\n", array_map("strval", array_values($ret))) . "\n");
     }
-    private function judge_gettestdata() {
+    protected function judge_gettestdata() {
         $filename = input('filename/s');
 		$path_judge_data = config('OjPath.testdata');
         $pathinfo = pathinfo(realpath($path_judge_data . DIRECTORY_SEPARATOR . $filename));
@@ -255,7 +273,7 @@ class Judge extends Ojtoolbase {
         $this->Response('Success');
     }
     
-    private function login_oper($userinfo) {
+    protected function login_oper($userinfo) {
         // 设置登录后的session
         session('user_id', $userinfo['user_id']);
         // judger权限

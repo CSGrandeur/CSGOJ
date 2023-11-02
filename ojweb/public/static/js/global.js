@@ -1,4 +1,4 @@
-﻿var g_submitDelayInfo = 500; //提交后通知延迟跳转
+﻿﻿var g_submitDelayInfo = 500; //提交后通知延迟跳转
 var g_submitDelayOper = 5; //提交后延迟下次操作
 
 function button_delay(button, delay, ori, tips) {
