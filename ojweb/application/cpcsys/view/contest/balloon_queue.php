@@ -203,7 +203,7 @@ function SendTaskQuery(ith, total_get) {
     } else if(total_get > 0){
         alertify.success(`获取了${total_get}个新任务`);
     } else {
-        alertify.msg(`本次没有新任务`);
+        alertify.message(`本次没有新任务`);
     }
 }
 function CalcTask() {
