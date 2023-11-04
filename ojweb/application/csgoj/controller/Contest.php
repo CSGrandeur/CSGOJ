@@ -936,23 +936,17 @@ class Contest extends Csgojbase
         $solution = db('solution')->where('solution_id', $solution_id)->find();
         if(!$this->if_can_see_info($solution))
             $this->error('Permission denied to see this infomation.');
-        if($solution['result'] == 10)
-        {
-            //Runtime Error
-            $runtimeinfo = db('runtimeinfo')->where('solution_id', $solution_id)->find();
-            $this->success(htmlentities(str_replace("\n\r","\n",$runtimeinfo['error']),ENT_QUOTES,"utf-8"));
-        }
-        else if($solution['result'] == 11)
+        if($solution['result'] == 11)
         {
             //Compile Error
             $compileinfo = db('compileinfo')->where('solution_id', $solution_id)->find();
             $this->success(htmlentities(str_replace("\n\r","\n",$compileinfo['error']),ENT_QUOTES,"utf-8"));
         }
-        else if((IsAdmin('source_browser') || $this->IsContestAdmin() || $this->ALLOW_WA_INFO) && in_array($solution['result'], [5, 6, 7, 8, 9]))
+        else if((IsAdmin('source_browser') || $this->IsContestAdmin() || $this->ALLOW_WA_INFO) && in_array($solution['result'], [5, 6, 7, 8, 9, 10]))
         {
             // PE || WA || TLE || MLE || OLE 暂时只允许管理员查看
-            $compileinfo = db('runtimeinfo')->where('solution_id', $solution_id)->find();
-            $this->success($compileinfo['error']);
+            $runtimeinfo = db('runtimeinfo')->where('solution_id', $solution_id)->find();
+            $this->success(htmlentities(str_replace("\n\r","\n",$runtimeinfo['error']),ENT_QUOTES,"utf-8"));
         }
         else
         {
@@ -1021,7 +1015,7 @@ class Contest extends Csgojbase
         $solution['res_show'] = false;
         $oj_results_html = config('CsgojConfig.OJ_RESULTS_HTML');
         // if_can_see_info 的前提下，【10 RE 或 11 CE】或者【5~9的结果且(为管理员或允许查看错误信息)】
-        $solution['res_show'] = $this->if_can_see_info($solution) && (($solution['result'] == 10 || $solution['result'] == 11) || (in_array($solution['result'], [5, 6, 7, 8, 9])  && ($this->IsContestAdmin() || $this->ALLOW_WA_INFO)));
+        $solution['res_show'] = $this->if_can_see_info($solution) && ($solution['result'] == 11 || (in_array($solution['result'], [5, 6, 7, 8, 9, 10])  && ($this->IsContestAdmin() || $this->ALLOW_WA_INFO)));
         $result_style = array_key_exists($solution['result'], $oj_results_html) ? $solution['result'] : 100;
         $solution['res_color'] = $oj_results_html[$result_style][0];
         $solution['res_text'] = $oj_results_html[$result_style][1];
