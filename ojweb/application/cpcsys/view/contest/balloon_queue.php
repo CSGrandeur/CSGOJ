@@ -43,6 +43,7 @@
     data-unique-id="team_pro"
     data-sort-stable="true"
     data-sort-name="bst"
+    data-sort-order="asc"
     data-pagination="false"
     data-method="get"
     data-search="false"
