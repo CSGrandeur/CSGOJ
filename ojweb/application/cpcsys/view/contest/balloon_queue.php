@@ -65,7 +65,7 @@
 
 </main>
 <script>
-let rank_data = null, rank_data_time = null;
+let rank_data = null, rank_data_time = null, rank_data_filtered_by_room;
 let balloon_task_list, map_team_balloon;
 let problem_id_map;
 let map_team;
@@ -163,12 +163,14 @@ function GetRoomMap() {
     let room_list = room_list_str.split(',');
     map_room = {};
     for(let i = 0; i < room_list.length; i ++) {
-        if(room_list[i].trim() != '') {
-            map_room[room_list[i].trim()] = true;
+        room_list[i] = room_list[i].trim()
+        if(room_list[i] != '') {
+            map_room[room_list[i]] = true;
         }
     }
+    room_list_str_input.val(Object.keys(map_room).join(','));
 }
-function MapTeamBaloonAdd(team_id, problem_id, task_item) {
+function MapTeamBalloonAdd(team_id, problem_id, task_item) {
     if(!(team_id in map_team_balloon)) {
         map_team_balloon[team_id] = {};
     }
@@ -194,7 +196,7 @@ function SendTaskQuery(ith, total_get) {
             if (ret.code === 1) {
                 balloon_queue_table.bootstrapTable('insertRow', {index: 1, row: task_data});
                 SendTaskQuery(ith + 1, total_get + 1);
-                MapTeamBaloonAdd(task_data.team_id, task_data.problem_id, task_data);
+                MapTeamBalloonAdd(task_data.team_id, task_data.problem_id, task_data);
             }
             else {
                 SendTaskQuery(ith + 1, total_get);
@@ -206,16 +208,16 @@ function SendTaskQuery(ith, total_get) {
         alertify.message(`本次没有新任务`);
     }
 }
-function CalcTask() {
+function CalcTask(rank_data_task) {
     task_potential = [];
     for(let apid in problem_id_map.abc2id) {
-        for(let i = 0; i < rank_data.length; i ++) {
-            if((apid in rank_data[i]) && (rank_data[i][apid].pst == 2 || rank_data[i][apid].pst == 3)) {
+        for(let i = 0; i < rank_data_task.length; i ++) {
+            if((apid in rank_data_task[i]) && (rank_data_task[i][apid].pst == 2 || rank_data_task[i][apid].pst == 3)) {
                 let problem_id = problem_id_map.abc2id[apid];
-                if(!(rank_data[i].user_id in map_team_balloon) || !(problem_id in map_team_balloon[rank_data[i].user_id])) {
+                if(!(rank_data_task[i].user_id in map_team_balloon) || !(problem_id in map_team_balloon[rank_data_task[i].user_id])) {
                     task_potential.push({
                         'apid': apid,
-                        'row': rank_data[i]
+                        'row': rank_data_task[i]
                     })
                 }
             }
@@ -227,12 +229,13 @@ function GetTask() {
     if(rank_data_time === null || Math.abs(new Date() - rank_data_time) > 60000) {
         $.get(`ranklist_ajax?cid=${cid}`, function(ret) {
             rank_data = ret;
-            rank_data = rank_data.filter((a) => map_room === null || (a.room in map_room));
+            rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || (a.room in map_room));
             rank_data_time = new Date();
-            CalcTask();
+            CalcTask(rank_data_filtered_by_room);
         });
     } else {
-        CalcTask();
+        rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || (a.room in map_room));
+        CalcTask(rank_data_filtered_by_room);
     }
 }
 function InitBalloonQueueShow() {
@@ -379,6 +382,9 @@ $('document').ready(function() {
     $("#room_limit").click(function() {
         alertify.alert(this.title.split(',').join('<br/>')).set("title", "管理的房间");
     })
+    room_list_str_input.change(function() {
+        GetRoomMap();
+    });
 });
 </script>
 <style>

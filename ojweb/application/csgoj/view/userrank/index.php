@@ -66,7 +66,6 @@ function FormatterRank(value, row, index, field) {
     return query_params.offset + index + 1;
 }
 function QueryParams(params) {
-    console.log(params);
     query_params = params
     return params;
 }
