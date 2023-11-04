@@ -524,7 +524,7 @@ class Contest extends Contestbase
         if(!$this->balloonManager && !$this->balloonSender && !$this->proctorAdmin && !$this->isContestAdmin) {
             $this->error("No permission to view balloon senders");
         }
-        return db('cpc_team')->where(['contest_id' => $this->contest['contest_id'], 'privilege' => 'balloon_sender'])->field('password', true)->select();
+        return db('cpc_team')->where(['contest_id' => $this->contest['contest_id'], 'privilege' => ['in', ['balloon_sender', 'balloon_manager']]])->field('password', true)->select();
     }
     public function balloon_change_status_ajax() {
         $this->BalloonAuth();

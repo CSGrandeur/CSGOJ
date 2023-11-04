@@ -23,7 +23,7 @@ function FormatterRankProBalloon(value, row, index, field) {
     function FB(val) {return val.pst == 3 ? ' - FB' : '';}
     let title = '';
     if('balloon_sender' in value) {
-        title = `sender: ${value.balloon_sender} - ${map_balloon_sender[value.balloon_sender].name} &#10;ac_time: ${Timeint2Str(value.ac)}`;
+        title = `sender: ${value.balloon_sender} - ${map_balloon_sender?.[value.balloon_sender]?.name} &#10;ac_time: ${Timeint2Str(value.ac)}`;
     }
     return `<span title="${title}">${AC(value)}${FB(value)}<br/>${WA(value)}</span>`;
 }
