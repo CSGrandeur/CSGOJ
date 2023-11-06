@@ -50,7 +50,7 @@ else
         SHM_CONFIG="--shm-size $JUDGE_SHM_SIZE"
     fi
     
-    if [ -z "$CSGOJ_DEV" ] || [ "$CSGOJ_DEV" != "1" ]; then
+    if [ "$DOCKER_PULL_NEW" = "1" ] && ([ -z "$CSGOJ_DEV" ] || [ "$CSGOJ_DEV" != "1" ]); then
         docker pull csgrandeur/csgoj-judge:$CSGOJ_VERSION   # 先pull以确保镜像最新
     fi
 

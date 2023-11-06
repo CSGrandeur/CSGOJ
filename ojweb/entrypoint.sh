@@ -15,7 +15,7 @@ PATH_OJWEB_BASE=/ojweb
 if [ ! -d /var/www/baseoj/public/static ]; then
     mkdir -p /var/www/baseoj/public/static
     cp -ruf $PATH_OJWEB_BASE/public/static/* /var/www/baseoj/public/static/
-elif [ "$OJ_UPDATE_STATIC" = "true" ]; then
+elif [ "$OJ_UPDATE_STATIC" = "1" ]; then
     cp -ruf $PATH_OJWEB_BASE/public/static/* /var/www/baseoj/public/static/
 fi
 # init env 文件不存在或为空时写入配置

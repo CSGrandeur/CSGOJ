@@ -7,7 +7,7 @@ mkdir -p $CONFIG_LOG
 CONFIG_FILE=0
 CSGOJ_VERSION=latest
 PATH_DATA=`pwd`/csgoj_data
-WITH_JUDGE='false'
+WITH_JUDGE=0
 PASS_SQL_ROOT=$PASSWORD_DEFAULT
 PASS_SQL_USER=$PASSWORD_DEFAULT
 PASS_JUDGER=$PASSWORD_DEFAULT
@@ -19,14 +19,14 @@ PORT_DB=20006
 PORT_OJ_DB=3306
 SQL_USER='csgcpc'
 SQL_HOST='db'
-WITH_MYSQL='true'
+WITH_MYSQL=1
 OJ_NAME='csgoj'
 OJ_CDN='local'
 OJ_MODE='cpcsys'
 OJ_STATUS='cpc'
-OJ_OPEN_OI='false'
-OJ_UPDATE_STATIC='false'
-BELONG_TO=false
+OJ_OPEN_OI=0
+OJ_UPDATE_STATIC=0
+BELONG_TO=0
 JUDGE_USER_NAME="judger"
 JUDGE_DOCKER_CPUS=6
 JUDGE_DOCKER_MEMORY=6g
@@ -39,6 +39,7 @@ JUDGER_TOTAL=1
 OJ_MOD=0
 NGINX_PORT_RANGS=''
 SECRET_KEY='super_secret_oj'
+DOCKER_PULL_NEW=1
 DOCKER_NET_NAME="csgoj_net"
 LINK_LOCAL="--network $DOCKER_NET_NAME"
 
@@ -80,6 +81,7 @@ parse_args() {
     OJ_MOD:, \
     NGINX_PORT_RANGS:, \
     SECRET_KEY:, \
+    DOCKER_PULL_NEW:, \
     DOCKER_NET_NAME:, \
     LINK_LOCAL:
   "
@@ -94,7 +96,7 @@ parse_args() {
         --CONFIG_FILE)                  CONFIG_FILE="$2"; shift 2;;                 # 指定一个配置文件
         --CSGOJ_VERSION)                CSGOJ_VERSION="$2"; shift 2;;               # docker hub 中CSGOJ 版本号（tag）
         --PATH_DATA)                    PATH_DATA="$2"; shift 2;;                   # 所有系统文件与数据的存放目录，用绝对路径
-        --WITH_JUDGE)                   WITH_JUDGE="$2"; shift 2;;                  # true / false
+        --WITH_JUDGE)                   WITH_JUDGE="$2"; shift 2;;                  # 1 / 0
         --PASS_SQL_ROOT)                PASS_SQL_ROOT="$2"; shift 2;;               # sql root密码
         --PASS_SQL_USER)                PASS_SQL_USER="$2"; shift 2;;               # sql 业务用户密码
         --PASS_JUDGER)                  PASS_JUDGER="$2"; shift 2;;                 # judge判题账号的密码
@@ -102,12 +104,12 @@ parse_args() {
         --PASS_MYADMIN_PAGE)            PASS_MYADMIN_PAGE="$2"; shift 2;;           # phpmyadmin的页面权限admin的密码
         --SQL_USER)                     SQL_USER="$2"; shift 2;;                    # sql 业务用户名
         --SQL_HOST)                     SQL_HOST="$2"; shift 2;;                    # sql 地址
-        --WITH_MYSQL)                   WITH_MYSQL="$2"; shift 2;;                  # 是否部署docker的mysql, true / false
+        --WITH_MYSQL)                   WITH_MYSQL="$2"; shift 2;;                  # 是否部署docker的mysql, 1 / 0
         --OJ_NAME)                      OJ_NAME="$2"; shift 2;;                     # OJ名称
         --OJ_CDN)                       OJ_CDN="$2"; shift 2;;                      # OJCDN local or jsdelivr
         --OJ_MODE)                      OJ_MODE="$2"; shift 2;;                     # online or cpcsys
         --OJ_STATUS)                    OJ_STATUS="$2"; shift 2;;                   # cpc
-        --OJ_OPEN_OI)                   OJ_OPEN_OI="$2"; shift 2;;                  # true or false
+        --OJ_OPEN_OI)                   OJ_OPEN_OI="$2"; shift 2;;                  # [parameter defunct]
         --OJ_UPDATE_STATIC)             OJ_UPDATE_STATIC="$2"; shift 2;;            # 部署时是否替换公共static（datapath/baseoj/public/static/*）
         --PORT_OJ)                      PORT_OJ="$2"; shift 2;;                     # OJ web端口
         --PORT_OJ_DB)                   PORT_OJ_DB="$2"; shift 2;;                  # OJ web 连接数据库使用的端口
@@ -126,6 +128,7 @@ parse_args() {
         --OJ_MOD)                       OJ_MOD="$2"; shift 2;;                      # judge多pod判题的本机编号
         --NGINX_PORT_RANGS)             NGINX_PORT_RANGS="$2"; shift 2;;            # 给nginx映射更多端口，"-p 80-89:80-89 -p 20000-20100:20000-20100"
         --SECRET_KEY)                   SECRET_KEY="$2"; shift 2;;                  # 一些加密地方的key，不太重要
+        --DOCKER_PULL_NEW)              DOCKER_PULL_NEW="$2"; shift 2;;             # 默认 1 尝试pull同标签镜像是否有更新，断网情况下设为 0
         --DOCKER_NET_NAME)              DOCKER_NET_NAME="$2"; shift 2;;             # docker局部网络名称
         --LINK_LOCAL)                   LINK_LOCAL="$2"; shift 2;;                  # docker局部网络设置，"--network $DOCKER_NET_NAME" 或空 ""
         --) shift; break;; 
@@ -149,7 +152,7 @@ parse_args() {
     sudo chown -R $USER $PATH_DATA
     chmod 777 -R $PATH_DATA
   fi 
-  if [ "$BELONG_TO" = "false" ]; then
+  if [ "$BELONG_TO" = "0" ]; then
       BELONG_TO=$OJ_NAME
   fi
 }

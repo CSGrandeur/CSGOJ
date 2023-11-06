@@ -13,7 +13,7 @@
 #   --PORT_OJ_DB=3306 \
 #   --PASS_ADMIN=987654321 \
 #   --PASS_JUDGER=987654321 \
-#   --OJ_UPDATE_STATIC=false
+#   --OJ_UPDATE_STATIC=0
 
 source parse_args.sh
 parse_args "$@"
@@ -27,9 +27,10 @@ if [ "$(docker ps -aq -f name=/php-$OJ_NAME$)" ]; then
     echo "php-$OJ_NAME ready"
 else
     WEB_MOUNT=""
-    if [ -z "$CSGOJ_DEV" ] || [ "$CSGOJ_DEV" != "1" ]; then
+    if [ "$DOCKER_PULL_NEW" = "1" ] && ([ -z "$CSGOJ_DEV" ] || [ "$CSGOJ_DEV" != "1" ]); then
         docker pull csgrandeur/csgoj-web:$CSGOJ_VERSION # 先pull以确保镜像最新
-    else
+    fi
+    if [ "$CSGOJ_DEV" = "1" ]; then
         WEB_MOUNT="-v `pwd`/../ojweb/application:/ojweb/application -v `pwd`/../ojweb/extend:/ojweb/extend"
     fi
     docker run -dit $LINK_LOCAL \

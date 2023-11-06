@@ -1,13 +1,13 @@
 #!/bin/bash
 # simple run:  bash auto_deploy.sh
 # parameter run: # bash auto_deploy.sh --<PARAM>=<your param>  # see parse_args.sh
-# 如果 --WITH_JUDGE=true，且PORT_OJ不是默认值，则要提供 --OJ_HTTP_BASEURL 参数告诉评测机 OJ在哪
+# 如果 --WITH_JUDGE=1 ，且PORT_OJ不是默认值，则要提供 --OJ_HTTP_BASEURL 参数告诉评测机 OJ在哪
 # 所有密码建议用数字字母；特殊符号的密码在脚本逻辑中可能出问题
 # 例:
 # bash auto_deploy.sh \
 #     --PATH_DATA=`pwd`/csgoj_data \
-#     --WITH_JUDGE=false \
-#     --WITH_MYSQL=true \
+#     --WITH_JUDGE=0 \
+#     --WITH_MYSQL=1 \
 #     --PASS_SQL_ROOT="123456" \
 #     --PASS_SQL_USER="123456789" \
 #     --PASS_JUDGER="999999" \
@@ -24,13 +24,13 @@ source parse_args.sh
 parse_args "$@"
 
 bash install_docker.sh
-if [ "$WITH_MYSQL" = "true" ]; then
+if [ "$WITH_MYSQL" = "1" ]; then
     bash start_db.sh "$@"
 fi
 bash start_myadmin.sh "$@"
 bash start_oj.sh "$@"
 bash start_nginx.sh "$@"
-if [ "$WITH_JUDGE" = "true" ]; then
+if [ "$WITH_JUDGE" = "1" ]; then
     bash start_judge.sh "$@"
 fi
 
