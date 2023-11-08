@@ -36,7 +36,6 @@
                 </a>
             </th>
             {/foreach}
-            <th data-field="school" data-align="left" data-valign="middle"  data-sortable="false" data-width="80" data-cell-style="schoolCellStyle">School</th>
             {if $module == 'cpcsys' }
             <th data-field="tmember" data-align="left" data-valign="middle"  data-sortable="false" data-cell-style="memberCellStyle">Member</th>
             <th data-field="coach" data-align="left" data-valign="middle"  data-sortable="false" data-width="50" data-cell-style="coachCellStyle">Coach</th>

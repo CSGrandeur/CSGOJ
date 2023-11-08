@@ -278,8 +278,9 @@ function acCellStyle(value, row, index) {
 }
 function FormatterIdName(value, row, index, field) {
     let team_url = FormatterRankUserId(row.user_id, row, index, field);
-    let team_name = `<span class='d-inline-block text-truncate' style='max-width:280px;'>${value}</span>`;
-    return `<div title="${row.nick} | ${row.tmember} | ${row.coach} @ ${row.school}">${team_url}<br/>${team_name}</div>`;
+    let team_school = `<div class='text-truncate text-warning' style='max-width:280px;'>${row.school}</div>`;
+    let team_name = `<div class='text-truncate' style='max-width:280px;'>${value}</div>`;
+    return `<div title="${row.nick} | ${row.tmember} | ${row.coach} @ ${row.school}"><div>${team_url}</div>${team_school}${team_name}</div>`;
 }
 function FormatterRankPro(value, row, index, field) {
     function AC(res) {
