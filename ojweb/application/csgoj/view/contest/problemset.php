@@ -1,31 +1,24 @@
 <div class="row">
     <div class="col-md-8 col-sm-8">
         <table
+            class="bootstraptable_refresh_local"
             data-toggle="table"
-            data-striped="true"
-            data-classes="table-no-bordered table table-hover"
+            data-url="/{$module}/{$controller}/problemset_ajax?cid={$contest['contest_id']}"
+            data-pagination="false"
+            data-side-pagination="client"
+            data-method="get"
+            data-search="false"
+            data-classes="table table-no-bordered table-hover table-striped"
         >
             <thead>
             <tr>
                 <th data-field="ac" data-align="center" data-valign="middle"  data-sortable="false" data-width="30"></th>
                 <th data-field="problem_id" data-align="center" data-valign="middle"  data-sortable="false" data-width="70">ID</th>
-                <th data-field="title" data-align="left" data-valign="middle"  data-sortable="false" data-width="500">Title</th>
-                <!-- {if $OJ_OPEN_OI == true}
-                <th data-field="pscore" data-align="right" data-valign="middle"  data-sortable="false" data-width="80">Score</th>
-                {/if} -->
-                <th data-field="accepted" data-align="right" data-valign="middle"  data-sortable="false" data-width="80">AC</th>
+                <th data-field="title" data-align="left" data-valign="middle"  data-sortable="false" data-width="500" data-formatter="FormatterProTitle">Title</th>
+                <th data-field="accepted" data-align="center" data-valign="middle"  data-sortable="false" data-width="80" data-formatter="FormatterProAc">AC</th>
                 <th data-field="submit" data-align="right" data-valign="middle"  data-sortable="false" data-width="100">Submit</th>
             </tr>
             </thead>
-            <tbody>
-            {foreach $problemList as $problem}
-            <tr>
-                {foreach $outputOrder as $item}
-                <td>{$problem[$item]}</td>
-                {/foreach}
-            </tr>
-            {/foreach}
-            </tbody>
         </table>
     </div>
     <div class="col-md-4 col-sm-4">
@@ -46,7 +39,18 @@
         </div>
     </div>
 </div>
-
+<input id="pro_page_info" type="hidden" module="{$module}" controller="{$controller}" cid="{$contest['contest_id']}">
+<style>
+.contest_problem_title {
+    display: inline-block;
+    width: 22vw;
+    max-width: 530px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+</style>
+{css href="__STATIC__/csgoj/contest_problemset.js" /}
 {if IsAdmin('contest', $contest['contest_id'])}
 {include file="../../csgoj/view/contest/change_notification" /}
 {/if}

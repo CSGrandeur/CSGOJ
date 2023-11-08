@@ -84,7 +84,12 @@
                     <!-- <label for="problems">Problems(split problem_id with ',', add ":xx" for problem score):</label>
                     <input type="text" class="form-control" id="title" placeholder="1000,1001:15,1002:20..." name="problems" {if $edit_mode}value="{$problems}"{/if}> -->
                     <label for="problems">Problems(split problem_id with ','):</label>
-                    <input type="text" class="form-control" id="title" placeholder="1000,1001,1002..." name="problems" {if $edit_mode}value="{$problems}"{/if} >
+                    <input type="text" class="form-control" id="problems" placeholder="1000,1001,1002..." name="problems" {if $edit_mode}value="{$problems}"{/if} >
+                </div>
+                <div class="form-group">
+                    <label for="balloon_colors">Balloon Color(hexadecimal like 3FFFAA):</label>
+                    <div id="balloon_color_div"></div>
+                    <input type="text" class="form-control" id="balloon_colors" placeholder="3F3F3F,202020,AB3062..." name="balloon_colors" {if $edit_mode}value="{$balloon_colors}"{/if} >
                 </div>
                 <label for="description">Description/Notification (markdown)：</label>
                 <textarea id="contest_description" class="form-control" placeholder="Content..." rows="5" cols="50" name="description" >{if $edit_mode}{$contest['description']|htmlspecialchars}{/if}</textarea>
@@ -104,14 +109,59 @@
 .form-inline {
     padding-bottom: 10px;
 }
+#balloon_color_div {
+    display: flex;
+}
+.balloon_color_block {
+    margin-right: 2px;
+    width: 53px;
+    height:20px;
+    color: white;
+    text-align: center;
+}
+#balloon_colors {
+	font-family: sans-serif, 'Simsun', 'Microsoft Yahei Mono', 'Lato', "PingFang SC", "Microsoft YaHei";
+}
 </style>
 <script type="text/javascript">
     var page_info = $('#page_info');
     var edit_mode = page_info.attr('edit_mode');
     var submit_button = $('#submit_button');
     var submit_button_text = submit_button.text();
+    let balloon_color_div = $('#balloon_color_div');
+    let balloon_colors_input = $('#balloon_colors')
+    let problems_input = $('#problems')
+    function InitBalloonColorDiv() {
+        let problem_list = problems_input.val().split(',');
+        let balloon_color_list = balloon_colors_input.val().split(',');
+        let balloon_color_list_new = [];
+        let balloon_color_block = [];
+        let map_color_record = {};
+        for(let i = 0; i < problem_list.length; i ++) {
+            let cl = -1;
+            if(i < balloon_color_list.length) {
+                cl = parseInt(balloon_color_list[i], 16);
+            }
+            if(cl < 0 || cl >= 16777216 || isNaN(cl) || (cl in map_color_record)) {
+                cl = Math.floor(Math.random() * 16777216);
+            }
+            map_color_record[cl] = true;
+            cl = cl.toString(16).toUpperCase().padStart(6, '0');
+            balloon_color_list_new.push(cl);
+            balloon_color_block.push(`<div style="background-color:#${cl};" class="balloon_color_block">${String.fromCharCode('A'.charCodeAt(0) + i)}</div>`);
+        }
+        balloon_color_div.html(balloon_color_block.join(''));
+        balloon_colors_input.val(balloon_color_list_new.join(','));
+    }
+    balloon_colors_input.change(function() {
+        InitBalloonColorDiv();
+    });
+    problems_input.change(function() {
+        InitBalloonColorDiv();
+    });
     $(document).ready(function()
     {
+        InitBalloonColorDiv();
         $('input[type="text"],textarea').tooltipster({
             trigger: 'custom',
             position: 'bottom',

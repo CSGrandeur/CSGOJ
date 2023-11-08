@@ -347,8 +347,18 @@ class Contest extends Csgojbase
     //Problem
     /**************************************************/
     public function problemset() {
+
         if(isset($this->isContestStaff) && $this->isContestStaff && !$this->isContestAdmin && !$this->proctorAdmin) {
             $this->redirect('/' . $this->module . '/' . $this->controller . '/contest?cid=' . $this->contest['contest_id']);
+        }
+        return $this->fetch();
+    }
+    public function problemset_ajax() {
+        $summary_map = ['result' => 4, 'contest_id' => $this->contest['contest_id']];
+        if($this->rankFrozen) {
+            // 如果不是比赛管理员，则统计ac数要按封榜时间
+            $closeRankTimeStr = date('Y-m-d H:i:s', $this->closeRankTime);
+            $summary_map['in_date'] = ['lt', $closeRankTimeStr];
         }
         $contestProblemSql = db('contest_problem')->alias('cp')
             ->join('problem p', 'p.problem_id = cp.problem_id', 'left')
@@ -357,12 +367,13 @@ class Contest extends Csgojbase
                 'p.problem_id problem_id',
                 'p.title title',
                 'cp.num num',
-                'cp.pscore pscore'
+                'cp.pscore pscore',
+                'cp.title color'    // 不改数据库了，暂时用这个字段
             ])
             ->buildSql();
         $acSql = db('solution')
             ->field(['problem_id', 'count(1) accepted'])
-            ->where(['result' => 4, 'contest_id' => $this->contest['contest_id']])
+            ->where($summary_map)
             ->group('problem_id')
             ->buildSql();
         $submitSql = db('solution')
@@ -378,6 +389,7 @@ class Contest extends Csgojbase
                 'p.problem_id problem_id',
                 'p.title title',
                 'p.num num',
+                'p.color color',
                 'p.pscore pscore',
                 'a.accepted accepted',
                 's.submit submit'
@@ -409,7 +421,7 @@ class Contest extends Csgojbase
                 //管理员弄错了题号，这里没有搜到这道题的情况下（多表联查，contest题目表left join problem，可能有problem不存在，虽然contest add时验证过）
                 continue;
             }
-            $problem['title'] = "<a href='/" . $this->request->module() . "/" . $this->controller . "/problem?cid=". $this->contest['contest_id']."&pid=" . $this->problemIdMap['id2abc'][$problem['problem_id']] . "'>" . $problem['title'] . "</a>";
+            // $problem['title_show'] = "<a href='/" . $this->request->module() . "/" . $this->controller . "/problem?cid=". $this->contest['contest_id']."&pid=" . $this->problemIdMap['id2abc'][$problem['problem_id']] . "'>" . $problem['title'] . "</a>";
 
             if($this->contestStatus < 2 && !$this->IsContestAdmin())
             {
@@ -429,14 +441,7 @@ class Contest extends Csgojbase
                 $problem['submit'] = 0;
             $retList[] = $problem;
         }
-        // if($this->OJ_OPEN_OI) {
-        //     $outputOrder = ['ac', 'problem_id_show', 'title', 'pscore', 'accepted', 'submit'];
-        // }
-        // else {
-            $outputOrder = ['ac', 'problem_id_show', 'title', 'accepted', 'submit'];
-        // }
-        $this->assign(['problemList' => $retList, 'outputOrder' => $outputOrder]);
-        return $this->fetch();
+        return $retList;
     }
     public function problem() {
         if(isset($this->isContestWorker) && $this->isContestWorker && !$this->isContestAdmin) {

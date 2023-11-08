@@ -212,12 +212,14 @@ class Contest extends Adminbase
         // 比赛的题目列表
         $contestProblem = db('contest_problem')->where('contest_id', $contest_id)->order('num')->select();
         $problems = [];
+        $balloon_colors = [];
         foreach($contestProblem as $problem) {
             $p = $problem['problem_id'];
             // if($this->OJ_OPEN_OI && $problem['pscore'] > 0) {
             //     $p .= ":" . $problem['pscore'];
             // }
             $problems[] = $p;
+            $balloon_colors[] = $problem['title'];
         }
         // 比赛的有权限用户
         $contestUser = db('privilege')->where('rightstr', 'c'.$contest_id)->order('user_id')->select();
@@ -250,6 +252,7 @@ class Contest extends Adminbase
             'frozen_after'  => $contest['frozen_after'],
             'contest'       => $contest,
             'problems'      => implode(",", $problems),
+            'balloon_colors'=> implode(",", $balloon_colors),
             'users'         => implode("\n", $users),
             'cooperator'    => implode(",", $cooperator),
             'item_priv'     => IsAdmin($this->privilegeStr, $contest['contest_id']),
@@ -317,7 +320,8 @@ class Contest extends Adminbase
     {
         /***********/
         // 处理Contest Problems
-        $problemList = explode(",", trim(input('problems')));
+        $problemList = explode(",", trim(input('problems/s')));
+        $balloonColorList = explode(",", trim(input('balloon_colors/s')));
         $ContestProblem = db('contest_problem');
         $ContestProblem->where('contest_id', $contest_id)->delete();//虽然基本不会有，还是防contest的auto_increcement被修改过
         $contest_problem_add = [];
@@ -329,6 +333,9 @@ class Contest extends Adminbase
         $infoDuplicate = '';
         $infoNovalid = '';
         $nonZeroPscore = 0;
+        if(count($problemList) != count($balloonColorList)) {
+            $this->error("The number not match between balloon colors and problems");
+        }
         foreach($problemList as $p)
         {
             // $p 可以为 “1000:20” 的形式，用于给每个题目分配分数
@@ -354,10 +361,11 @@ class Contest extends Adminbase
             $problemSelected[$p] = true;
             if($pscore > 0) $nonZeroPscore ++;
             $contest_problem_add[] = [
-                'problem_id' => $p,
-                'contest_id' => $contest_id,
-                'num'        => $num,
-                'pscore'    => $pscore
+                'problem_id'    => $p,
+                'contest_id'    => $contest_id,
+                'num'           => $num,
+                'title'         => $balloonColorList[$num],
+                'pscore'        => $pscore
             ];
             $num ++;
         }
