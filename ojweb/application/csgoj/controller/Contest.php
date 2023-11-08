@@ -1347,7 +1347,7 @@ class Contest extends Csgojbase
         }
         $schoolRankTeamNum = $this->contest['topteam'] < 1 ? 1 : $this->contest['topteam']; // config($ojModeConfig . '.SCHOOL_RANK_TEAMNUM');
 
-        $data = $this->GetRankData();
+        $data = $this->GetRankData(false);  // school rank 排除打星队，$with_star=false
         $firstBlood = &$data[0];
         $rankDataList = &$data[1];
         $schoolDataList = [];
@@ -1446,7 +1446,7 @@ class Contest extends Csgojbase
         return $retList;
 
     }
-    public function RankUserList($map)
+    public function RankUserList($map, $with_star=true)
     {
         return db('solution')->alias('s')
         ->join('users u', 'u.user_id = s.user_id', 'left')
@@ -1469,7 +1469,7 @@ class Contest extends Csgojbase
         else
             return '/' . $this->module . '/user/userinfo?user_id=' . $user_id;
     }
-    public function GetRankData() {
+    protected function GetRankData($with_star=true) {
         $map = ['contest_id' => $this->contest['contest_id']];
         $Solution = db('solution');
         $solutionList = $Solution->where($map)->order('in_date', 'asc')->select();
@@ -1481,7 +1481,8 @@ class Contest extends Csgojbase
         
         // 先获取用户列表，Online版只需要nick，比赛里需要只计算比赛账号的rank，以免 fb 计算错误
         // 解释：对于比赛系统，生成账号交题后，重新生成账号去掉了已交题账号，避免这个交题记录被作为fb，造成rank实际用户fb无信息
-        $userList = $this->RankUserList($map);
+
+        $userList = $this->RankUserList($map, $with_star);
         $userMap = [];
         foreach($userList as $user) {
             $userMap[$user['user_id']] = $user;

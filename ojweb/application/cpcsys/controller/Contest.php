@@ -200,9 +200,13 @@ class Contest extends Contestbase
         }
         return $user_id;
     }
-    public function RankUserList($map)
+    public function RankUserList($map, $with_star=true)
     {
-        return db('cpc_team')->where(['contest_id' => $this->contest['contest_id']])
+        $cmap = ['contest_id' => $this->contest['contest_id']];
+        if(!$with_star) {
+            $cmap['tkind'] = ['neq', 2];
+        }
+        return db('cpc_team')->where($cmap)
         ->field([
             'team_id user_id',
             'name nick',
