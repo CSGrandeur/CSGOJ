@@ -13,7 +13,7 @@
             <thead>
             <tr>
                 <th data-field="ac" data-align="center" data-valign="middle"  data-sortable="false" data-width="30"></th>
-                <th data-field="problem_id" data-align="center" data-valign="middle"  data-sortable="false" data-width="70">ID</th>
+                <th data-field="problem_id_show" data-align="center" data-valign="middle"  data-sortable="false" data-width="70">ID</th>
                 <th data-field="title" data-align="left" data-valign="middle"  data-sortable="false" data-width="500" data-formatter="FormatterProTitle">Title</th>
                 <th data-field="accepted" data-align="center" data-valign="middle"  data-sortable="false" data-width="80" data-formatter="FormatterProAc">AC</th>
                 <th data-field="submit" data-align="right" data-valign="middle"  data-sortable="false" data-width="100">Submit</th>
