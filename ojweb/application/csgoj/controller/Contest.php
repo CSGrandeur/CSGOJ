@@ -768,8 +768,9 @@ class Contest extends Csgojbase
 
         if($apid != null && strlen($apid) > 0)
             $map['problem_id'] = array_key_exists($apid, $this->problemIdMap['abc2id']) ? $this->problemIdMap['abc2id'][$apid] : '';
-        if($user_id != null && strlen($user_id) > 0)
+        if($user_id != null && strlen($user_id) > 0) {
             $map['user_id'] = $this->SolutionUser($user_id, true);
+        }
         if($solution_id != null && strlen($solution_id) > 0) {
             $map['solution_id'] = $solution_id;
         } else if($solution_id_list != null){            
@@ -782,8 +783,15 @@ class Contest extends Csgojbase
             //筛选比赛允许的语言（比赛过程可能修改过语言列表）
             $map['language'] = ['in', array_keys($this->allowLanguage)];
         }
-        if($result != null && $result != -1)
+        if($result != null && $result != -1) {
             $map['result'] = $result;
+            // 如果已封榜，且搜索特定类型，则只返回封榜前内容
+            if($this->rankFrozen && ($user_id === null || $this->SolutionUser($user_id, true) != $this->contest_user)) {
+                $closeRankTimeStr = date('Y-m-d H:i:s', $this->closeRankTime);
+                $map['in_date'] = ['lt', $closeRankTimeStr];
+            }
+
+        }
         $map['contest_id'] = $this->contest['contest_id'];
         $ret = [];
         $ordertype = [];
