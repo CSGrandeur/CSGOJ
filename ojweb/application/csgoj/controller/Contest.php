@@ -318,7 +318,10 @@ class Contest extends Csgojbase
         $search        = trim(input('search/s'));
 
         $map = [];
-        if($this->module == 'cpcsys') {
+        
+        if($this->module == 'ojtool') {
+            // nothing
+        } else if($this->module == 'cpcsys') {
             $map['private'] = ['in', [2, 12]];
         } else {
             $map['private'] = ['in', [0, 1, 10, 11]];

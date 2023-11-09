@@ -1,5 +1,3 @@
-let param = csg.Url2Json();
-let cid = param.cid;
 if('oj_mode' in param) {
     OJ_MODE = param.oj_mode;
 }
@@ -10,15 +8,9 @@ let flag_award_area = false;    // 标识是否进入奖区，进入奖区时取
 let flag_nowstep = null;
 let flag_judgingdo_step = false;  // 当前操作为judge，而非初始sort或undo sort
 let flag_keyvalid = true;
-let flag_star_mode = 0;
-const STAR_NORANK = 0, STAR_WITHOUT = 1, STAR_RANK = 2;
-let cdata = null;  // 比赛原始数据
 let time_start, time_end, time_frozen, time_frozen_end;
-let cnt_base = null;    // 过题队数量作为评奖基数，金银铜向上取整
-let real_rank_list = [], real_rank_map = {}, tmp_rank_list = [], tmp_rank_map = {};
+let tmp_rank_list = [], tmp_rank_map = {};
 let ratio_gold, ratio_silver, ratio_bronze;
-let rank_gold, rank_silver, rank_bronze;
-let map_team_sol, map_item = {}, map_team, map_p2num, map_num2p, map_fb, map_fb_now; // data maps
 let stack_judge = [];
 let judging_team_id, judging_pro_id, judging_team_id_last, judging_ac_flag;    // single judging now
 
@@ -29,6 +21,7 @@ let rankroll_div;
 let rank_grid_div;
 let now_judging_ith = -1, now_order = [], map_now_order = {}, now_rank = {};
 let summary_data;
+let map_item = {}
 
 function FontNarrow(target_dom, target_width=null) {
     target_dom.style.transform = "none";
@@ -47,27 +40,6 @@ function FontNarrowRank() {
         FontNarrow(g_name_list[i]);
     }
 }
-function ContestUserId(user_id) {
-    if(user_id.startsWith('#')) {
-        return user_id.replace(/#cpc\d+?_/g, '');
-    }
-    return user_id;
-}
-function Str2Sec(time_str) {
-    return Math.floor(new Date(time_str).getTime() / 1000 + 1e-6);
-}
-function SummaryTemplate() {
-    return {
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-        10: 0,
-        'sum': 0 
-    }
-}
 const RES_CODE = {
     4:  '<div style="height:60px;padding:5px;margin:2px;" class="alert alert-success">  <strong>题目通过<br/>（A C）</strong></div>',
     5:  '<div style="height:60px;padding:5px;margin:2px;" class="alert alert-danger">   <strong>格式错误<br/>（P E）</strong></div>',
@@ -81,125 +53,6 @@ const RES_CODE = {
     1:  '<div style="height:60px;padding:5px;margin:2px;" class="alert alert-default "> <strong>等待重测<br/>（P R）</strong></div>',
     2:  '<div style="height:60px;padding:5px;margin:2px;" class="alert alert-default">  <strong>正在编译<br/>（C I）</strong></div>',
     3:  '<div style="height:60px;padding:5px;margin:2px;" class="alert alert-info">     <strong>正在运行<br/>（R J）</strong></div>',
-}
-function ProcessData() {
-    cnt_base = null;
-    map_team_sol = {};
-    map_team = {};
-    stack_judge = [];
-    summary_data = {
-        'total': SummaryTemplate(),
-        'pro_list': []
-    };
-    for(let i = 0; i < cdata.problem.length; i ++) {
-        summary_data.pro_list.push(SummaryTemplate());
-    }
-    
-    time_start = Str2Sec(cdata.contest.start_time);
-    time_end = Str2Sec(cdata.contest.end_time);
-    time_frozen = time_end - parseInt(cdata.contest.frozen_minute) * 60;
-    time_frozen_end = time_end + parseInt(cdata.contest.frozen_after) * 60;
-    
-    ratio_gold = cdata.contest.award_ratio % 1000;
-    ratio_silver = Math.floor(cdata.contest.award_ratio / 1000) % 1000;
-    ratio_bronze = Math.floor(cdata.contest.award_ratio / 1000000);
-    if(ratio_gold < 100) {
-        ratio_gold = ratio_gold / 100.0 - 0.0000001;
-    }
-    if(ratio_silver < 100) {
-        ratio_silver = ratio_silver / 100.0;
-    }
-    if(ratio_bronze < 100) {
-        ratio_bronze = ratio_bronze / 100.0;
-    }
-
-    for(let i = 0; i < cdata.team.length; i ++) {
-        map_team[cdata.team[i].team_id] = cdata.team[i];
-    }
-    // process problem id map
-    map_p2num = {};
-    map_num2p = new Array(cdata.problem.length);
-    for(let i = 0; i < cdata.problem.length; i ++) {
-        map_p2num[cdata.problem[i].problem_id] = cdata.problem[i].num;
-        map_num2p[cdata.problem[i].num] = cdata.problem[i].problem_id;
-    }
-    // process solutions
-    cdata.solution.sort((a, b) => a.in_date == b.in_date ? 0 : (a.in_date < b.in_date ? -1 : 1));
-    for(let i = 0; i < cdata.solution.length; i ++) {
-        cdata.solution[i].user_id = ContestUserId(cdata.solution[i].user_id);
-        cdata.solution[i].in_date = Str2Sec(cdata.solution[i].in_date);
-        if(cdata.solution[i].in_date < time_start || 
-            cdata.solution[i].in_date > time_end || 
-            // cdata.solution[i].result < 4 || 
-            cdata.solution[i].result == 11 ||
-            !(cdata.solution[i].user_id in map_team)
-        ) {
-            continue;
-        }
-        // process summary
-        let p_numid = map_p2num[cdata.solution[i].problem_id];
-        if(cdata.solution[i].result in summary_data.pro_list[p_numid]) {
-            summary_data.pro_list[p_numid][cdata.solution[i].result] ++;
-            summary_data.pro_list[p_numid].sum ++;
-            // console.log(p_numid, cdata.solution[i].result);
-            summary_data.total[cdata.solution[i].result] ++;
-            summary_data.total.sum ++;
-        }
-        if(!(cdata.solution[i].user_id in map_team_sol)) {
-            map_team_sol[cdata.solution[i].user_id] = {};
-            map_team_sol[cdata.solution[i].user_id].ac = {};
-            map_team_sol[cdata.solution[i].user_id].frozen = {};
-        }
-        let user_sol = map_team_sol[cdata.solution[i].user_id];
-        if(!(cdata.solution[i].problem_id in user_sol)) {
-            user_sol[cdata.solution[i].problem_id] = [];
-        }
-        let user_sol_pro = user_sol[cdata.solution[i].problem_id];
-        if(cdata.solution[i].problem_id in user_sol.ac) {
-            continue;   // 已ac之后的提交忽略
-        }
-        if(cdata.solution[i].result >= 4) {
-            // cdata.solution[i].frozen = false;
-            if(cdata.solution[i].result == 4) {
-                user_sol.ac[cdata.solution[i].problem_id] = cdata.solution[i].in_date;
-            }
-        } else {
-            // cdata.solution[i].frozen = true;
-            user_sol.frozen[cdata.solution[i].problem_id] = true;
-        }
-        user_sol_pro.push(cdata.solution[i]);
-    }
-    $('#page_header_main').text(cdata.contest.title);
-    if(typeof(SummaryUpdate) == 'function') {
-        SummaryUpdate();
-    }
-}
-function SolTime(in_date, mi=true, format_int=true) {
-    let ret = in_date - time_start;
-    if(mi) {
-        ret = Math.floor(ret / 60 + 0.00000001);
-    }
-    if(!format_int) {
-        if(mi) {
-            ret *= 60;
-        }
-        ret =Timeint2Str(ret);
-    }
-    return ret;
-}
-function DomSantize(st) {
-    return st
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-function StrEmpty(st) {
-    return st === null || st.trim() == '';
-}
-function ProPenalty(team_id, pro_id, ith_ac) {
-    return ith_ac * 20 * 60 + map_team_sol[team_id][pro_id][ith_ac].in_date - time_start;
 }
 function LoadData() {
     if(cid == null) {
@@ -215,6 +68,10 @@ function LoadData() {
         if(ret.code == 1) {
             cdata = ret.data;
             ProcessData();
+            $('#page_header_main').text(cdata.contest.title);
+            if(typeof(SummaryUpdate) == 'function') {
+                SummaryUpdate();
+            }
             ProcessItem();
             
         } else {
@@ -245,25 +102,11 @@ function TryStopInterval() {
 function InitData(re_query=false) {
     // loading_div.show();
     try {
-        if(re_query) {
-            LoadData();
-        } else {
-            ProcessData();
-            ProcessItem();
-        }
+        LoadData();
     } catch (e) {
         console.error(e);
         loading_div.hide();
     }
-}
-function PostprocessDataItem(team_line_item) {
-    if('penalty' in team_line_item) {
-        // 处理penalty的单位
-        team_line_item.penalty_mi = Math.floor(team_line_item.penalty / 60 + 0.00000001);
-        team_line_item.penalty_sec = team_line_item.penalty;
-        team_line_item.penalty = team_line_item.penalty_mi;
-    }
-    return team_line_item;
 }
 function TeamItem(team_id, with_dom=true) {
     if(!(team_id in map_team)) {

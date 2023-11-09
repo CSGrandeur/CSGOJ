@@ -1,5 +1,4 @@
-
-
+<script src="/static/ojtool/js/rank_base.js"></script>
 <script src="/static/ojtool/js/newrank_rank_base.js"></script>
 {if $action == 'rank'}
 <script src="/static/ojtool/js/newrank_rank.js"></script>

@@ -18,7 +18,7 @@ var csg = {
                 url += tmp;
             }
         } else {
-            fetchBody['body'] = data;
+            fetchBody['body'] = JSON.stringify(data);
         }
         return fetch(url, fetchBody);
     },
