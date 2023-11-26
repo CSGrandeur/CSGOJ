@@ -1,8 +1,22 @@
 <?php
 namespace app\ojtool\controller;
-use app\cpcsys\controller\Contest as Contestbase;
+use app\ojtool\controller\Rankroll as Contestbase;
 class Contestlive extends Contestbase
 {
+    public function InitController() {
+        $privateAction = ['ctrl', 'live_command_send_ajax'];
+        if(in_array($this->action, $privateAction) && !IsAdmin('contest', input('cid/d')) && !$this->IsContestAdmin('watcher')) {
+            $this->error("无访问权限", '/ojtool/contestlive', null, 1);
+        }
+        $this->contest = null;
+        if(input('?cid')) {
+            $cid = input('cid/d');
+            $this->contest = db('contest')->where('contest_id', $cid)->find();
+            if($this->contest == null) {
+                $this->error("错误的比赛请求");
+            }
+        }
+    }
     public function index() {
         $this->assign('pagetitle', "Contest List");
         $this->assign('contest_controller', 'contestlive');

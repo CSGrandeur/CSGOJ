@@ -132,10 +132,6 @@ contest_title="{$contest['title']|htmlspecialchars}"
             function(ret) {
                 RankDataPreprocess(ret);
                 for(let i = 0; i < ret.length; i ++) {
-                    // console.log(ret[i]);
-                    // if(ret[i]['user_id'].includes("<a")) {
-                    //     ret[i]['user_id'] = /<a.*>(.+?)<\/a>/.exec(ret[i]['user_id'])[1];
-                    // }
                     let tmp = {
                         "coach": ret[i]['coach'],
                         "nick": ret[i]['nick'],
@@ -371,6 +367,8 @@ function ExportAwardCsv() {
     downloadLink.download = `获奖名单-cid${page_cid}.csv`;
     downloadLink.click();
 }
+
+
 async function ExportAwardXlsx() {
     const alignment_title = { vertical: 'middle', horizontal: 'center', wrapText: true};
     const columns_width = [{width: 5}, {width: 16}, {width: 16}, {width: 25}, {width: 8}, {width: 8}, {width: 9}, {width: 22}];
@@ -450,7 +448,6 @@ async function ExportAwardXlsx() {
         Object.assign(cell.style, title_row_style);
     });
     allAwardsMergedSheetTitle.alignment = alignment_title;
-    allAwardsMergedSheetTitle.alignment = alignment_title;
     allAwardsMergedSheetData.forEach((row, index) => {
         let excelRow = allAwardsMergedSheet.addRow(row);
         if(index == 0) {
@@ -460,6 +457,7 @@ async function ExportAwardXlsx() {
         }
         excelRow.eachCell(cell => {
             cell.border = {top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'}};
+            cell.alignment = 'right'
         });
     });
     allAwardsMergedSheet.mergeCells('A1:H1');
@@ -495,6 +493,43 @@ async function ExportAwardXlsx() {
         ws.mergeCells('A2:G2');
         ws.columns = columns_width;
     }
+
+    // 完整排名sheet
+    let allRankSheet = wb.addWorksheet("完整排名");
+    allRankSheet.columns = [{width: 5}, {width: 20}, {width: 20}, {width: 25}, {width: 6}, {width: 6}, {width: 6}, {width: 6}, {width: 6}, {width: 8}];
+    let allRankSheetTitle = allRankSheet.addRow([`完整排名-${contest_title}`])
+    allRankSheetTitle.height = 40;
+    allRankSheetTitle.eachCell(cell => {
+        Object.assign(cell.style, title_row_style);
+    });
+    allRankSheetTitle.alignment = alignment_title;
+    let excelRow = allRankSheet.addRow(["排名", "学校", "队名", "选手", "教练", "类型", "题数", "罚时", "校排", "队号", "备注"]);
+    excelRow.eachCell(cell => {
+        Object.assign(cell.style, header_row_style);
+        cell.border = {top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'}};
+    });
+    data_show.forEach((row, index) => {
+        excelRow = allRankSheet.addRow([
+            row.rank,
+            row.school,
+            row.nick,
+            row.tmember,
+            row.coach,
+            TkindAwardFormatter(row.tkind),
+            row.solved,
+            row.penalty,
+            isNaN(parseInt(row.school_rank)) ? "" : row.school_rank,
+            row.user_id,
+            ""
+        ])
+        // excelRow.eachCell(cell => {
+        //     Object.assign(cell.style, header_row_style);
+        // });
+        excelRow.eachCell(cell => {
+            cell.border = {top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'}};
+        });
+    });
+    allRankSheet.mergeCells('A1:K1');
 
     // 导出文件
     const buffer = await wb.xlsx.writeBuffer();

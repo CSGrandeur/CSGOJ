@@ -4,7 +4,7 @@
     overflow-x: visible;
     padding: 10px;
     font-weight: bold;
-    font-family: "等线", Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Noto Sans CJK SC,WenQuanYi Micro Hei,Arial,sans-serif;
+    font-family: Microsoft YaHei, "Arial Black", "Helvetica Neue Bold", "Roboto Black", "Open Sans Bold", Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Noto Sans CJK SC,WenQuanYi Micro Hei,Arial,sans-serif;
     overflow-y: auto;
 }
 :root {
@@ -170,7 +170,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: right;
-    flex: 1;
+    flex: 0.8;
 }
 .g_pro_mspan {
     text-align: center;
@@ -181,7 +181,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
-    flex: 1;
+    flex: 1.2;
 }
 .g_pro_ac{
     background-color: #198754;

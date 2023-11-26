@@ -8,6 +8,7 @@ class Contest extends Contestbase
 {
     var $teamSessionName;       // team 的 session 字段名
     var $proctorAdmin;
+    var $watcherUser;
     var $balloonManager;
     var $balloonSender;
     var $printManager;
@@ -37,8 +38,9 @@ class Contest extends Contestbase
         $this->isContestAdmin = false;
         if($this->controller == 'contest' && !in_array($this->request->action(), $this->outsideContestAction) || $this->controller == 'admin' || $this->controller == 'contestadmin') {
             $this->GetContestInfo();
+            $this->teamSessionName = '#cpcteam' . $this->contest['contest_id']; // 先获取contest，后组合teamSessionName，最后计算rankUseCache
+            $this->rankUseCache = !$this->IsContestAdmin() && !$this->IsContestAdmin('balloon_manager') && !$this->IsContestAdmin('balloon_sender') && !$this->IsContestAdmin('admin') && !$this->IsContestAdmin('watcher') ? 1 : 0;
             $this->isContestAdmin = $this->IsContestAdmin();
-            $this->teamSessionName = '#cpcteam' . $this->contest['contest_id'];
             $this->GetVars();
             $this->ContestAuthentication();
             $this->SetAssign();
@@ -56,6 +58,7 @@ class Contest extends Contestbase
             $this->assign('login_teaminfo', null);
         }
         $this->proctorAdmin = $this->IsContestAdmin('admin');
+        $this->watcherUser = $this->IsContestAdmin('watcher');
         $this->balloonManager = $this->IsContestAdmin('balloon_manager');
         $this->balloonSender = $this->IsContestAdmin('balloon_sender');
         $this->printManager = $this->IsContestAdmin('printer');
@@ -63,6 +66,7 @@ class Contest extends Contestbase
         $this->isContestStaff = $this->proctorAdmin || $this->balloonManager || $this->balloonSender || $this->printManager || $this->isReviewer;
         $this->isContestWorker = $this->balloonSender || $this->printManager;
         $this->assign('proctorAdmin', $this->proctorAdmin);
+        $this->assign('watcherUser', $this->watcherUser);
         $this->assign('balloonManager', $this->balloonManager);
         $this->assign('balloonSender', $this->balloonSender);
         $this->assign('printManager', $this->printManager);
@@ -519,8 +523,9 @@ class Contest extends Contestbase
         }
         $res = db('contest_balloon')->where($map)->select();
         $this->success('ok', null, [
-            'balloon_task_list'  => $res,
-            'problem_id_map'    => $this->problemIdMap,
+            'balloon_task_list'     => $res,
+            'problem_id_map'        => $this->problemIdMap,
+            'contest_problem_list'  => $this->contest_problem_list
         ]);
     }
     public function balloon_sender_list_ajax() {

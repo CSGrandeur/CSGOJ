@@ -111,6 +111,12 @@
 //    });
 </script>
 
+<div id="teamgen_toolbar">
+    <button type="button" class="btn btn-primary" id="export_teamgen_pageteam_btn">
+        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+        XLSX
+    </button>
+</div>
 <table
     id="teamgen_table"
     data-toggle="table"
@@ -120,9 +126,11 @@
     data-show-export="true"
     data-unique-id="team_id"
     data-url="__CPC__/admin/teamgen_list_ajax?cid={$contest['contest_id']}&ttype=0"
+    data-toolbar="#teamgen_toolbar"
+    data-toolbar-align="right"
     data-pagination="false"
     data-method="get"
-    data-export-types="['excel', 'xlsx', 'csv', 'json', 'png']"
+    data-export-types="['excel', 'csv', 'json', 'png']"
     data-export-options='{"fileName": "Team_Generated"}'
 >
     <thead>
@@ -140,11 +148,14 @@
     </thead>
 </table>
 </div>
-<input type="hidden" id="page_info" cid="{$contest['contest_id']}">
+<input type="hidden" id="page_info" cid="{$contest['contest_id']}" ctitle="{$contest['title']|htmlspecialchars}">
+
+{include file="../../csgoj/view/public/js_exceljs" /}
 
 <script>
 let page_info = $('#page_info');
 let cid = page_info.attr('cid');
+let ctitle = page_info.attr('ctitle');
 let teamgen_table = $('#teamgen_table');
 let delete_infoed = false;
 function FormatterDel(value, row, index, field) {
@@ -170,6 +181,186 @@ teamgen_table.on('dbl-click-cell.bs.table', function(e, field, td, row){
             }
         });
     }
+});
+
+function SheetSimple(team_list, ctitle, worksheet) {
+    const per_subtable = 15;
+    const per_page = per_subtable * 2;
+    const font_size = 14;
+    // 简化密码表
+    worksheet.columns = [
+        // { width: 8 },
+        { width: 16 },
+        { width: 25 },
+        { width: 5 }
+    ];
+    worksheet.columns = [...worksheet.columns, ...worksheet.columns];
+
+    // 添加数据
+    let totalRows = Math.ceil(team_list.length / per_page);  // 总页数
+    for (let i = 0; i < team_list.length; i++) {
+        let team = team_list[i];
+        let rowNumber = i % per_page % per_subtable + 4;  // 当前行号
+        let columnOffset = i % per_page < per_subtable ? 0 : 3;  // 列偏移量
+        let currentPage = Math.floor(i / per_page) + 1;  // 当前页数
+        
+        let rowOffset = Math.floor(i / per_page) * (per_subtable + 3)
+
+        // 如果是新的一页，更新页码
+        if (i % per_page === 0) {
+            
+            // 前两行横向合并单元格并居中
+            let titleRow = worksheet.addRow([`${ctitle}`]);
+            worksheet.mergeCells(`A${titleRow.number}:E${titleRow.number}`);
+            titleRow.height = 60;
+            titleRow.alignment = { wrapText: true, vertical: 'middle', horizontal: 'center'  }; 
+            titleRow.font = {size: font_size};
+
+            let headerRow = worksheet.addRow([`账号表 ${currentPage}/${totalRows}`]);
+            worksheet.mergeCells(`A${headerRow.number}:E${headerRow.number}`);
+            headerRow.alignment = { horizontal: 'center' };
+            headerRow.font = {size: font_size};
+            
+            // 添加表头
+            // let tableHeaderRow = worksheet.addRow(['序号', '账号', '密码', '', '序号', '账号', '密码']);
+            let tableHeaderRow = worksheet.addRow(['账号', '密码', '', '账号', '密码']);
+            tableHeaderRow.font = { bold: true, size: font_size };
+            tableHeaderRow.eachCell(cell => cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            });
+            tableHeaderRow.font = {size: font_size};
+        }
+
+        // 添加数据
+        let row = worksheet.getRow(rowOffset + rowNumber);
+        // row.getCell(columnOffset + 1).value = i + 1;
+        row.getCell(columnOffset + 1).value = team.team_id;
+        row.getCell(columnOffset + 2).value = team.password;
+        if(columnOffset == 0) {
+            row.getCell(columnOffset + 3).value = '';
+        }
+
+        // 设置行高和文本自动换行
+        row.height = 62;  // 设置行高
+        row.alignment = { wrapText: true, vertical: 'middle', horizontal: 'center'  };  // 设置文本自动换行
+
+        // 设置单元格边框
+        for (let j = 1; j <= 5; j++) {
+            if(j == 3) {
+                continue
+            }
+            let cell = row.getCell(j);
+            cell.font = {};
+            if(j == 2 || j == 5) {
+                cell.font = { name: 'Courier New', bold: true }; 
+            }
+            cell.font.size = font_size;
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+        }
+    }
+}
+
+function SheetPage(team_list, ctitle, worksheet) {
+    const per_subtable = 15;
+    const per_page = per_subtable * 2;
+    // 单页密码
+    worksheet.columns = [
+        // { width: 6 },
+        { width: 15 },
+        { width: 30 },
+        { width: 30 },
+        { width: 15 },
+        { width: 15 },
+        { width: 5 }
+    ];
+
+    for (let i = 0; i < team_list.length; i++) {
+        // 添加数据
+        let row = worksheet.getRow(i + 1);
+        let team = team_list[i];
+        // row.getCell(1).value = `${i + 1}`;
+        row.getCell(1).value = ` | ${team.team_id}`;
+        row.getCell(2).value = ` | ${team.school}`;
+        row.getCell(3).value = ` | ${team.name}`;
+        row.getCell(4).value = ` | ${team.room}`;
+        row.getCell(5).value = ` | ${team.password}`;
+        row.getCell(5).font = { name: 'Courier New', bold: true }; 
+        row.height = 800;  // 设置行高
+        row.alignment = { wrapText: true, vertical: 'top', horizontal: 'left'  }; 
+    }
+}
+function SheetFull(team_list, ctitle, worksheet) {
+    const per_subtable = 15;
+    const per_page = per_subtable * 2;
+    // 完整数据表
+    worksheet.columns = [
+        // { width: 6 },
+        { width: 12 },
+        { width: 20 },
+        { width: 25 },
+        { width: 10 },
+        { width: 15 },
+        { width: 5 }
+    ];
+    // 添加表头
+    let tableHeaderRow = worksheet.addRow(['账号', '学校', '队名', '分区', '密码']);
+    tableHeaderRow.font = { bold: true };
+    tableHeaderRow.eachCell(cell => cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    });
+    for (let i = 0; i < team_list.length; i++) {
+        let team = team_list[i];
+        let row = worksheet.getRow(i + 2);
+        // row.getCell(1).value = i + 1;
+        row.getCell(1).value = team.team_id;
+        row.getCell(2).value = team.school;
+        row.getCell(3).value = team.name;
+        row.getCell(4).value = team.room;
+        row.getCell(5).value = team.password;
+        row.getCell(5).font = { name: 'Courier New', bold: true }; 
+        row.height = 42; 
+        row.alignment = { wrapText: true };
+        for (let j = 1; j <= 5; j++) {
+            row.getCell(j).border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+        }
+    }
+}
+async function ExportTeamgenTable(team_list, ctitle) {
+    const workbook = new ExcelJS.Workbook();
+    SheetSimple(team_list, ctitle, workbook.addWorksheet('密码条-表格'));
+    SheetPage(team_list, ctitle, workbook.addWorksheet('密码条-分页（横向打印）'));
+    SheetFull(team_list, ctitle, workbook.addWorksheet('完整数据'));
+
+    // 导出文件
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `账号表-cid${cid}.xlsx`;
+    a.click();
+}
+
+
+$('#export_teamgen_pageteam_btn').click(function() {
+    let team_list = teamgen_table.bootstrapTable('getData', {includeHiddenRows: true});
+    ExportTeamgenTable(team_list, ctitle);
 });
 </script>
 <style type="text/css">

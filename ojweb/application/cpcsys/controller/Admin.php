@@ -296,7 +296,7 @@ class Admin extends Contestbase
                         $nowTeam['contest_id'] = $this->contest['contest_id'];
                         break;
                     case 'privilege':
-                        $nowTeam['privilege'] = in_array($field, ['admin', 'printer', 'balloon_manager', 'balloon_sender']) ? $field : null;
+                        $nowTeam['privilege'] = in_array($field, ['admin', 'printer', 'balloon_manager', 'balloon_sender', 'watcher']) ? $field : null;
                         if($nowTeam['privilege'] != null && strpos($nowTeam['team_id'], 'team') === 0) {
                             $validateNotList .= "<br/>[$teamStr] special account should not start with \"team\".";
                         }

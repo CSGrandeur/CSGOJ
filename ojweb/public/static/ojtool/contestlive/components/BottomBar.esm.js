@@ -19,7 +19,6 @@ export default {
   },
   mounted() {
     const { isShow } = useBottomBarState();
-
     document.addEventListener('keyup', (ev) => {
       if (ev.code === 'Space') {
         isShow.value = !isShow.value;

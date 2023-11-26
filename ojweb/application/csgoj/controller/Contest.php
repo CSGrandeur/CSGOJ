@@ -23,6 +23,7 @@ class Contest extends Csgojbase
     var $canJoin;                       // 参赛权限
     var $needAuth;                      // 比赛加了密码（目前只Public比赛密码生效）
     var $contest_user;                  // 登录这个比赛的用户
+    var $contest_problem_list;          // 比赛的题目列表
     var $isAdmin;
     var $isContestAdmin;
     var $rankUseCache;
@@ -50,6 +51,7 @@ class Contest extends Csgojbase
         $this->isContestAdmin = false;
         if(!in_array($this->request->action(), $this->outsideContestAction)) {
             $this->GetContestInfo();
+            $this->rankUseCache = !$this->IsContestAdmin() ? 1 : 0;
             $this->isContestAdmin = $this->IsContestAdmin();
             $this->GetVars();
             $this->ContestAuthentication();
@@ -72,7 +74,10 @@ class Contest extends Csgojbase
         if(!$this->contest) {
             $this->error("No such contest");
         }
-        if(!in_array($this->contest['private'] % 10, [2, 5]) && $this->module != 'csgoj') {
+        if($this->controller == 'contestlive') {
+            // nothing
+        }
+        else if(!in_array($this->contest['private'] % 10, [2, 5]) && $this->module != 'csgoj') {
             $this->redirect('/csgoj/' . $this->controller . '/' . $this->action . '?cid=' . $this->contest['contest_id']);
         }
         else if($this->contest['private'] % 10 == 2 && $this->module != 'cpcsys') {
@@ -81,7 +86,6 @@ class Contest extends Csgojbase
         else if($this->contest['private'] % 10 == 5 && $this->module != 'expsys') {
             $this->redirect('/expsys/' . $this->controller . '/' . $this->action . '?cid=' . $this->contest['contest_id']);
         }
-        $this->rankUseCache = !$this->IsContestAdmin() && !$this->IsContestAdmin('balloon_manager') && !$this->IsContestAdmin('balloon_sender') && !$this->IsContestAdmin('admin') ? 1 : 0;
     }
     public function CanJoin()
     {
@@ -97,7 +101,7 @@ class Contest extends Csgojbase
         }
         return true;
     }
-    public function IsContestAdmin()
+    public function IsContestAdmin($privilegeName=null)
     {
         return IsAdmin('contest', $this->contest['contest_id']);
     }
@@ -230,11 +234,12 @@ class Contest extends Csgojbase
         //     'id2abc'=>//10xx->ABC题号映射,
         //     'id2num'=>//10xx->0、1、2(num)
         //]
-        $problemIdList = db('contest_problem')
+        $this->contest_problem_list = db('contest_problem')
             ->where('contest_id', $this->contest['contest_id'])
             ->field([
                 'problem_id',
                 'num',
+                'title',
                 'pscore'
             ])
             ->order('num', 'asc')
@@ -248,22 +253,22 @@ class Contest extends Csgojbase
             'num2score' => [],
             'id2score' => []
         ];
-        if($problemIdList == null)
+        if($this->contest_problem_list == null)
         {
             //这种情况一般不会发生，如果真的有，那是管理员操作不当，页面出问题也难免
             return;
         }
         $zeroScoreFlag = true;  // 是否所有题都没设置分数
-        foreach($problemIdList as $problemId)
+        foreach($this->contest_problem_list as $problemId)
         {
             if($problemId['pscore'] > 0) {
                 $zeroScoreFlag = false;
             }
         }
         // 如果有附加题，则计分题目个数减1
-        $pnum = count($problemIdList) - (round($this->contest['private'] / 10) == 1);
+        $pnum = count($this->contest_problem_list) - (round($this->contest['private'] / 10) == 1);
         $everScore = $pnum <= 0 ? 100 : (floor(100 / $pnum * 10) / 10);
-        foreach($problemIdList as $problemId)
+        foreach($this->contest_problem_list as $problemId)
         {
             $alphabetId = $this->ContestProblemId($problemId['num']);
             $this->problemIdMap['abc2id'][$alphabetId] = $problemId['problem_id'];
@@ -1189,19 +1194,19 @@ class Contest extends Csgojbase
                         $this->contest['contest_id'];
         
         $cache_option = config('CsgojConfig.OJ_RANKDYNAMIC_CACHE_OPTION');
-        $cache_name = $this->OJ_MODE . '_' . $query_param;
+        $cache_name = $this->OJ_MODE . '_drk_' . $query_param;
         // $use_cache = $this->rankUseCache;
-        if($this->isContestAdmin) {
-            //非管理员则使用cache
-            $contest_data = cache($cache_name, '', $cache_option);
-            if($contest_data) {
-                $this->success("ok", null, $contest_data);
-                return;
-            }
-        }
+        // if(!$this->isContestAdmin && !$this->IsContestAdmin('watcher')) {
+        //     //非管理员则使用cache
+        //     $contest_data = cache($cache_name, '', $cache_option);
+        //     if($contest_data) {
+        //         $this->success("ok", null, $contest_data);
+        //         return;
+        //     }
+        // }
         $sol_map = [
             'contest_id' => $this->contest['contest_id'], 
-            'result' => ['egt', 4]
+            // 'result' => ['egt', 4]
         ];
         if($min_solution_id != null) {
             $sol_map['solution_id'] = ['gt', $min_solution_id];
@@ -1227,9 +1232,9 @@ class Contest extends Csgojbase
                 }
             }
         }
-        if($this->isContestAdmin) {
-            cache($cache_name, $contest_data, $cache_option);
-        }        
+        // if(!$this->isContestAdmin && !$this->IsContestAdmin('watcher')) {
+        //     cache($cache_name, $contest_data, $cache_option);
+        // }        
         $this->success("ok", null, $contest_data);
     }
     /**************************************************/

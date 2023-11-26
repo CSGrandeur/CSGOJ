@@ -177,21 +177,15 @@ class Status extends Csgojbase
         $solution_related_admin = IsAdmin('source_browser') || $solution['contest_id'] != null && $solution['contest_id'] > 0 && IsAdmin('contest', $solution['contest_id']);
         if($this->if_can_see_info($solution))
         {
-            if($solution['result'] == 10)
-            {
-                // Runtime Error
-                $runtimeinfo = db('runtimeinfo')->where('solution_id', $solution_id)->find();
-                $this->success($runtimeinfo['error']);
-            }
-            else if($solution['result'] == 11)
+            if($solution['result'] == 11)
             {
                 // Compile Error
                 $compileinfo = db('compileinfo')->where('solution_id', $solution_id)->find();
                 $this->success($compileinfo['error']);
             }
-            else if(in_array($solution['result'], [5, 6, 7, 8, 9]) && ($solution_related_admin || $this->ALLOW_WA_INFO))
+            else if(in_array($solution['result'], [5, 6, 7, 8, 9, 10]) && ($solution_related_admin || $this->ALLOW_WA_INFO))
             {
-                // PE || WA || TLE || MLE || OLE 暂时只允许管理员查看
+                // PE || WA || TLE || MLE || OLE || RE 暂时只允许管理员查看
                 $compileinfo = db('runtimeinfo')->where('solution_id', $solution_id)->find();
                 if(in_array($solution['result'], [5, 6]) && !IsAdmin('source_browser') && !$solution_related_admin) {
                     // 隐去 test.in 内容

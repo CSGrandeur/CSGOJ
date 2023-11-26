@@ -43,6 +43,9 @@ class Rankroll extends Ojtoolbase {
     public function contest_list_ajax() {
         $map = [];
         $map['private'] = ['in', [0, 1, 2, 10, 11, 12]];
+        if(!IsAdmin()) {
+            $map['defunct'] = '0';
+        }
         $Contest = db('contest');
         $contestList = $Contest
             ->where($map)

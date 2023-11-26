@@ -24,6 +24,7 @@ const template = `
 <AcceptQueue/>
 <Rank/>
 <div v-if="!available" class="live">Not Available</div>
+<div v-if="test" class="live">Testing (x{{ 1 << testScale }})</div>
 `;
 
 /* Export component */

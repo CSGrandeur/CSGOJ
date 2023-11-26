@@ -37,7 +37,7 @@
         <button class="btn btn-success button_get">获取</button>
     </div>
 </div>
-    <table
+<table
     id="balloon_queue_table"
     data-toggle="table"
     data-unique-id="team_pro"
@@ -69,6 +69,7 @@
 let rank_data = null, rank_data_time = null, rank_data_filtered_by_room;
 let balloon_task_list, map_team_balloon;
 let problem_id_map;
+let contest_problem_list;
 let map_team;
 var ua = navigator.userAgent.toLowerCase();
 if (ua.match(/MicroMessenger/i) == "micromessenger" || ua.match(/QQ/i) == "qq") {
@@ -87,16 +88,22 @@ let team_end_input = $('#team_end'), team_end;
 let room_list_str_input = $('#room_list_str'), room_list_str, map_room;
 let task_potential;
 let flg_fullscreen = false;
+let map_balloon_othertask = null;   // 标记分配给其他人的balloon，刷新时清理
 
 function FormatterAcTime(value, row, index, field) {
-    return `<button class="btn btn-danger" >${Timeint2Str(value)}</button>`
+    return row.bst == 5 ? Timeint2Str(value) : `<button class="btn btn-danger" >${Timeint2Str(value)}</button>`;
 }
 function FormatterPro(value, row, index, field) {
     let apid = problem_id_map['id2abc']?.[value];
     if(apid === null) {
         apid = "Unkonw";
     }
-    return `<strong class="text-danger"><i class="bi bi-balloon"></i>${apid}</strong>`;
+    let cl = parseInt(contest_problem_list?.[problem_id_map?.id2num?.[value]]?.title, 16);
+    if(cl < 0 || cl >= 16777216 || isNaN(cl)) {
+        cl = 3373751;
+    }
+    cl = cl.toString(16).toUpperCase().padStart(6, '0');
+    return `<strong style="color:#${cl};"><i class="bi bi-balloon"></i>${apid}</strong>`;
 }
 function FormatterTaskStatus(value, row, index, field) {
     let color, txt;
@@ -193,16 +200,24 @@ function SendTaskQuery(ith, total_get) {
         };
         task_data.problem_id = problem_id_map['abc2id']?.[task_data.apid];
         task_data.team_pro = `${task_data.team_id}_${task_data.problem_id}`;
-        $.post(`balloon_change_status_ajax?cid=${cid}`, task_data, function (ret) {
-            if (ret.code === 1) {
-                balloon_queue_table.bootstrapTable('insertRow', {index: 1, row: task_data});
-                SendTaskQuery(ith + 1, total_get + 1);
-                MapTeamBalloonAdd(task_data.team_id, task_data.problem_id, task_data);
-            }
-            else {
-                SendTaskQuery(ith + 1, total_get);
-            }
-        })
+        if(map_balloon_othertask?.[task_data.team_pro]) {
+            // 如果气球已由他人领取，则不再请求
+            SendTaskQuery(ith + 1, total_get);
+        } else {
+            $.post(`balloon_change_status_ajax?cid=${cid}`, task_data, function (ret) {
+                if (ret.code === 1) {
+                    balloon_queue_table.bootstrapTable('insertRow', {index: 1, row: task_data});
+                    SendTaskQuery(ith + 1, total_get + 1);
+                    MapTeamBalloonAdd(task_data.team_id, task_data.problem_id, task_data);
+                }
+                else {
+                    // 这个气球已分配给他人，或者大管理员没登录比赛内账号；该信息刷新后会重置
+                    map_balloon_othertask[task_data.team_pro] = true;
+                    SendTaskQuery(ith + 1, total_get);
+                }
+            })
+
+        }
     } else if(total_get > 0){
         alertify.success(`获取了${total_get}个新任务`);
     } else {
@@ -230,17 +245,24 @@ function GetTask() {
     if(rank_data_time === null || Math.abs(new Date() - rank_data_time) > 60000) {
         $.get(`ranklist_ajax?cid=${cid}`, function(ret) {
             rank_data = ret;
-            rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || (a.room in map_room));
+            rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || Object.keys(map_room).length === 0 || (a.room in map_room));
             rank_data_time = new Date();
             CalcTask(rank_data_filtered_by_room);
         });
     } else {
-        rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || (a.room in map_room));
+        rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || Object.keys(map_room).length === 0 || (a.room in map_room));
         CalcTask(rank_data_filtered_by_room);
     }
 }
+function BalloonQueueTableSort() {
+    balloon_queue_table.bootstrapTable('sortBy', {
+        'field': 'bst'
+    });
+
+}
 function InitBalloonQueueShow() {
     balloon_queue_table.bootstrapTable('load', balloon_task_list);
+    BalloonQueueTableSort();
 }
 let flg_init = 0;
 function InitFinishFlag() {
@@ -265,7 +287,9 @@ function MakeMapTeamBalloon() {
 function RefreshBalloonQueue() {
     $.get(`balloon_task_ajax`, {'cid': cid}, function(ret) {
         if(ret.code == 1) {
+            map_balloon_othertask = {};
             balloon_task_list = ret.data.balloon_task_list;
+            contest_problem_list = ret.data.contest_problem_list;
             problem_id_map = ret.data.problem_id_map;
             MakeMapTeamBalloon();
             InitFinishFlag();
@@ -357,6 +381,9 @@ $('document').ready(function() {
                 }
             })
         } else if(field == 'ac_time') {
+            if(row.bst == 5) {
+                return;
+            }
             $.post('balloon_change_status_ajax?cid=' + cid, {
                 'team_id': row.team_id,
                 'apid': apid,
@@ -364,6 +391,7 @@ $('document').ready(function() {
             }, function(ret) {
                 if(ret.code == 1) {
                     RemoveTask(row);
+                    BalloonQueueTableSort();
                     alertify.warning(`${row.team_id}-${row.apid} 任务已退还`);
                 } else {
                     alertify.error(ret.msg);

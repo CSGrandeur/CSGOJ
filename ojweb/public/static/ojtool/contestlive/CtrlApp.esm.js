@@ -1,8 +1,10 @@
 /// Index root component
 import { useCtrlAppStore } from './stores/CtrlApp.esm.js';
 
+/* Application version */
 const appVersion = '1.0.0';
 
+/* Template HTML */
 const template = `
 <notifications position="top right" />
 <div class="controller">
@@ -103,13 +105,14 @@ const template = `
 /* Export component */
 export default {
   data() {
-    const logo = Vue.ref(window.staticDirectory + 'favicon.png');
-
-    return { ...useCtrlAppStore(), logo };
+    return {
+      ...useCtrlAppStore(),
+      logo: Vue.ref(window.staticDirectory + 'favicon.png')
+    };
   },
-  mounted() {
-    const { cid } = useCtrlAppStore();
-    cid.value = new URL(window.location.href).searchParams.get('cid');
+  beforeMount() {
+    // Expose contest ID from search params
+    window.csgLiveCid = new URL(window.location.href).searchParams.get('cid');
   },
   template
 };

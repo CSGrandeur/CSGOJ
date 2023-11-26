@@ -7,6 +7,7 @@ let rank_gold, rank_silver, rank_bronze;
 let real_rank_list = [], real_rank_map = {};
 const STAR_NORANK = 0, STAR_WITHOUT = 1, STAR_RANK = 2;
 let flag_star_mode = STAR_NORANK;
+let summary_data;
 function Str2Sec(time_str) {
     if(typeof(time_str) != 'string') {
         return time_str;
@@ -130,6 +131,7 @@ function SummaryTemplate() {
         8: 0,
         9: 0,
         10: 0,
+        'other': 0,
         'sum': 0 
     }
 }
@@ -208,7 +210,9 @@ function ProcessData() {
         map_num2p[cdata.problem[i].num] = cdata.problem[i].problem_id;
     }
     // process solutions
-    cdata.solution.sort((a, b) => a.in_date == b.in_date ? 0 : (a.in_date < b.in_date ? -1 : 1));
+    cdata.solution.sort((a, b) => a.solution_id == b.solution_id ? 0 : (a.solution_id < b.solution_id ? -1 : 1));
+    let solution_new = [];
+    let map_solution_aced = {};
     for(let i = 0; i < cdata.solution.length; i ++) {
         cdata.solution[i].user_id = ContestUserId(cdata.solution[i].user_id);
         cdata.solution[i].in_date = Str2Sec(cdata.solution[i].in_date);
@@ -220,6 +224,17 @@ function ProcessData() {
         ) {
             continue;
         }
+        // 如果特定选手特定题目ac过，之后的提交忽略
+        if(!(cdata.solution[i].user_id in map_solution_aced)) {
+            map_solution_aced[cdata.solution[i].user_id] = {};
+        }
+        if(cdata.solution[i].problem_id in map_solution_aced[cdata.solution[i].user_id]) {
+            continue;
+        }
+        if(cdata.solution[i].result == 4) {
+            map_solution_aced[cdata.solution[i].user_id][cdata.solution[i].problem_id] = true;
+        }
+        solution_new.push(cdata.solution[i]);
         // process summary
         let p_numid = map_p2num[cdata.solution[i].problem_id];
         if(cdata.solution[i].result in summary_data.pro_list[p_numid]) {
@@ -227,6 +242,9 @@ function ProcessData() {
             summary_data.pro_list[p_numid].sum ++;
             summary_data.total[cdata.solution[i].result] ++;
             summary_data.total.sum ++;
+        } else {
+            summary_data.total.other ++;
+            summary_data.pro_list[p_numid].other ++;
         }
         if(!(cdata.solution[i].user_id in map_team_sol)) {
             map_team_sol[cdata.solution[i].user_id] = {};
@@ -252,4 +270,5 @@ function ProcessData() {
         }
         user_sol_pro.push(cdata.solution[i]);
     }
+    cdata.solution = solution_new;
 }

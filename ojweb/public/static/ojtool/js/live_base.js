@@ -1,15 +1,21 @@
 let min_solution_id = 0;
-function SetCdata() {
+function GetMinSolId() {
+    let new_min_solution_id;
     if(cdata?.solution?.length) {
-        min_solution_id = cdata?.solution[cdata.solution.length - 1].solution_id;
+        new_min_solution_id = cdata?.solution[cdata.solution.length - 1].solution_id;
         for(let i = 0; i < cdata.solution.length; i ++) {
-            if(cdata.solution[i].result < 4 && cdata.solution[i].result >= 0) {
-                min_solution_id = cdata.solution[i].solution_id - 1;
+            if(cdata.solution[i].result < 4 && cdata.solution[i].result >= 0 && cdata.solution[i].solution_id - 1 < new_min_solution_id) {
+                new_min_solution_id = cdata.solution[i].solution_id - 1;
             }
         }
     } else {
-        min_solution_id = 0;
+        new_min_solution_id = 0;
     }
+    if(new_min_solution_id > min_solution_id) {
+        min_solution_id = new_min_solution_id;
+    }
+}
+function SetCdata() {
     // for debug
     // min_solution_id = 5000;
     // |||||||
@@ -24,9 +30,9 @@ function SetCdata() {
     cdata.cnt_base = cnt_base;
     cdata.real_rank_list = real_rank_list;
     cdata.real_rank_map = real_rank_map;
+    cdata.summary_data = summary_data;
 }
 function DataTimeLimit(cdata, timestamp_sec_limit) {
-    console.log(cdata.solution[0].in_date);
     if(timestamp_sec_limit === null) {
         return;
     }
@@ -95,11 +101,13 @@ function DataSync(callback_function, timestamp_sec_limit=null) {
         let ret = data[0];
         if(ret.code == 1) {
             let data_solution_new = ret.data;
-            console.log(data_solution_new)
-            if(data_solution_new.length > 0) {
-                JoinSolution(cdata.solution, data_solution_new);
+            if(data_solution_new?.solution?.length > 0) {
+                JoinSolution(cdata.solution, data_solution_new.solution);
             }
+            DataTimeLimit(cdata, timestamp_sec_limit);
+            GetMinSolId();
             ProcessData(cdata);
+            
             SetAwardRank(true);
             SetCdata(cdata)
             

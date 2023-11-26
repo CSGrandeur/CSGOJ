@@ -1,3 +1,20 @@
+/* Root style */
+:root {
+  --medal-gold-color: #eb0;
+  --medal-silver-color: #aaa;
+  --medal-bronze-color: #b63;
+  --status-first-color: #0af;
+  --status-accept-color: #383;
+  --status-wrong-color: #e00;
+  --status-pending-color: #aa0;
+  --status-frozen-color: #0dd;
+  --list-odd-color: #333;
+  --list-even-color: #222;
+  --widget-title-color: #f00;
+
+  color: #fff;
+}
+
 /* Global style */
 @font-face {
   font-family: chivo-mono;
@@ -6,6 +23,10 @@
 
 * {
   font-family: chivo-mono;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -31,7 +52,6 @@ body {
 
 /* Bottom bar scoped style */
 .bottom-bar {
-  color: #fff;
   display: flex;
   bottom: 0;
   left: 0;
@@ -40,11 +60,11 @@ body {
   z-index: 1000;
 }
 .bottom-bar__time {
-  background-color: #f00a;
+  background-color: var(--widget-title-color);
   padding: 0.2rem 1rem 0.2rem 0.5rem;
 }
 .bottom-bar__msg {
-  background-color: #000a;
+  background-color: #000;
   flex-grow: 1;
   overflow: hidden;
   padding: 0.2rem 1rem;
@@ -79,7 +99,6 @@ body {
 
 .submission-queue {
   bottom: 3rem;
-  color: #fff;
   left: 1rem;
   list-style-type: none;
   margin: 0;
@@ -92,24 +111,24 @@ body {
   line-height: 2.25rem;
 }
 .submission-queue > li:nth-child(even) {
-  background-color: #000a;
+  background-color: var(--list-even-color);
 }
 .submission-queue > li:nth-child(odd) {
-  background-color: #0007;
+  background-color: var(--list-odd-color);
 }
 .submission-queue__rank {
   background-color: #333a;
   text-align: center;
   width: 4rem;
 }
-.submission-queue__rank--gold {
-  background-color: #eb0a;
+.submission-queue__rank[data-medal='gold'] {
+  background-color: var(--medal-gold-color);
 }
-.submission-queue__rank--silver {
-  background-color: #aaaa;
+.submission-queue__rank[data-medal='silver'] {
+  background-color: var(--medal-silver-color);
 }
-.submission-queue__rank--bronze {
-  background-color: #b63a;
+.submission-queue__rank[data-medal='bronze'] {
+  background-color: var(--medal-bronze-color);
 }
 .submission-queue__name {
   padding: 0 0.5rem;
@@ -132,7 +151,7 @@ body {
   width: 2rem;
 }
 .submission-queue__problem::after {
-  background-color: var(--bg-color);
+  background-color: var(--problem-color);
   bottom: 0;
   content: '';
   height: 0.2rem;
@@ -144,18 +163,18 @@ body {
   text-align: center;
   width: 3.5rem;
 }
-.submission-queue__status--accept {
-  background-color: #383a;
+.submission-queue__status[data-status='accept'] {
+  background-color: var(--status-accept-color);
 }
-.submission-queue__status--wrong {
-  background-color: #e00a;
+.submission-queue__status[data-status='wrong'] {
+  background-color: var(--status-wrong-color);
 }
-.submission-queue__status--pending {
+.submission-queue__status[data-status='pending'] {
   animation: k-submission-queue__status--pending 1s infinite linear;
-  background-color: #aa0a;
+  background-color: var(--status-pending-color);
 }
-.submission-queue__status--frozen {
-  background-color: #0dda;
+.submission-queue__status[data-status='frozen'] {
+  background-color: var(--status-frozen-color);
 }
 
 .t-submission-queue-enter-active,
@@ -190,7 +209,7 @@ body {
   display: flex;
   gap: 0.5rem;
   left: 0.5rem;
-  opacity: 0.5;
+  opacity: 0.9;
   position: fixed;
   top: 0.5rem;
 }
@@ -205,14 +224,13 @@ body {
 /* Statistic scoped style */
 .statistic {
   bottom: 3rem;
-  color: #fff;
   right: 1rem;
   position: fixed;
   width: 43vw;
   z-index: 500;
 }
 .statistic__title {
-  background-color: #f00a;
+  background-color: var(--widget-title-color);
   font-weight: bold;
   line-height: 2rem;
   margin: 0;
@@ -229,10 +247,10 @@ body {
   text-align: center;
 }
 .statistic__graph > li:nth-child(even) {
-  background-color: #000a;
+  background-color: var(--list-even-color);
 }
 .statistic__graph > li:nth-child(odd) {
-  background-color: #0007;
+  background-color: var(--list-odd-color);
 }
 .statistic__graph__problem {
   background-color: #0003;
@@ -241,7 +259,7 @@ body {
   width: 2rem;
 }
 .statistic__graph__problem::after {
-  background-color: var(--bg-color);
+  background-color: var(--problem-color);
   bottom: 0;
   content: '';
   height: 0.2rem;
@@ -250,13 +268,13 @@ body {
   width: 100%;
 }
 .statistic__graph__accept {
-  background-color: #383a;
+  background-color: var(--status-accept-color);
 }
 .statistic__graph__pending {
-  background-color: #aa0a;
+  background-color: var(--status-pending-color);
 }
 .statistic__graph__wrong {
-  background-color: #e00a;
+  background-color: var(--status-wrong-color);
 }
 
 .t-statistic-enter-active,
@@ -271,7 +289,6 @@ body {
 /* Accept queue scoped style */
 .accept-queue {
   bottom: 24rem;
-  color: #fff;
   left: 1rem;
   list-style-type: none;
   margin: 0;
@@ -284,24 +301,24 @@ body {
   line-height: 2.25rem;
 }
 .accept-queue > li:nth-child(even) {
-  background-color: #000a;
+  background-color: var(--list-even-color);
 }
 .accept-queue > li:nth-child(odd) {
-  background-color: #0007;
+  background-color: var(--list-odd-color);
 }
 .accept-queue__rank {
   background-color: #333a;
   text-align: center;
   width: 4rem;
 }
-.accept-queue__rank--gold {
-  background-color: #eb0a;
+.accept-queue__rank[data-medal='gold'] {
+  background-color: var(--medal-gold-color);
 }
-.accept-queue__rank--silver {
-  background-color: #aaaa;
+.accept-queue__rank[data-medal='silver'] {
+  background-color: var(--medal-silver-color);
 }
-.accept-queue__rank--bronze {
-  background-color: #b63a;
+.accept-queue__rank[data-medal='bronze'] {
+  background-color: var(--medal-bronze-color);
 }
 .accept-queue__name {
   padding: 0 0.5rem;
@@ -324,7 +341,7 @@ body {
   width: 2rem;
 }
 .accept-queue__problem::after {
-  background-color: var(--bg-color);
+  background-color: var(--problem-color);
   bottom: 0;
   content: '';
   height: 0.2rem;
@@ -333,12 +350,12 @@ body {
   width: 100%;
 }
 .accept-queue__penalty {
-  background-color: #383a;
+  background-color: var(--status-accept-color);
   text-align: center;
   width: 3.5rem;
 }
-.accept-queue__penalty--first {
-  background-color: #0afa;
+.accept-queue__penalty[data-first='true'] {
+  background-color: var(--status-first-color);
 }
 
 .t-accept-queue-enter-active,
@@ -351,12 +368,12 @@ body {
 }
 
 .tg-accept-queue-move,
-.tg-accept-queue-enter-active {
+.tg-accept-queue-enter-active,
+.tg-accept-queue-leave-active {
   transition: all 0.5s ease;
 }
 .tg-accept-queue-leave-active {
   position: absolute;
-  transition: all 0.5s ease;
 }
 .tg-accept-queue-enter-from {
   opacity: 0;
@@ -370,14 +387,13 @@ body {
 /* Rank scoped style */
 .rank {
   top: 1rem;
-  color: #fff;
   right: 1rem;
   position: fixed;
   width: 65vw;
   z-index: 250;
 }
 .rank__title {
-  background-color: #f00a;
+  background-color: var(--widget-title-color);
   font-weight: bold;
   line-height: 2rem;
   margin: 0;
@@ -402,14 +418,14 @@ body {
 .rank__wrapper__rank {
   width: 4rem;
 }
-.rank__wrapper__rank--gold {
-  background-color: #eb0a;
+.rank__wrapper__rank[data-medal='gold'] {
+  background-color: var(--medal-gold-color);
 }
-.rank__wrapper__rank--silver {
-  background-color: #aaaa;
+.rank__wrapper__rank[data-medal='silver'] {
+  background-color: var(--medal-silver-color);
 }
-.rank__wrapper__rank--bronze {
-  background-color: #b63a;
+.rank__wrapper__rank[data-medal='bronze'] {
+  background-color: var(--medal-bronze-color);
 }
 .rank__wrapper__name {
   white-space: nowrap;
@@ -429,8 +445,20 @@ body {
 .rank__wrapper__problems > span {
   position: relative;
 }
+.rank__wrapper__problems > span[data-type='accept'] {
+  background-color: var(--status-accept-color);
+}
+.rank__wrapper__problems > span[data-type='first'] {
+  background-color: var(--status-first-color);
+}
+.rank__wrapper__problems > span[data-type='pending'] {
+  background-color: var(--status-pending-color);
+}
+.rank__wrapper__problems > span[data-type='wrong'] {
+  background-color: var(--status-wrong-color);
+}
 .rank__wrapper__problems > span::after {
-  background-color: var(--bg-color);
+  background-color: var(--problem-color);
   bottom: 0;
   content: '';
   height: 0.2rem;
@@ -450,10 +478,10 @@ body {
   line-height: 2rem;
 }
 .rank__wrapper__list > li:nth-child(even) {
-  background-color: #000a;
+  background-color: var(--list-even-color);
 }
 .rank__wrapper__list > li:nth-child(odd) {
-  background-color: #0009;
+  background-color: var(--list-odd-color);
 }
 .rank__wrapper__list > li > span {
   text-align: center;

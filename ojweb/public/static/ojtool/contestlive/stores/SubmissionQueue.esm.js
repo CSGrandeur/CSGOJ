@@ -44,21 +44,26 @@ function getStatusType(result) {
 export const useSubmissionQueueStore = VueUse.createGlobalState(() => {
   // States
   const isShow = Vue.ref(false);
-
   const queueList = Vue.ref([]);
 
   // Actions
   function adjustWidth() {
-    const els = document.querySelectorAll('.submission-queue__name');
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-    els.forEach((el) => {
+    document.querySelectorAll('.submission-queue__name').forEach((el) => {
+      // If not shown
+      if (el.clientWidth === 0) {
+        return;
+      }
+
+      // If scaled
       const sub = el.querySelector('span');
       if (sub.style.transform !== '') {
         return;
       }
 
-      const sw = sub.getBoundingClientRect().width;
+      // Set scale
       const cw = el.clientWidth - rem;
+      const sw = sub.clientWidth;
       if (sw > cw) {
         sub.style.transform = `scaleX(${cw / sw})`;
       } else {
@@ -66,39 +71,43 @@ export const useSubmissionQueueStore = VueUse.createGlobalState(() => {
       }
     });
   }
-
   async function update(cdata) {
-    queueList.value = cdata.solution
-      .slice(-8)
-      .map((v) => {
-        const realRank = cdata.real_rank_map[v.user_id];
-        const team = cdata.map_team[v.user_id];
-        const rank = cdata.real_rank_list[realRank.ith - 1];
-        const [status, type] = getStatusType(v.result);
+    // Generate list
+    queueList.value.splice(
+      0,
+      queueList.value.length,
+      ...cdata.solution
+        .slice(-8)
+        .map((v) => {
+          const realRank = cdata.real_rank_map[v.user_id];
+          const team = cdata.map_team[v.user_id];
+          const rank = cdata.real_rank_list[realRank.ith - 1];
+          const [status, type] = getStatusType(v.result);
+          return {
+            id: v.solution_id,
+            medal:
+              realRank.rank === '*'
+                ? null
+                : realRank.rank <= cdata.rank_gold
+                ? 'gold'
+                : realRank.rank <= cdata.rank_silver
+                ? 'silver'
+                : realRank.rank <= cdata.rank_bronze
+                ? 'bronze'
+                : null,
+            rank: realRank.rank,
+            name: team.school + ' ' + team.name,
+            solved: rank.sol,
+            problem: cdata.map_num2p.indexOf(v.problem_id),
+            status,
+            type
+          };
+        })
+        .reverse()
+    );
 
-        return {
-          id: v.solution_id,
-          medal:
-            realRank.rank === '*'
-              ? null
-              : realRank.rank <= cdata.rank_gold
-              ? 'gold'
-              : realRank.rank <= cdata.rank_silver
-              ? 'silver'
-              : realRank.rank <= cdata.rank_bronze
-              ? 'bronze'
-              : null,
-          rank: realRank.rank,
-          name: team.school + ' ' + team.name,
-          solved: rank.sol,
-          problem: cdata.map_num2p.indexOf(v.problem_id),
-          status,
-          type
-        };
-      })
-      .reverse();
+    // Update DOM
     await Vue.nextTick();
-
     adjustWidth();
   }
 

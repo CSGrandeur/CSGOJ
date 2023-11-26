@@ -8,7 +8,7 @@ const template = `
     <p class="statistic__title">Statistic</p>
     <ul class="statistic__graph">
       <li v-for="(val, idx) in statList" :key="idx">
-        <span class="statistic__graph__problem" :style="'--bg-color:' + problemColor[idx]">{{ String.fromCharCode(idx + 'A'.charCodeAt(0)) }}</span>
+        <span class="statistic__graph__problem" :style="'--problem-color:' + problemColor[idx]">{{ String.fromCharCode(idx + 'A'.charCodeAt(0)) }}</span>
         <span v-if="val.accept" class="statistic__graph__accept">{{ val.accept }}</span>
         <span v-if="val.pending" class="statistic__graph__pending">{{ val.pending }}</span>
         <span v-if="val.wrong" class="statistic__graph__wrong">{{ val.wrong }}</span>
@@ -23,12 +23,10 @@ export default {
   data() {
     const { isShow, statList } = useStatisticStore();
     const { problemColor } = useLiveAppStore();
-
     return { isShow, statList, problemColor };
   },
   mounted() {
     const { isShow } = useStatisticStore();
-
     document.addEventListener('keyup', (ev) => {
       if (ev.code === 'BracketRight') {
         isShow.value = !isShow.value;

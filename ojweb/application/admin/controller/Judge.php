@@ -35,7 +35,10 @@ class Judge extends Filebase
             'rename_url'        => '/admin/judge/file_rename_ajax?item='.$this->inputInfo['item'].'&id='.$this->inputInfo['id'],
             'upload_url'        => '/admin/judge/upload_ajax',
             'method_button'     => 'File Type',
-            'attach_notify'     => "<code>.in</code>, <code>.out</code> and <code>spj.cc/tpj.cc</code>. Uploaded zip file will be automatically decompressed.<br/>If invalid files exists in the zip, they'll be automatically deleted without notification.<br/><strong>System will only recursively search folder with the same name of the zip file, e.g. a \"test\" folder in a \"test.zip\" file.</strong>"
+            'attach_notify'     => "<code>.in</code>, <code>.out</code> and <code>spj.cc/tpj.cc</code>. <br/>
+            OJ原生special judge上传<code>spj.cc</code>，<strong class='text-danger'>若基于 testlib 请上传<code>tpj.cc</code></strong><br/>
+            上传zip将自动解压，不合法文件会自动删除。<br/>
+            Uploaded zip file will be automatically decompressed.<br/>If invalid files exists in the zip, they'll be automatically deleted without notification.<br/><strong>System will only recursively search folder with the same name of the zip file, e.g. a \"test\" folder in a \"test.zip\" file.</strong>"
         ]);
         return $this->fetch();
     }

@@ -13,6 +13,7 @@ function ProblemSampleHtml(sample_in_str, sample_out_str, hlevel=4, is_input_dom
             hlevel, 
             is_input_dom
         );
+        console.log(sample_html);
     }
     if(sample_num_max == 0) {
         sample_html = "<h${hlevel}>No Sample</h${hlevel}>"
@@ -33,7 +34,7 @@ function OneSample(i, sample_in_item, sample_out_item, hlevel=4, is_input_dom=fa
             <button type="button" class="btn btn-xs btn-success up_sample_btn" title="move up">⬆</button>
             <button type="button" class="btn btn-xs btn-danger del_sample_btn" title="double click to delete">Del</button>
             <button type="button" class="btn btn-xs btn-warning down_sample_btn" title="move down">⬇</button>
-        </div
+        </div>
         ` : "";
     return `
     <div class="sample_item_div" ${ith_info}>

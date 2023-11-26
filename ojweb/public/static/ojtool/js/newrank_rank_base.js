@@ -20,7 +20,6 @@ let grid = null;
 let rankroll_div;
 let rank_grid_div;
 let now_judging_ith = -1, now_order = [], map_now_order = {}, now_rank = {};
-let summary_data;
 let map_item = {}
 
 function FontNarrow(target_dom, target_width=null) {

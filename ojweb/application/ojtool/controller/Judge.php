@@ -78,7 +78,7 @@ class Judge extends Ojtoolbase {
         $ret = db('solution')->where('solution_id', $sid)->where(function($query){
             $query->where('result', '<', 2)
                 ->whereOr(function($query2) {
-                    $query2->where('result', '<', 4)->whereTime('judgetime', '<', time() - 300);
+                    $query2->where('result', '<', 4)->whereTime('judgetime', '<', time() - 900);
                 });
         })->update([
             'result'    => $result,
@@ -98,7 +98,7 @@ class Judge extends Ojtoolbase {
             ->where(function ($query) {
                 $query->where('result', '<', 2)
                     ->whereOr(function ($query) {
-                        $query->where('result', '<', 4)->whereTime('judgetime', '<', time() - 300);
+                        $query->where('result', '<', 4)->whereTime('judgetime', '<', time() - 900);
                     });
             })
             ->order(['result' => 'asc', 'solution_id' => 'asc'])

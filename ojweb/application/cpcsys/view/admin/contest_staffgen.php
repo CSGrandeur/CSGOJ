@@ -12,6 +12,7 @@
         <li><code>printer</code>: 打印管理员，负责打印机</li>
         <li><code>balloon_manager</code>: 气球管理员，建议只设置一名</li>
         <li><code>balloon_sender</code>: 气球配送员，可查看气球队列和领取气球任务</li>
+        <li><code>watcher</code>: 观察员，外榜、直播用</li>
         对于printer和balloon_sender，如不指定房间，则由使用者自己进行过滤。如指定房间，则使用者只能处理对应房间的数据。
     </article>
     <div>
@@ -87,7 +88,7 @@ staff_gen_table.on('dbl-click-cell.bs.table', function(e, field, td, row){
         });
     }
 });
-const staff_name = new Set(['admin', 'printer', 'balloon_manager', 'balloon_sender']);
+const staff_name = new Set(['admin', 'printer', 'balloon_manager', 'balloon_sender', 'watcher']);
 $(document).ready(function() { 
     staff_submit_button.click(function(){
         let rvs = staff_description.val();

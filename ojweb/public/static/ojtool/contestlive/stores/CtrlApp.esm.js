@@ -6,7 +6,6 @@ import { packData } from '../utils/pack.esm.js';
 /* Export store */
 export const useCtrlAppStore = VueUse.createGlobalState(() => {
   // States
-  const cid = VueUse.useStorage('csg-live-cid', '', localStorage);
   const status = Vue.ref('disconnect');
 
   const signUrl = VueUse.useStorage('csg-live-sign-url', '', localStorage);
@@ -37,9 +36,9 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
   function openOverlay() {
     const { notify } = useNotification();
 
-    if (cid.value === '') {
+    if (window.csgLiveCid === null) {
       notify({
-        title: 'Contest ID empty',
+        title: 'Contest ID param lost',
         type: 'error'
       });
       return;
@@ -68,15 +67,12 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
   }
   async function syncLiveSignSection() {
     if (
-      await sendCommand(
-        {
-          t: 'live_sign_sync',
-          sU: signUrl.value,
-          sT: signTxt.value,
-          sC: signColor.value
-        },
-        cid.value
-      )
+      await sendCommand({
+        t: 'live_sign_sync',
+        sU: signUrl.value,
+        sT: signTxt.value,
+        sC: signColor.value
+      })
     ) {
       notify({
         title: 'Live sign synchronized',
@@ -95,14 +91,11 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
   }
   async function syncBottomBarSection() {
     if (
-      await sendCommand(
-        {
-          t: 'bottom_bar_sync',
-          f: focus.value,
-          m: messages.value
-        },
-        cid.value
-      )
+      await sendCommand({
+        t: 'bottom_bar_sync',
+        f: focus.value,
+        m: messages.value
+      })
     ) {
       notify({
         title: 'Bottom bar synchronized',
@@ -123,13 +116,10 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
     }
 
     if (
-      await sendCommand(
-        {
-          t: 'panel_show_change',
-          iS: isShow.value
-        },
-        cid.value
-      )
+      await sendCommand({
+        t: 'panel_show_change',
+        iS: isShow.value
+      })
     ) {
       notify({
         title: 'Panel updated',
@@ -156,13 +146,10 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
     }
 
     if (
-      await sendCommand(
-        {
-          t: 'panel_show_change',
-          iS: isShow.value
-        },
-        cid.value
-      )
+      await sendCommand({
+        t: 'panel_show_change',
+        iS: isShow.value
+      })
     ) {
       notify({
         title: 'Panel updated',
@@ -176,7 +163,7 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
     }
   }
   async function scrollToTop() {
-    if (await sendCommand({ t: 'scroll_top' }, cid.value)) {
+    if (await sendCommand({ t: 'scroll_top' })) {
       notify({
         title: 'Scrolled',
         type: 'success'
@@ -189,7 +176,7 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
     }
   }
   async function scrollToBottom() {
-    if (await sendCommand({ t: 'scroll_bottom' }, cid.value)) {
+    if (await sendCommand({ t: 'scroll_bottom' })) {
       notify({
         title: 'Scrolled',
         type: 'success'
@@ -202,7 +189,7 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
     }
   }
   async function scrollUp() {
-    if (await sendCommand({ t: 'scroll_up' }, cid.value)) {
+    if (await sendCommand({ t: 'scroll_up' })) {
       notify({
         title: 'Scrolled',
         type: 'success'
@@ -215,7 +202,7 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
     }
   }
   async function scrollDown() {
-    if (await sendCommand({ t: 'scroll_down' }, cid.value)) {
+    if (await sendCommand({ t: 'scroll_down' })) {
       notify({
         title: 'Scrolled',
         type: 'success'
@@ -230,7 +217,6 @@ export const useCtrlAppStore = VueUse.createGlobalState(() => {
 
   // Return store
   return {
-    cid,
     status,
     signUrl,
     signTxt,

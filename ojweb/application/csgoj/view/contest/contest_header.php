@@ -55,6 +55,9 @@
         {elseif $balloonSender}
             <li role="presentation" {if $action == 'balloon_queue'} class="active" {/if}><a href="/{$module}/{$contest_controller}/balloon_queue?cid={$contest['contest_id']}" target="_blank">气球任务<br/>BalloonQue</a></li>
         {/if}
+        {if isset($watcherUser) && $watcherUser }
+        <li role="presentation"><a href="/ojtool/contestlive/ctrl?cid={$contest['contest_id']}" target="_blank">直播<br/>Live</a></li>
+        {/if}
     {/if}
     {if $isContestAdmin || isset($proctorAdmin) && $proctorAdmin }
         <li role="presentation" id="contest_admin" cid="{$contest['contest_id']}" {if $controller == 'admin'}class="active" {/if}><a href="/{$module}/admin?cid={$contest['contest_id']}">比赛管理<br/>Admin</a></li>
@@ -62,7 +65,7 @@
     
 </ul>
 <script type="text/javascript">
-    var diff = new Date($('#current_time').attr('time_stamp') * 1000).getTime()-new Date().getTime();
+    var diff = new Date($('#current_time_div').attr('time_stamp') * 1000).getTime()-new Date().getTime();
     function str0(a)
     {
         if(a<10) return "0" + a;
@@ -79,7 +82,7 @@
         m    =    str0(x.getMinutes());
         s    =    str0(x.getSeconds());
         n    =    y + '-' + mon + '-' + d + ' ' + h + ':' + m + ':' + s;
-        $('#current_time').text(n);
+        $('#current_time_div').text(n);
         setTimeout("clock()",1000);
     }
     $(document).ready(function(){

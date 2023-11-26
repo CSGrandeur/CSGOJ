@@ -13,6 +13,7 @@ if [ $OJ_HTTP_USERNAME ];   then sed -i "s#OJ_HTTP_USERNAME=.*#OJ_HTTP_USERNAME=
 if [ $JUDGE_PROCESS_NUM ];  then sed -i "s#OJ_RUNNING=.*#OJ_RUNNING=$JUDGE_PROCESS_NUM#g"               /volume/etc/judge.conf; fi
 if [ $JUDGE_IGNORE_ESOL ];  then sed -i "s#OJ_IGNORE_ESOL=.*#OJ_IGNORE_ESOL=$JUDGE_IGNORE_ESOL#g"       /volume/etc/judge.conf; fi
 if [ $JUDGE_SHM_RUN ];      then sed -i "s#OJ_SHM_RUN=.*#OJ_SHM_RUN=$JUDGE_SHM_RUN#g"                   /volume/etc/judge.conf; fi
+if [ $OJ_OPEN_OI ];         then sed -i "s#OJ_OPEN_OI=.*#OJ_OPEN_OI=$OJ_OPEN_OI#g"                      /volume/etc/judge.conf; fi
 
 if [ ! -d /volume/data ]; then  
     cp -rp /home/judge/data /volume/data;  
