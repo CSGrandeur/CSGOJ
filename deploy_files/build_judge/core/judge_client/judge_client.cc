@@ -648,8 +648,8 @@ void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,con
     execute_cmd("nl -w 6 -n ln %s | head -c 256 >> diff.out", userfile);
     // execute_cmd("head -c 256 %s >>diff.out",userfile);
     execute_cmd("echo  '\\n------diff out 4096 bytes-----'>>diff.out");
-    execute_cmd("nl -w 6 -n ln '%s' >> tmp_ans_out.tout", path);
-    execute_cmd("nl -w 6 -n ln %s >> tmp_user_out.tout", userfile);
+    execute_cmd("nl -w 6 -n ln '%s' > tmp_ans_out.tout", path);
+    execute_cmd("nl -w 6 -n ln %s > tmp_user_out.tout", userfile);
     execute_cmd("diff tmp_ans_out.tout tmp_user_out.tout -y --strip-trailing-cr | grep -E '<|>|\\|' | head -c 4096 >> diff.out");
     // execute_cmd("diff '%s' %s -y --strip-trailing-cr | grep -E '<|>|\\|' | head -c 4096 >> diff.out", path, userfile);
     execute_cmd("echo  '\\n=============================='>>diff.out");
