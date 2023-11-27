@@ -16,7 +16,7 @@ else
   fi
   PUBLIC_MOUNT=""
   if [ "$CSGOJ_DEV" = "1" ];then
-    PUBLIC_MOUNT="-v `pwd`/../ojweb/public:/var/www/baseoj/public"
+    PUBLIC_MOUNT="-v `pwd`/../../ojweb/public:/var/www/baseoj/public"
   fi
   docker run --name nginx-server $LINK_LOCAL \
     $NGINX_PORT_RANGS \

@@ -31,7 +31,7 @@ else
         docker pull csgrandeur/csgoj-web:$CSGOJ_VERSION # 先pull以确保镜像最新
     fi
     if [ "$CSGOJ_DEV" = "1" ]; then
-        WEB_MOUNT="-v `pwd`/../ojweb/application:/ojweb/application -v `pwd`/../ojweb/extend:/ojweb/extend"
+        WEB_MOUNT="-v `pwd`/../../ojweb/application:/ojweb/application -v `pwd`/../../ojweb/extend:/ojweb/extend"
     fi
     docker run -dit $LINK_LOCAL \
         --name php-$OJ_NAME \
