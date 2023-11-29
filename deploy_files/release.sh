@@ -50,7 +50,7 @@ if [ "$FLAG_BUILD" = "true" ]; then
         cd $PATH_DIR/build_judge && bash dockerbuild.sh $FLAG_CACHE
     fi
     if [ "$FLAG_WEB" = "true" ]; then
-        cd $PATH_DIR/../ && bash dockerbuild.sh $FLAG_CACHE
+        cd $PATH_DIR/../ && bash build_web.sh $FLAG_CACHE
     fi
 fi
 

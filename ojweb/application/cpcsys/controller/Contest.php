@@ -512,15 +512,23 @@ class Contest extends Contestbase
     public function balloon_task_ajax() {
         $this->BalloonAuth();
         $map = ['contest_id' => $this->contest['contest_id']];
-        $FILTER_KEY_LIST = ['solution_id', 'room', 'balloon_sender'];
+        $FILTER_KEY_LIST = ['problem_id', 'room', 'balloon_sender'];
         foreach($FILTER_KEY_LIST as $key) {
-            if($item = input($key . '/s')) {
+            if(($item = input($key . '/s')) !== null && ($item = trim($item) != '')) {
                 $map[$key] = ['in', explode($item, ',')];
             }
         }
-        if(!$this->IsContestAdmin('balloon_manager')) {
-            $map['balloon_sender'] = $this->contest_user;
+        $team_start = input('team_start/s');
+        if($team_start !== null && ($team_start = trim($team_start)) != '') {
+            $map['team_id'] = ['egt', $team_start];
         }
+        $team_end = input('team_end/s');
+        if($team_end !== null && ($team_end = trim($team_end)) != '') {
+            $map['team_id'] = ['elt', $team_start];
+        }
+        // if(!$this->IsContestAdmin('balloon_manager')) {
+        //     $map['balloon_sender'] = $this->contest_user;
+        // }
         $res = db('contest_balloon')->where($map)->select();
         $this->success('ok', null, [
             'balloon_task_list'     => $res,
@@ -540,14 +548,14 @@ class Contest extends Contestbase
         $team_id        = trim(input('team_id/s', ''));
         $apid           = trim(input('apid/s', ''));
         if($team_id == '' || $apid == '') {
-            $this->error("需要提供队伍ID与字母题号");
+            $this->error("需要提供队伍ID与字母题号", null, 'need_teamid_apid');
         }
         $task_new = ['bst'=> input('bst/d')];
         if($task_new['bst'] === null) {
-            $this->error("需要提供参数：气球状态bst");
+            $this->error("需要提供参数：气球状态bst", null, 'need_bst');
         }
         if(!array_key_exists($apid, $this->problemIdMap['abc2id'])) {
-            $this->error('No such problem');
+            $this->error('No such problem', null, 'pro_not_exists');
         }
         $pid = $this->problemIdMap['abc2id'][$apid];
         $ContestBalloon = db('contest_balloon');
@@ -565,17 +573,17 @@ class Contest extends Contestbase
             if($task_new['bst'] == 4) {
                 $task_new['balloon_sender']     = input('balloon_sender/s');
                 if(!$task_new['balloon_sender'] || trim($task_new['balloon_sender']) == '') {
-                    $this->error("需要设置气球配送员balloon_sender");
+                    $this->error("需要设置气球配送员balloon_sender", null, 'need_balloon_sender');
                 }
             }
             if($task_new['pst'] === null || $task_new['ac_time'] === null) {
-                $this->error("需要提供参数：题目状态pst，ac时间 ac_time");
+                $this->error("需要提供参数：题目状态pst，ac时间 ac_time", null, 'need_pst_actime');
             }
             $ContestBalloon->insert(array_merge($map, $task_new));
         } else {
             // 更新任务
             if($item['balloon_sender'] != $this->contest_user && !$this->IsContestAdmin('balloon_manager')) {
-                $this->error("没有权限更改此任务");
+                $this->error("没有权限更改此任务", null, 'no_privilege');
             }
             if($this->IsContestAdmin('balloon_manager')) {
                 if(input('?pst')) {
@@ -596,11 +604,11 @@ class Contest extends Contestbase
             } else {
                 $update_ret = $ContestBalloon->where($map)->update($task_new);
                 if($update_ret === 0) {
-                    return $this->error("0 updated");
+                    return $this->error("0 updated", null, 'nothing_changed');
                 }
             }
         }
-        $this->success('ok');
+        $this->success('ok', null, 'ok');
     }
     public function balloon_queue() {
         return $this->fetch();

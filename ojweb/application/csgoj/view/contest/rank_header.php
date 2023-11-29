@@ -4,6 +4,9 @@
 <div id="rank_div">
 <div id="ranklist_toobar">
     <div class="form-inline" role="form">
+        {if $action == "balloon" }
+        <button class="btn btn-default" type="button" aria-label="Refresh" id="balloon_refresh"><i class="glyphicon glyphicon-refresh icon-refresh"></i> </button>
+        {/if}
 
         <button class="btn btn-warning" type="button" id="rank_fullscreen_btn" title="网页全屏"><span id="rank_fullscreen_span" class="glyphicon glyphicon-fullscreen"></span></button>
         {if $action == 'ranklist' || $action == 'schoolrank' }

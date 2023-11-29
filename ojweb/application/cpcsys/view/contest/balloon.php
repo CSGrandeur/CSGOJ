@@ -3,7 +3,7 @@
 <table id="help_info_table"><tr><td>
         <p><strong class="text-success">绿色: </strong>该队通过题目，待发气球</p>
         <p><strong class="text-primary">蓝色: </strong>一血气球（一血计算排除打星队）</p>
-        <p><strong class="text-secondary">灰色: </strong>鼠标左键点击绿色待发气球转为灰色，表示已发</p>
+        <p><strong class="text-secondary">灰色: </strong>表示已发</p>
         <p><strong class="text-warning">黄色: </strong>键盘字母A开启分配模式，将气球分配给特定发送员后转为黄色，表示已分配</p>
         <p><strong class="text-danger">红色: </strong>提交了代码尚未AC的题目，可以适当留意</p>
 
@@ -26,7 +26,7 @@
         data-method="get"
         data-striped="true"
         data-show-refresh="false"
-        data-buttons-align="left"
+        data-buttons-align="right"
         data-toolbar-align="left"
         data-unique-id="user_id"
         data-sort-stable="true"

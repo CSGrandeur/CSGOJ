@@ -43,11 +43,11 @@ $(window).keyup(function(e) {
 function ChangeFlagAssign(flg) {
     flagAssignBalloon = flg;
     if(flagAssignBalloon) {
-        alertify.warning("开启分配模式");
+        alertify.warning("分配模式");
         $('.task_assign').show();
         $('.task_finish').hide();
     } else {
-        alertify.success("关闭分配模式");
+        alertify.success("标记模式");
         $('.task_assign').hide();
         $('.task_finish').show();
     }
@@ -121,6 +121,17 @@ function ChangeStatus(value, row, field, change_type, balloon_sender=null) {
                 });
                 balloon_waiting_num_span.text(balloon_waiting_num);
                 balloon_assign_num_span.text(balloon_assign_num);
+                const alt_func = change_to > 3 ? alertify.success : alertify.message;
+                alt_func(`<table style='text-align:left'>
+                    <tr><td>队号:</td>      <td>&nbsp;&nbsp;${row.user_id}</td></tr>
+                    <tr><td>题号:</td>      <td>&nbsp;&nbsp;${field}</td></tr>
+                    <tr><td>状态:</td>      <td>&nbsp;&nbsp;${change_to}</td></tr>
+                    <tr><td>一血:</td>      <td>&nbsp;&nbsp;${value.pst == 2 ? 'false' : 'true'}</td></tr>
+                    <tr><td>区域:</td>      <td>&nbsp;&nbsp;${row.room}</td></tr>
+                    <tr><td>AC时间:</td>    <td>&nbsp;&nbsp;${Timeint2Str(value.ac)}</td></tr>
+                    <tr><td>配送员:</td>    <td>&nbsp;&nbsp;${balloon_sender}</td></tr>
+                    </table>
+                `).delay(10);
             }
             else {
                 alertify.error(ret.msg);
@@ -139,7 +150,7 @@ function ChangeStatus(value, row, field, change_type, balloon_sender=null) {
             break;
         case 'assign':
             if((pst == 2 || pst == 3) && bst < 4) {
-                alertify.confirm("确认派送员", sender_div.html(), function() {
+                alertify.confirm("确认配送员", sender_div.html(), function() {
                     change_to = 4;
                     assign_user = $('#balloon_sender_select').val();
                     DoChange(change_to, row, field, assign_user) ;
@@ -205,9 +216,7 @@ function SetInfoLocal() {
 }
 function GetInfoLocal() {
     let flg = csg.store(`${cid}_balloon_assign_mode`);
-    if(flg === '1') {
-        ChangeFlagAssign(true);
-    }
+    ChangeFlagAssign(flg !== '0');
 }
 function InitVars() {
     ranktable = $('#ranklist_table');
@@ -293,6 +302,9 @@ function DoTableRefresh() {
     // 覆盖 rank_pub 中的表刷新方式
     GetBalloonData();
 }
+$('#balloon_refresh').click(function() {
+    DoTableRefresh();
+});
 $(document).ready(function() {
     deleteBalloonKey = false;
     InitVars();

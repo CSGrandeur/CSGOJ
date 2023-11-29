@@ -210,7 +210,7 @@ function SendTaskQuery(ith, total_get) {
                     SendTaskQuery(ith + 1, total_get + 1);
                     MapTeamBalloonAdd(task_data.team_id, task_data.problem_id, task_data);
                 }
-                else {
+                else if(ret?.data == 'no_privilege') {
                     // 这个气球已分配给他人，或者大管理员没登录比赛内账号；该信息刷新后会重置
                     map_balloon_othertask[task_data.team_pro] = true;
                     SendTaskQuery(ith + 1, total_get);
@@ -242,6 +242,11 @@ function CalcTask(rank_data_task) {
     SendTaskQuery(0, 0);
 }
 function GetTask() {
+    if(contest_user === null || contest_user === '') {
+        alertify.warning("非气球配送员账号<br/>无法获取任务");
+        return;
+    }
+    RefreshBalloonQueue(false); // update tasks to avoid pull occupied tasks
     if(rank_data_time === null || Math.abs(new Date() - rank_data_time) > 60000) {
         $.get(`ranklist_ajax?cid=${cid}`, function(ret) {
             rank_data = ret;
@@ -284,16 +289,20 @@ function MakeMapTeamBalloon() {
         }
     }
 }
-function RefreshBalloonQueue() {
-    $.get(`balloon_task_ajax`, {'cid': cid}, function(ret) {
+function RefreshBalloonQueue(flag_refresh_table=true) {
+    $.get(`balloon_task_ajax`, {'cid': cid, 'room': room_list_str, 'team_start': team_start, 'team_end': team_end}, function(ret) {
         if(ret.code == 1) {
             map_balloon_othertask = {};
             balloon_task_list = ret.data.balloon_task_list;
             contest_problem_list = ret.data.contest_problem_list;
             problem_id_map = ret.data.problem_id_map;
             MakeMapTeamBalloon();
-            InitFinishFlag();
-            alertify.success(`加载到${balloon_task_list.length}个任务`)
+            // filter tasks for balloon_sender
+            balloon_task_list = balloon_task_list.filter((a) => a.balloon_sender === contest_user || contest_user === null || contest_user === '');
+            if(flag_refresh_table) {
+                InitFinishFlag();
+                alertify.success(`加载到${balloon_task_list.length}个任务`)
+            }
         } else {
             alertify.alert("没有访问权限，可能登录超时", function() {
                 location.href = "/";

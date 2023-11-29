@@ -13,7 +13,6 @@ function ProblemSampleHtml(sample_in_str, sample_out_str, hlevel=4, is_input_dom
             hlevel, 
             is_input_dom
         );
-        console.log(sample_html);
     }
     if(sample_num_max == 0) {
         sample_html = "<h${hlevel}>No Sample</h${hlevel}>"
