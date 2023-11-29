@@ -3,6 +3,9 @@
         <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#staff_gen_help_div" aria-expanded="false" aria-controls="navbar">
             Help
         </button>
+        <button type="button" class="btn btn-success" id="staff_gen_template" >
+            Gen Template
+        </button>
     </h1>
 </div>
 <div class="container">
@@ -124,6 +127,34 @@ $(document).ready(function() {
             }
         });
     });
+});
+function GenPass(len=8) {
+    var chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    var result = '';
+    for (var i = 0; i < len; i++) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return result;
+}
+
+$('#staff_gen_template').click(function() {
+    // 生成一份 staff 模板
+    let tpe = ``;
+    tpe += `admin\t裁判\t${GenPass()}\tadmin\n`;
+    tpe += `live\t直播\t${GenPass()}\twatcher\n`;
+    tpe += `rankroll\t滚榜\t${GenPass()}\tadmin\n`;
+    for(let i = 0; i < 6; i ++) {
+        let alp = String.fromCharCode('A'.charCodeAt(0) + i);
+        tpe += `print${alp}\t${alp}区打印\t${GenPass()}\tprinter\t${alp}\n`;
+    }
+    for(let i = 0; i < 6; i ++) {
+        let alp = String.fromCharCode('A'.charCodeAt(0) + i);
+        for(let j = 0; j < 6; j ++) {
+            tpe += `bal${alp}${j}\t${alp}区配送\t${GenPass()}\tballoon_sender\t${alp}\n`;
+        }
+    }
+    tpe += `bmanager\t气球管理\t${GenPass()}\tballoon_manager\n`;
+    staff_description.val(tpe);
 });
 </script>
 <style type="text/css">
