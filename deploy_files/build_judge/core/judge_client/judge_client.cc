@@ -213,7 +213,7 @@ void print_arm_regs(long long unsigned int *d){
     }
     printf("\n");
 }
-int data_list_has(char *file)
+int data_list_has(const char file[])
 {
     for (int i = 0; i < data_list_len; i++)
     {
@@ -544,9 +544,10 @@ int inFile(const struct dirent * dp){   //获得测试数据目录中测试数�
     int l = strlen(dp->d_name);
     if(DEBUG) printf("file name:%s\n",dp->d_name);
     if(DEBUG) printf("ext name:%s\n",dp->d_name + l - 3);
-    int ret = isInFile(dp->d_name);    
-    if(DEBUG) printf("\t:%d\n",ret);
-    return ret;
+    int in_file = isInFile(dp->d_name); 
+    int valid_data = data_list_has(dp->d_name);
+    if(DEBUG) printf("in_file:%d\tvalid_data:%d\n", in_file, valid_data);
+    return in_file && valid_data;
 }
 
 void find_next_nonspace(int &c1, int &c2, FILE *&f1, FILE *&f2, int &ret)
@@ -640,18 +641,17 @@ void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,con
 {
     execute_cmd("echo '========[%s]========='>>diff.out", getFileNameFromPath(path));
     execute_cmd("echo  '\\n------test in top 256 bytes------'>>diff.out");
-    execute_cmd("head -c 256 %s >>diff.out",infile);
+    execute_cmd("nl -w 6 -n ln '%s' | head -c 256 >> diff.out", infile);
+    // execute_cmd("head -c 256 %s >>diff.out",infile);
     execute_cmd("echo  '\\n------test out top 256 bytes-----'>>diff.out");
     execute_cmd("nl -w 6 -n ln '%s' | head -c 256 >> diff.out", path);
-    // execute_cmd("head -c 256 '%s'>>diff.out", path);
     execute_cmd("echo  '\\n------user out top 256 bytes-----'>>diff.out");
     execute_cmd("nl -w 6 -n ln %s | head -c 256 >> diff.out", userfile);
-    // execute_cmd("head -c 256 %s >>diff.out",userfile);
-    execute_cmd("echo  '\\n------diff out 4096 bytes-----'>>diff.out");
-    // execute_cmd("nl -w 6 -n ln '%s' > tmp_ans_out.tout", path);
-    // execute_cmd("nl -w 6 -n ln %s > tmp_user_out.tout", userfile);
-    // execute_cmd("diff tmp_ans_out.tout tmp_user_out.tout -y --strip-trailing-cr | grep -E '<|>|\\|' | head -c 4096 >> diff.out");
-    execute_cmd("diff '%s' %s -y --strip-trailing-cr | awk '{printf(\"%%-6d %%s\\n\", NR, $0)}' |grep -E '<|>|\\|' | head -c 4096 >> diff.out", path, userfile);
+    execute_cmd("echo  '\\n------diff out top 2048 bytes-----'>>diff.out");
+    execute_cmd("diff '%s' %s -y --strip-trailing-cr > tmp_diff.tout", path, userfile);
+    execute_cmd("head -c 2048 tmp_diff.tout >> diff.out");
+    execute_cmd("echo  '\\n------diff out different 2048 bytes-----'>>diff.out");
+    execute_cmd("grep -E '<|>|\\||\\\\' tmp_diff.tout | head -c 2048 >> diff.out");
     execute_cmd("echo  '\\n=============================='>>diff.out");
 }
 void make_diff_out_simple(FILE *f1, FILE *f2, int c1, int c2, const char *path,const char * userfile )
