@@ -17,6 +17,7 @@ export const useLiveAppStore = VueUse.createGlobalState(() => {
   const contestStartAt = Vue.ref(0);
   const contestEndAt = Vue.ref(0);
   const problemColor = Vue.ref([]);
+  const sync_interval = 1000;
 
   // Local states
   let fakeTime = 0;
@@ -57,7 +58,7 @@ export const useLiveAppStore = VueUse.createGlobalState(() => {
 
       DataLoadAll(
         (cdata) => {
-          console.log(cdata);
+          // console.log(cdata);
 
           contestStartAt.value = Math.floor(
             new Date(cdata.contest.start_time).getTime() / 1000
@@ -90,10 +91,10 @@ export const useLiveAppStore = VueUse.createGlobalState(() => {
       rkShow.value = data.iS.includes('rank');
 
       setInterval(() => {
-        fakeTime += 0.5 * (1 << testScale.value);
+        fakeTime += (sync_interval / 1000) * (1 << testScale.value);
         DataSync(
           (cdata) => {
-            console.log(cdata);
+            // console.log(cdata);
             sqUpdate(cdata);
             stUpdate(cdata);
             acUpdate(cdata);
@@ -101,7 +102,7 @@ export const useLiveAppStore = VueUse.createGlobalState(() => {
           },
           test.value ? contestStartAt.value + fakeTime : null
         );
-      }, 500);
+      }, sync_interval);
 
       let lastTime = Math.floor(Date.now() / 1000);
       startReceiveCommand(url.searchParams.get('cid'), (data) => {
