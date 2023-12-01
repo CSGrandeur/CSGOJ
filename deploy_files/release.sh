@@ -28,6 +28,7 @@ FLAG_CACHE=""
 FLAG_PUSH=false
 FLAG_WEB=false
 FLAG_JUDGE=false
+FLAG_ZIP_SCRIPTS=false
 PATH_DIR=`pwd`
 for arg in "$@"
 do
@@ -41,6 +42,8 @@ do
         FLAG_WEB=true
     elif [ "$arg" = "judge" ]; then
         FLAG_JUDGE=true
+    elif [ "$arg" = "sh" ]; then
+        FLAG_ZIP_SCRIPTS=true
     fi
 done
 
@@ -71,6 +74,12 @@ if [ "$FLAG_PUSH" = "true" ]; then
         docker push csgrandeur/csgoj-judge:latest
         docker push csgrandeur/csgoj-judge:$TAG_VERSION
     fi
+fi
+
+if [ "$FLAG_ZIP_SCRIPTS" = "true" ]; then
+    cd $PATH_DIR
+    zip csgoj_scripts_$TAG_VERSION.zip start_scripts/*.sh -j
+
 fi
 
 cd $PATH_DIR/../ && echo $TAG_VERSION > version
