@@ -1,3 +1,17 @@
+## 1.2.0
+
+重大更新：添加直播系统，支持obstudio直播信号覆盖
+
+- 修复抽签系统数据检验时的bug
+- 修正java栈深设置
+- judge 的reinfo处理乱码字符
+- 修复balloon系统已知bug
+- 中文faq、气球管理优化、school rank总罚时按分钟
+- school rank 不统计打星队
+- 为wa diff 添加行号
+
+
+
 ## 1.1.0
 
 - 增加单pod评测机可用内存

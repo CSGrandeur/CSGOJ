@@ -150,7 +150,10 @@ class Rankroll extends Ojtoolbase {
         }
         $ojPath = config('ojPath');
         $team_id = input('team_id/s');
-        $file_path = $ojPath['PUBLIC'] . $ojPath['contest_ATTACH'] . '/' . $this->contest['attach'] . '/team_photo/' . preg_replace('/[^A-Za-z0-9_]/', '', $team_id) . '.jpg';
+        if($team_id === null || trim($team_id) === '' || ($team_id = preg_replace('/[^A-Za-z0-9_]/', '', $team_id)) === '') {
+            $this->error("team_id not valid");
+        }
+        $file_path = $ojPath['PUBLIC'] . $ojPath['contest_ATTACH'] . '/' . $this->contest['attach'] . '/team_photo/' . $team_id . '.jpg';
         DelWhatever($file_path);
         $this->success('ok');
     }
