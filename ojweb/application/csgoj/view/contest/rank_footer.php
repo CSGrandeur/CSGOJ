@@ -5,6 +5,7 @@ silver="<?php echo isset($ratio_silver) ? $ratio_silver : 15;?>"
 bronze="<?php echo isset($ratio_bronze) ? $ratio_bronze : 20;?>"
 />
 
+{js href="__STATIC__/csgoj/rank_common.js" /}
 {js href="__STATIC__/csgoj/rank_only.js" /}
 {/if}
 

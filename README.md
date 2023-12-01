@@ -161,3 +161,16 @@ bash batch_sub_judge.sh \
 
 脚本默认为 latest 版本，如果需要特定版本，可设置 `--CSGOJ_VERSION`参数指定docker镜像版本
 
+
+### 4. 自行编译及本地部署
+
+```bash
+cd deploy_files/build_judge
+bash docker_build_base.sh 
+cd ../build_php
+bash dockerbuild_script.sh
+cd ..
+bash release.sh build judge web
+export CSGOJ_DEV=1
+bash auto_deploy.sh <your parameters>
+```
