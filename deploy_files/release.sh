@@ -29,6 +29,7 @@ FLAG_PUSH=false
 FLAG_WEB=false
 FLAG_JUDGE=false
 FLAG_ZIP_SCRIPTS=false
+FLAG_TAG_PUSH=false
 PATH_DIR=`pwd`
 for arg in "$@"
 do
@@ -44,6 +45,8 @@ do
         FLAG_JUDGE=true
     elif [ "$arg" = "sh" ]; then
         FLAG_ZIP_SCRIPTS=true
+    elif [ "$arg" = "tag" ]; then
+        FLAG_TAG_PUSH=true
     fi
 done
 
@@ -79,7 +82,12 @@ fi
 if [ "$FLAG_ZIP_SCRIPTS" = "true" ]; then
     cd $PATH_DIR
     zip csgoj_scripts_$TAG_VERSION.zip start_scripts/*.sh -j
+fi
 
+if [ "$FLAG_TAG_PUSH" = "true" ]; then
+    cd $PATH_DIR
+    git tag $TAG_VERSION
+    git push origin $TAG_VERSION
 fi
 
 cd $PATH_DIR/../ && echo $TAG_VERSION > version
