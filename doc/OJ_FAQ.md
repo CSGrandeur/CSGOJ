@@ -5,13 +5,13 @@ A:The online judge system is running on Debian Linux. We are using GNU GCC/G++ f
 |:----|:-------------------------------------------------------------------------------|
 |C:|gcc Main.c -o Main -O2 -fmax-errors=10 -Wall -lm --static -std=c17 -DONLINE_JUDGE|
 |C++:|g++ Main.cc -o Main -O2 -fno-asm -fmax-errors=10 -Wall -lm --static -std=c++17 -DONLINE_JUDGE|
-|Java:|javac -J-Xms32m -J-Xmx256m Main.java|
+|Java:|javac -J-Xms64M -J-Xmx128M -J-Xss64M Main.java <br/> java -Xms64M -Xmx<problem limit> -Xss64M Main |
 
-- Java has 2 more seconds and 512M more memory when running and judging.
-Our compiler software version:
-- gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04) 
-- Python 3.10.12
-- java openjdk 17.0.8
+Java has 2 more seconds and 512M more memory when running and judging.
+
+- C/C++： gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04) 
+- Python： 3.10.12
+- JAVA： openjdk 17.0.8.1
 
 ### Q:Where is the input and the output?
 A:Your program shall read input from stdin(`Standard Input`) and write output to stdout(`Standard Output`).For example,you can use `scanf` in C or `cin` in C++ to read from stdin,and use `printf` in C or `cout` in C++ to write to stdout.
