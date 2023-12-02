@@ -56,7 +56,10 @@ bash auto_deploy.sh \
 
 ```bash
 bash start_oj.sh \
-    --PASS_SQL_USER="123456789" \
+    --SQL_HOST="<MySQL IP>" \
+    --SQL_USER="<数据库用户名>" \
+    --PASS_SQL_USER="<你的数据库密码>" \
+    --PASS_ADMIN="666666" \
     --PASS_JUDGER="999999" \
     --PORT_OJ=80
 ```
