@@ -93,7 +93,7 @@ bash batch_sub_judge.sh \
 ```bash
 bash batch_sub_judge.sh \
   --OJ_HTTP_BASEURL=http://url:20080 \
-  --PASS_JUDGER=999999 \
+  --PASS_JUDGER="999999" \
   --JUDGER_TOTAL=2
 ```
 
@@ -108,7 +108,7 @@ bash batch_sub_judge.sh \
 ```bash
 bash start_judge.sh \
   --OJ_HTTP_BASEURL=http://url:20080 \
-  --PASS_JUDGER='999999'
+  --PASS_JUDGER="999999"
 ```
 
 ##### 3.2.3 多机判题
@@ -137,15 +137,15 @@ bash start_judge.sh \
 # 单机单pod
 bash start_judge.sh \
   --OJ_HTTP_BASEURL=http://url:20080 \
-  --PASS_JUDGER='999999' \
-  --JUDGE_USER_NAME='judger2' \
+  --PASS_JUDGER="999999" \
+  --JUDGE_USER_NAME="judger2" \
   --JUDGE_SHM_RUN=1
 # 单机多pod
 bash batch_sub_judge.sh \
   --OJ_HTTP_BASEURL=http://url:20080 \
-  --PASS_JUDGER=999999 \
+  --PASS_JUDGER="999999" \
   --JUDGER_TOTAL=2 \
-  --JUDGE_USER_NAME='judger2' \
+  --JUDGE_USER_NAME="judger2" \
   --JUDGE_SHM_RUN=1
 ```
 
