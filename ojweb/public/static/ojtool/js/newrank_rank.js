@@ -102,7 +102,7 @@ function ProcessItem() {
     now_judging_ith = -1;
     judging_team_id_last = null;
     for(let team_id in map_team_sol) {
-        let team_item = TeamItem(team_id);
+        let team_item = TeamItem(team_id, true, 'rank');
         if(team_item != null) {
             team_item.dom = $(team_item.dom);
             if(team_id in map_item) {

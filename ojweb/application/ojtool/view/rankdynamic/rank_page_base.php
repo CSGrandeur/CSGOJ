@@ -1,3 +1,4 @@
+{js href="__STATIC__/csgoj/rank_common.js" /}
 <script src="/static/ojtool/js/rank_base.js"></script>
 <script src="/static/ojtool/js/newrank_rank_base.js"></script>
 {if $action == 'rank'}
@@ -31,9 +32,9 @@
     <div id="rank_header_div">
         <div class="h_td h_rank">排名</div>
         <div class="h_td h_logo">图标</div>
-        <div class="h_td h_team_content">{if $action == 'rank'}队伍{else /}学校{/if}</div>
         <div class="h_td h_solve">题数</div>
         <div class="h_td h_time">罚时</div>
+        <div class="h_td h_team_content">{if $action == 'rank'}队伍{else /}学校{/if}</div>
     </div>
     <div class="grid" id="rank_grid_div">
             

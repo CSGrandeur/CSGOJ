@@ -56,6 +56,7 @@ export async function sendCommand(data) {
  */
 export function startReceiveCommand(cid, cb) {
   // Start interval
+  const command_interval = 1000;
   setInterval(async () => {
     try {
       // Get data
@@ -80,5 +81,5 @@ export function startReceiveCommand(cid, cb) {
       // Log error
       console.error(e);
     }
-  }, 500);
+  }, command_interval);
 }

@@ -107,11 +107,35 @@ function InitData(re_query=false) {
         loading_div.hide();
     }
 }
-function TeamItem(team_id, with_dom=true) {
+function TeamItem(team_id, with_dom=true, page_type='rank') {
     if(!(team_id in map_team)) {
         return null;
     }
     let pro_res = TeamItemRes(team_id);
+
+    let dom_rank = `<div class="g_td g_rank"></div>`;
+    let dom_logo = `<div class="g_td g_logo"><img class="school_logo" school="${map_team[team_id].school}" onerror="SchoolLogoUriOnError(this)"/></div>`;
+    let dom_team_content = `<div class="g_team_content">
+            <div class="g_name" title="${map_team[team_id].tmember}&#10;${map_team[team_id].coach}&#10;${map_team[team_id].tkind == 0 ? '常规队' : (map_team[team_id].tkind == 1 ? '女队' : '打星队')}">
+            ${TkindIcon(map_team[team_id].tkind)}
+            <strong class="page_str">
+            ${DomSantize(map_team[team_id].school)}
+            ${!StrEmpty(map_team[team_id].school) && !StrEmpty(map_team[team_id].name) ? '：' : '' }
+            ${DomSantize(map_team[team_id].name)}
+            </strong>
+            </div>
+            <div class="g_pro_group">
+                ${pro_res.pro_list_dom}
+            </div>
+        </div>`;
+    let dom_solve = `<div class="g_td g_solve">${pro_res.solved}</div>`;
+    let dom_time = `<div class="g_td g_time" title="${Timeint2Str(pro_res.penalty_sec)}">${pro_res.penalty}</div>`;
+    let team_line_dom;
+    if(page_type == 'rank') {
+        team_line_dom = `${dom_rank}${dom_logo}${dom_solve}${dom_time}${dom_team_content}`;
+    } else {
+        team_line_dom = `${dom_rank}${dom_logo}${dom_team_content}${dom_solve}${dom_time}`;
+    }
     return {
         'solved': pro_res.solved,
         'penalty': pro_res.penalty,
@@ -119,18 +143,7 @@ function TeamItem(team_id, with_dom=true) {
         'penalty_mi': pro_res.penalty_mi,
         'dom': with_dom ? `<div class="item" id="g_${team_id}" team_id="${team_id}" tkind="${map_team[team_id].tkind}" >
             <div class="item-content" solved="${pro_res.solved}" penalty="${pro_res.penalty}" team_id="${team_id}">
-                <div class="g_td g_rank"></div>
-                <div class="g_td g_logo"><img class="school_logo" school="${map_team[team_id].school}" onerror="SchoolLogoUriOnError(this)"/></div>
-                <div class="g_team_content">
-                    <div class="g_name" title="${map_team[team_id].tmember}&#10;${map_team[team_id].coach}&#10;${map_team[team_id].tkind == 0 ? '常规队' : (map_team[team_id].tkind == 1 ? '女队' : '打星队')}">
-                    ${TkindIcon(map_team[team_id].tkind)}${DomSantize(map_team[team_id].school)}${!StrEmpty(map_team[team_id].school) && !StrEmpty(map_team[team_id].name) ? '：' : '' }${DomSantize(map_team[team_id].name)}
-                    </div>
-                    <div class="g_pro_group">
-                        ${pro_res.pro_list_dom}
-                    </div>
-                </div>
-                <div class="g_td g_solve">${pro_res.solved}</div>
-                <div class="g_td g_time" title="${Timeint2Str(pro_res.penalty_sec)}">${pro_res.penalty}</div>
+                ${team_line_dom}
             </div>
         </div>` : ''
     }

@@ -127,6 +127,7 @@ class News extends Adminbase
 		$news_add['content'] = ParseMarkdown($news_md_add['content']);
 		$news_add['attach']	 = $this->AttachFolderCalculation(session('user_id')); // 计算附件文件夹名称，固定后导入导出题目不会有路径变化问题
 		$news_id = null;
+		unset($news_add['cooperator']);
 		if(!($news_id = db('news')->insertGetId($news_add)))
 		{
 			$this->error('Add news failed, SQL error.');
@@ -136,15 +137,18 @@ class News extends Adminbase
 		$news_md = $News_md->where('news_id', $news_id)->find();
 		$news_md_add['news_id'] = $news_id; //注意news_md表要设置news_id以和news表对应。
 		//虽然新插数据基本不会发生news_md已有此news_id的情况，但以防万一news表被删除过并修改过auto_increacement
-		if($news_md == null)
-		{
+		if($news_md == null) {
 			$News_md->insert($news_md_add);
 		}
-		else
-		{
+		else {
 			$News_md->update($news_md_add);
 		}
 		$this->AddPrivilege(session('user_id'), 'news', $news_id);
+		
+        //处理cooperator
+        $cooperator = input('cooperator/s');
+        $cooperatorList = explode(",", $cooperator);
+        $cooperatorFailList = $this->SaveCooperator($cooperatorList, $news_id);
 		$this->InsertTagList($news_id, $tagList);
 		$this->success('News successfully added.', '', ['id' => $news_id]);
 	}

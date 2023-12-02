@@ -75,6 +75,7 @@ cid="{$contest['contest_id']}"
 contest_title="{$contest['title']|htmlspecialchars}"
 />
 
+{js href="__STATIC__/csgoj/rank_common.js" /}
 {js href="__STATIC__/csgoj/rank_pub.js" /}
 <script>
     let table_award_table = $('#award_table');
@@ -221,11 +222,11 @@ contest_title="{$contest['title']|htmlspecialchars}"
                 map_data_show[tmp.user_id] = tmp;
             }
         }
-        rank_gold = ratio_gold >= 100 ? ratio_gold - 100 : Math.ceil(cnt_base * ratio_gold);
-        let tmp_ratio_gold = ratio_gold >= 100 ? rank_gold / cnt_base : ratio_gold;
-        rank_silver = ratio_silver >= 100 ? rank_gold + ratio_silver - 100 : Math.ceil(cnt_base * (tmp_ratio_gold + ratio_silver));
-        let tmp_ratio_silver = ratio_silver >= 100 ? rank_silver / cnt_base : tmp_ratio_gold + ratio_silver;
-        rank_bronze = ratio_bronze >= 100 ? rank_silver + ratio_bronze - 100 : Math.ceil(cnt_base * (tmp_ratio_silver + ratio_bronze));
+        
+        let award_rank = GetAwardRank(cnt_base, ratio_gold, ratio_silver, ratio_bronze);
+        rank_gold = award_rank[0];
+        rank_silver = award_rank[1];
+        rank_bronze = award_rank[2];
         map_award = {};
         award_to_export = flag_one_two_three ? ["一等奖", "二等奖", "三等奖"] : ["金奖", "银奖", "铜奖"];
         award_to_export.push("最快解题奖");

@@ -484,22 +484,22 @@ class Contest extends Contestbase
     /**************************************************/
     //Balloon
     /**************************************************/
-    public function BalloonCacheOption($flag=null) {
-        if($flag === null) {
-            return;
-        }
-        $ojPath = config('OjPath');
-        $cachePath = $ojPath['PUBLIC'] . '/' . $ojPath['contest_ATTACH'] . '/' . $this->contest['attach'] . '/contest_cache';
-        if(!MakeDirs($cachePath)) {
-            exit($this->display("<span class='alert alert-warning' style='display:block;'><h3>Contest cache path [" . $cachePath . "] is not writable, you need 'chmod' to modify.</h3></span>"));
-        }
-        return [
-            'type'   => 'File',
-            'path'   => $cachePath,
-            'prefix' => 'balloon',
-            'expire' => $flag ? 5 : 0,
-        ];
-    }
+    // public function BalloonCacheOption($flag=null) {
+    //     if($flag === null) {
+    //         return;
+    //     }
+    //     $ojPath = config('OjPath');
+    //     $cachePath = $ojPath['PUBLIC'] . '/' . $ojPath['contest_ATTACH'] . '/' . $this->contest['attach'] . '/contest_cache';
+    //     if(!MakeDirs($cachePath)) {
+    //         exit($this->display("<span class='alert alert-warning' style='display:block;'><h3>Contest cache path [" . $cachePath . "] is not writable, you need 'chmod' to modify.</h3></span>"));
+    //     }
+    //     return [
+    //         'type'   => 'File',
+    //         'path'   => $cachePath,
+    //         'prefix' => 'balloon',
+    //         'expire' => $flag ? 5 : 0,
+    //     ];
+    // }
     protected function BalloonAuth() {
         if(!$this->balloonManager && !$this->balloonSender && !$this->isContestAdmin) {
             $this->error('Permission denied to manage balloon', '/', '', 1);
@@ -514,17 +514,17 @@ class Contest extends Contestbase
         $map = ['contest_id' => $this->contest['contest_id']];
         $FILTER_KEY_LIST = ['problem_id', 'room', 'balloon_sender'];
         foreach($FILTER_KEY_LIST as $key) {
-            if(($item = input($key . '/s')) !== null && ($item = trim($item) != '')) {
-                $map[$key] = ['in', explode($item, ',')];
+            if(($item = input($key . '/s')) !== null && ($item = trim($item)) !== '') {
+                $map[$key] = ['in', explode(',', $item)];
             }
         }
         $team_start = input('team_start/s');
-        if($team_start !== null && ($team_start = trim($team_start)) != '') {
+        if($team_start !== null && ($team_start = trim($team_start)) !== '') {
             $map['team_id'] = ['egt', $team_start];
         }
         $team_end = input('team_end/s');
-        if($team_end !== null && ($team_end = trim($team_end)) != '') {
-            $map['team_id'] = ['elt', $team_start];
+        if($team_end !== null && ($team_end = trim($team_end)) !== '') {
+            $map['team_id'] = ['elt', $team_end];
         }
         // if(!$this->IsContestAdmin('balloon_manager')) {
         //     $map['balloon_sender'] = $this->contest_user;

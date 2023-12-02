@@ -651,7 +651,7 @@ void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,con
     execute_cmd("diff '%s' %s -y --strip-trailing-cr > tmp_diff.tout", path, userfile);
     execute_cmd("head -c 2048 tmp_diff.tout >> diff.out");
     execute_cmd("echo  '\\n------diff out different 2048 bytes-----'>>diff.out");
-    execute_cmd("grep -E '<|>|\\||\\\\' tmp_diff.tout | head -c 2048 >> diff.out");
+    execute_cmd("grep -E '<|>|\\||/|\\\\' tmp_diff.tout | head -c 2048 >> diff.out");
     execute_cmd("echo  '\\n=============================='>>diff.out");
 }
 void make_diff_out_simple(FILE *f1, FILE *f2, int c1, int c2, const char *path,const char * userfile )
