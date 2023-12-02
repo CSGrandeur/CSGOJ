@@ -28,7 +28,7 @@
 
 ### 1.3 Special Judge
 
-将special judge代码与评测数据一起上传。
+将special judge代码与评测数据一起上传，并勾选题目设置中的“Special Judge”
 
 #### 1) 基于testlib（推荐）
 
