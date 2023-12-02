@@ -28,6 +28,8 @@
 
 ### 1.3 Special Judge
 
+将special judge代码与评测数据一起上传。
+
 #### 1) 基于testlib（推荐）
 
 只支持AC和WA的结果，非AC都会处理为WA，上传 tpj.cc 文件（文件名严格为 **tpj.cc** ），评测机会对tpj.cc执行编译
