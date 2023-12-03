@@ -156,6 +156,7 @@ class Problem extends Adminbase
         if($problem_id === null) {
             // 插入数据
             $problem_update['attach'] = $this->AttachFolderCalculation(session('user_id'));
+            $problem_update['defunct'] = '1';
             $problem_id = db('problem')->insertGetId($problem_update);
             if(!$problem_id) {
                 $this->error('Add problem failed, SQL error.');
