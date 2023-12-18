@@ -226,11 +226,34 @@ function BtnResultShow(td, row) {
             'cid': status_page_information.attr('cid')
         },
         function (ret) {
-            if (ret['code'] == 1) {
-                var info = $('<pre class="content_show_modal_realinfo" id="content_show_to_copy">' + ret['msg'] + '</pre>')[0];
-                hljs.highlightElement(info);
+            let info_hidden = '';
+            let info_addition = '<div></div>';
+            if(ret.code == 1) {
+                if(row.result == 6 || row.result == 5) {
+                    // WA diff
+                    info_hidden = 'style="display:none;';
+                    let str = ret.msg;
+                    // 先将 diff 部分替换为 HTML 格式
+                    str = str.replace(/(------diff out top.*?-----)([\s\S]*?)(------diff|=====)/g, (match, p1, p2, p3) => {
+                        try {
+                            let htmlStr = Diff2Html.html(p2, {drawFileList: false, matching: 'lines', outputFormat: 'side-by-side'});
+                            if(htmlStr.includes('<span class="d2h-code-line-ctn">')) {
+                                return `${p1}</pre>${htmlStr}<pre class="content_show_modal_realinfo">${p3}`;
+                            } else {
+                                return match;
+                            }
+                        } catch (error) {
+                            return match;
+                        }                        
+                    });
+
+                    info_addition = `<strong class='text-danger'>输出比对仅展示前若干字节数据，数据过大时可能看不到差异部分，建议下载测试数据在本地进行测试</strong><pre class="content_show_modal_realinfo">${str}</pre>`;
+                }
+                var info = $(`<pre class="content_show_modal_realinfo" id="content_show_to_copy" ${info_hidden}>${ret.msg}</pre>`)[0];
+                // hljs.highlightElement(info);
                 content_show_modal_content.empty();
                 content_show_modal_content.append(info);
+                content_show_modal_content.append(info_addition);
                 content_show_modal_label_span.text('Runinfo of Submission #' + solution_id);
                 content_show_modal.modal('show');
             }

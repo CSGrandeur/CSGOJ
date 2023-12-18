@@ -112,6 +112,7 @@
 {include file="../../csgoj/view/public/code_highlight_base" /}
 {include file="../../csgoj/view/public/code_line_number" /}
 {include file="../../csgoj/view/public/clipboard_js" /}
+{include file="../../csgoj/view/public/js_diff2html" /}
 
 <!-- Modal -->
 <div class="modal fade" id="content_show_modal" tabindex="-1" role="dialog" aria-labelledby="content_show_modal_label">
