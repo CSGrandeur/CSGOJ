@@ -643,8 +643,8 @@ void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,con
     execute_cmd("echo  '\\n------test in top 512 bytes------'>>diff.out");
     execute_cmd("nl -w 6 -n ln '%s' | head -c 512 >> diff.out", infile);
     execute_cmd("echo  '\\n------diff out top 4096 bytes-----'>>diff.out");
-    execute_cmd("head -c 2048 '%s' >> test_data.out", path);
-    execute_cmd("head -c 2048 '%s' >> user_code.out", userfile);
+    execute_cmd("head -c 2048 '%s' > test_data.out", path);
+    execute_cmd("head -c 2048 '%s' > user_code.out", userfile);
     execute_cmd("diff -u test_data.out user_code.out --strip-trailing-cr >> diff.out");
     execute_cmd("echo  '\\n=============================='>>diff.out");
 }
