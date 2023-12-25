@@ -62,6 +62,7 @@ else
         -e OJ_OPEN_OI=$OJ_OPEN_OI \
         -e JUDGE_PROCESS_NUM=$JUDGE_PROCESS_NUM \
         -e JUDGE_IGNORE_ESOL=$JUDGE_IGNORE_ESOL \
+        -e JUDGE_TOP_DIFF_BYTES=$JUDGE_TOP_DIFF_BYTES \
         -e JUDGE_SHM_RUN=$JUDGE_SHM_RUN \
         -v $PATH_DATA/var/data/judge-$OJ_NAME:/volume $SIDE_ETC \
         --cpus=$JUDGE_DOCKER_CPUS \

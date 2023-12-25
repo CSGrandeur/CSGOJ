@@ -99,6 +99,7 @@ static char java_xss[BUFFER_SIZE_SM];
 static int sim_enable = 0;
 static int oi_mode = 0;
 static int full_diff = 0;
+static int top_diff_bytes = 2048;
 static int use_max_time = 0;
 static int time_limit_to_total= 1;
 static int total_time= 0;
@@ -512,6 +513,7 @@ void init_judge_conf()   //读取判题主目录etc中的配置文件judge.conf
             read_int(buf, "OJ_HTTP_DOWNLOAD", &http_download);
             read_int(buf, "OJ_OI_MODE", &oi_mode);
             read_int(buf, "OJ_FULL_DIFF", &full_diff);
+            read_int(buf, "OJ_TOP_DIFF_BYTES", &top_diff_bytes);
             read_int(buf, "OJ_SHM_RUN", &shm_run);
             read_int(buf, "OJ_USE_MAX_TIME", &use_max_time);
             read_int(buf, "OJ_TIME_LIMIT_TO_TOTAL", &time_limit_to_total);
@@ -642,10 +644,10 @@ void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,con
     execute_cmd("echo '========[%s]========='>>diff.out", getFileNameFromPath(path));
     execute_cmd("echo  '\\n------test in top 512 bytes------'>>diff.out");
     execute_cmd("nl -w 6 -n ln '%s' | head -c 512 >> diff.out", infile);
-    execute_cmd("echo  '\\n------diff out top 4096 bytes-----'>>diff.out");
-    execute_cmd("head -c 2048 '%s' > test_data.out", path);
-    execute_cmd("head -c 2048 '%s' > user_code.out", userfile);
-    execute_cmd("diff -u -s test_data.out user_code.out --strip-trailing-cr >> diff.out");
+    execute_cmd("echo  '\\n------diff out top %d bytes-----'>>diff.out", top_diff_bytes);
+    execute_cmd("head -c %d '%s' > top_%d_bytes_of_test_data.out", top_diff_bytes, path, top_diff_bytes);
+    execute_cmd("head -c %d '%s' > top_%d_bytes_of_user_code.out", top_diff_bytes, userfile, top_diff_bytes);
+    execute_cmd("diff -u -s top_%d_bytes_of_test_data.out top_%d_bytes_of_user_code.out --strip-trailing-cr >> diff.out", top_diff_bytes, top_diff_bytes);
     execute_cmd("echo  '\\n=============================='>>diff.out");
 }
 void make_diff_out_simple(FILE *f1, FILE *f2, int c1, int c2, const char *path,const char * userfile )

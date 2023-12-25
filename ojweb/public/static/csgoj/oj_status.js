@@ -237,17 +237,27 @@ function BtnResultShow(td, row) {
                     str = str.replace(/(------diff out top.*?-----)([\s\S]*?)(------diff|=====)/g, (match, p1, p2, p3) => {
                         try {
                             let htmlStr = Diff2Html.html(p2, {drawFileList: false, matching: 'lines', outputFormat: 'side-by-side'});
+                            let diff_str = '';
                             if(htmlStr.includes('<span class="d2h-code-line-ctn">')) {
-                                return `${p1}</pre>${htmlStr}<pre class="content_show_modal_realinfo">${p3}`;
+                                diff_str = htmlStr;
                             } else {
-                                return match;
+                                diff_str = `<pre class="content_show_modal_realinfo">${p2}</pre>`;
                             }
+                            return `</pre><h4>${p1.replace(/-/g, '')}</h4><strong class='text-danger'>输出比对仅展示前若干字节数据，数据过大时可能看不到差异部分，建议下载测试数据在本地进行测试</strong>${diff_str}<pre class="content_show_modal_realinfo">${p3}`;
                         } catch (error) {
                             return match;
                         }                        
                     });
+                    str = str.replace(/========\[(.*?)\]=========/g, (match, p1) => {
+                        return `</pre><h3># Data: ${p1.replace('.out', '')}</h3><pre class="content_show_modal_realinfo">`
+                    });
+                    str = str.replace(/------(test in top.*?)------/g, (match, p1) => {
+                        return `</pre><h4>${p1}</h4><pre class="content_show_modal_realinfo">`
+                    });
 
-                    info_addition = `<strong class='text-danger'>输出比对仅展示前若干字节数据，数据过大时可能看不到差异部分，建议下载测试数据在本地进行测试</strong><pre class="content_show_modal_realinfo">${str}</pre>`;
+                    // info_addition = `<strong class='text-danger'>输出比对仅展示前若干字节数据，数据过大时可能看不到差异部分，建议下载测试数据在本地进行测试</strong><pre class="content_show_modal_realinfo">${str}</pre>`;
+                    info_addition = `<pre class="content_show_modal_realinfo">${str}</pre>`;
+                    info_addition = info_addition.replace(/<pre class="content_show_modal_realinfo">\s*?<\/pre>/g, '');
                 }
                 var info = $(`<pre class="content_show_modal_realinfo" id="content_show_to_copy" ${info_hidden}>${ret.msg}</pre>`)[0];
                 // hljs.highlightElement(info);

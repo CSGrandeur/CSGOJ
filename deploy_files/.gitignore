@@ -1,4 +1,4 @@
 csgoj_data
 config_log
 *.cfg
-start_scripts*.zip
+**/*scripts*.zip
