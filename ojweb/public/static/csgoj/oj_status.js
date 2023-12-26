@@ -229,7 +229,7 @@ function BtnResultShow(td, row) {
             let info_hidden = '';
             let info_addition = '<div></div>';
             if(ret.code == 1) {
-                if(row.result == 6 || row.result == 5) {
+                if(row.result == 6 || row.result == 5 || row.result == 9) {
                     // WA diff
                     info_hidden = 'style="display:none;';
                     let str = ret.msg;
