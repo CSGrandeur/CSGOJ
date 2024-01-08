@@ -2,7 +2,7 @@
 <div style="max-width: 800px;">
     <div class="mb-3">
         <label for="km" class="form-label">科目</label>
-        <input type="email" class="form-control tp_cls_input" id="km">
+        <input class="form-control tp_cls_input" id="km">
     </div>
     <div class="mb-3">
         <label for="start_time" class="form-label" id="time_db_click_reset">开始时间（请仔细检查，双击本行文字重置）</label>
