@@ -4,6 +4,7 @@
 #   --OJ_NAME=test \
 #   --OJ_HTTP_BASEURL=http://url:20080 \
 #   --PASS_JUDGER=987654321 \
+#   --OJ_OPEN_OI=0 \
 #   --JUDGER_TOTAL=10 
 
 source parse_args.sh
@@ -13,6 +14,7 @@ echo "OJ_NAME: $OJ_NAME"
 echo "OJ_HTTP_BASEURL: $OJ_HTTP_BASEURL"
 echo "PASS_JUDGER: $PASS_JUDGER"
 echo "JUDGER_TOTAL: $JUDGER_TOTAL"
+echo "OJ_OPEN_OI: $OJ_OPEN_OI"
 
 for ((i=0; i<$JUDGER_TOTAL; i++))
 do
@@ -21,6 +23,7 @@ do
         --OJ_NAME=$OJ_NAME \
         --OJ_HTTP_BASEURL="$OJ_HTTP_BASEURL" \
         --PASS_JUDGER="$PASS_JUDGER" \
+        --OJ_OPEN_OI="$OJ_OPEN_OI" \
         --JUDGER_TOTAL=$JUDGER_TOTAL \
         --OJ_MOD=$i
 done
