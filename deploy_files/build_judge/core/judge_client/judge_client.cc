@@ -643,7 +643,7 @@ void make_diff_out_full(FILE *f1, FILE *f2, int c1, int c2, const char *path,con
 {
     execute_cmd("echo '========[%s]========='>>diff.out", getFileNameFromPath(path));
     execute_cmd("echo  '\\n------test in top 512 bytes------'>>diff.out");
-    execute_cmd("nl -w 6 -n ln '%s' | head -c 512 >> diff.out", infile);
+    execute_cmd("head -c %d '%s' >> diff.out", top_diff_bytes, infile);
     execute_cmd("echo  '\\n------diff out top %d bytes-----'>>diff.out", top_diff_bytes);
     execute_cmd("head -c %d '%s' > top_%d_bytes_of_test_data.out", top_diff_bytes, path, top_diff_bytes);
     execute_cmd("head -c %d '%s' > top_%d_bytes_of_user_code.out", top_diff_bytes, userfile, top_diff_bytes);
