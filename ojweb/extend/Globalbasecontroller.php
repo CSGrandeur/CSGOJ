@@ -73,7 +73,7 @@ class Globalbasecontroller extends Controller
         $this->assign('action', $this->action);
         $this->OJ_SESSION_PREFIX = config('OJ_ENV.OJ_SESSION') . '_';
         $this->assign('OJ_SESSION_PREFIX', $this->OJ_SESSION_PREFIX);
-
+        $this->assign('OJ_ADDITION_LINK', config('OJ_ENV.OJ_ADDITION_LINK'));
         $this->OJ_MODE_ALLOW_MODULE = config('OjMode.OJ_MODE_ALLOW_MODULE');
         if(!in_array($this->module, $this->OJ_MODE_ALLOW_MODULE[$this->OJ_MODE][$this->OJ_STATUS]) && !IsAdmin('administrator')) {
             $this->redirect('/' . $this->OJ_MODE_ALLOW_MODULE[$this->OJ_MODE][$this->OJ_STATUS][0]);

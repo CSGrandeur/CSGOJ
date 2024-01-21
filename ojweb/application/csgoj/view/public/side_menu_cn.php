@@ -31,3 +31,5 @@ if($showadmin)
 {if $OJ_MODE=='online' || IsAdmin() }
 <li><a href="__OJTOOL__">工具集</a></li>
 {/if}
+
+{$OJ_ADDITION_LINK }

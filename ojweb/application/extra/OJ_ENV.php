@@ -17,6 +17,7 @@ return [
     'OJ_BASE_URL'           => Env::get('OJ_BASE_URL', 'http://127.0.0.1/'),
     'OJ_PASSBACK_MAIL'      => Env::get('OJ_PASSBACK_MAIL', '<passbackmail>@163.com'),
     'OJ_PASSBACK_MAIL_PASS' => Env::get('OJ_PASSBACK_MAIL_PASS', '987654321'),
+    'OJ_ADDITION_LINK'      => Env::get('OJ_ADDITION_LINK', ''),
 
     // OJ Mode Special
     // Only in expsys MODE
