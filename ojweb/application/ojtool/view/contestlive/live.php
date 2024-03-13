@@ -23,6 +23,7 @@
     {/if}
     <link href="__STATIC__/ojtool/contestlive/css/live.css" rel="stylesheet" />
     <script src="__STATIC__/js/util.js"></script>
+    {js href="__STATIC__/csgoj/rank_common.js" /}
     <script src="__STATIC__/ojtool/js/rank_base.js"></script>
     <script src="__STATIC__/ojtool/js/live_base.js"></script>
   </head>
