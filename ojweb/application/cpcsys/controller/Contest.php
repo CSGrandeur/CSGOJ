@@ -567,6 +567,9 @@ class Contest extends Contestbase
             if($item['balloon_sender'] != $this->contest_user && !$this->IsContestAdmin('balloon_manager')) {
                 $this->error("没有权限更改此任务", null, 'no_privilege');
             }
+            if(trim(input('new_query/s', '')) === '1') {
+                $this->error("已分配的任务", null, 'no_privilege'); // 避免其它指令因前端信息不同步而覆盖
+            }
             if($this->IsContestAdmin('balloon_manager')) {
                 if(input('?pst')) {
                     $task_new['pst'] = input('pst/d');

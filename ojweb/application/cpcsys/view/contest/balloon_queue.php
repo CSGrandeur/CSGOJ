@@ -196,7 +196,8 @@ function SendTaskQuery(ith, total_get) {
             'pst':              row[apid].pst,
             'room':             row.room,
             'ac_time':          row[apid].ac,
-            'balloon_sender':   contest_user
+            'balloon_sender':   contest_user,
+            'new_query':        '1' // 标记为新申请任务
         };
         task_data.problem_id = problem_id_map['abc2id']?.[task_data.apid];
         task_data.team_pro = `${task_data.team_id}_${task_data.problem_id}`;
