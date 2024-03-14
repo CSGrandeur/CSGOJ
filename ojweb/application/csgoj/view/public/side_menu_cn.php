@@ -1,4 +1,4 @@
-<hr/>
+<hr id="hidden_user_panel">
 {if $OJ_MODE=='online' || IsAdmin('administrator') }
 <li {if ($module == 'index') } class="active" {/if} ><a href="__HOME__/index">主页</a></li>
 <li {if ($controller == 'problemset')} class="active" {/if} ><a href="__OJ__/problemset">开放题目集</a></li>

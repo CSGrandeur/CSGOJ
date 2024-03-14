@@ -21,6 +21,9 @@ sidebar_div.on('click', function (event) {
         user_panel.toggle();
     }
 });
+$('#hidden_user_panel').click(function (event) {
+    user_panel.toggle();
+});
 </script>
 {/if}
 </header>

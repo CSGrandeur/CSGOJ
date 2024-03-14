@@ -1,4 +1,4 @@
-<hr/>
+<hr id="hidden_user_panel">
 {if $OJ_MODE=='online' || IsAdmin('administrator') }
 <li {if ($module == 'index') } class="active" {/if} ><a href="__HOME__/index">Home</a></li>
 <li {if ($controller == 'problemset')} class="active" {/if} ><a href="__OJ__/problemset">Problem Set</a></li>
