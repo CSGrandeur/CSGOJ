@@ -246,18 +246,20 @@ function GetTask() {
         alertify.warning("非气球配送员账号<br/>无法获取任务");
         return;
     }
-    RefreshBalloonQueue(false); // update tasks to avoid pull occupied tasks
-    if(rank_data_time === null || Math.abs(new Date() - rank_data_time) > 60000) {
-        $.get(`ranklist_ajax?cid=${cid}`, function(ret) {
-            rank_data = ret;
+    function NewTask() {
+        if(rank_data_time === null || Math.abs(new Date() - rank_data_time) > 60000) {
+            $.get(`ranklist_ajax?cid=${cid}`, function(ret) {
+                rank_data = ret;
+                rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || Object.keys(map_room).length === 0 || (a.room in map_room));
+                rank_data_time = new Date();
+                CalcTask(rank_data_filtered_by_room);
+            });
+        } else {
             rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || Object.keys(map_room).length === 0 || (a.room in map_room));
-            rank_data_time = new Date();
             CalcTask(rank_data_filtered_by_room);
-        });
-    } else {
-        rank_data_filtered_by_room = rank_data.filter((a) => map_room === null || Object.keys(map_room).length === 0 || (a.room in map_room));
-        CalcTask(rank_data_filtered_by_room);
+        }
     }
+    RefreshBalloonQueue(false, NewTask); // update tasks to avoid pull occupied tasks
 }
 function BalloonQueueTableSort() {
     balloon_queue_table.bootstrapTable('sortBy', {
@@ -289,7 +291,7 @@ function MakeMapTeamBalloon() {
         }
     }
 }
-function RefreshBalloonQueue(flag_refresh_table=true) {
+function RefreshBalloonQueue(flag_refresh_table=true, recall_func=null) {
     $.get(`balloon_task_ajax`, {'cid': cid, 'room': room_list_str, 'team_start': team_start, 'team_end': team_end}, function(ret) {
         if(ret.code == 1) {
             map_balloon_othertask = {};
@@ -307,6 +309,9 @@ function RefreshBalloonQueue(flag_refresh_table=true) {
             alertify.alert("没有访问权限，可能登录超时", function() {
                 location.href = "/";
             });
+        }
+        if(recall_func) {
+            recall_func();
         }
     });
 }

@@ -484,22 +484,6 @@ class Contest extends Contestbase
     /**************************************************/
     //Balloon
     /**************************************************/
-    // public function BalloonCacheOption($flag=null) {
-    //     if($flag === null) {
-    //         return;
-    //     }
-    //     $ojPath = config('OjPath');
-    //     $cachePath = $ojPath['PUBLIC'] . '/' . $ojPath['contest_ATTACH'] . '/' . $this->contest['attach'] . '/contest_cache';
-    //     if(!MakeDirs($cachePath)) {
-    //         exit($this->display("<span class='alert alert-warning' style='display:block;'><h3>Contest cache path [" . $cachePath . "] is not writable, you need 'chmod' to modify.</h3></span>"));
-    //     }
-    //     return [
-    //         'type'   => 'File',
-    //         'path'   => $cachePath,
-    //         'prefix' => 'balloon',
-    //         'expire' => $flag ? 5 : 0,
-    //     ];
-    // }
     protected function BalloonAuth() {
         if(!$this->balloonManager && !$this->balloonSender && !$this->isContestAdmin) {
             $this->error('Permission denied to manage balloon', '/', '', 1);
@@ -526,10 +510,8 @@ class Contest extends Contestbase
         if($team_end !== null && ($team_end = trim($team_end)) !== '') {
             $map['team_id'] = ['elt', $team_end];
         }
-        // if(!$this->IsContestAdmin('balloon_manager')) {
-        //     $map['balloon_sender'] = $this->contest_user;
-        // }
-        $res = db('contest_balloon')->where($map)->select();
+        $ContestBalloon = db('contest_balloon');
+        $res = $ContestBalloon->where($map)->select();
         $this->success('ok', null, [
             'balloon_task_list'     => $res,
             'problem_id_map'        => $this->problemIdMap,
@@ -555,7 +537,7 @@ class Contest extends Contestbase
             $this->error("需要提供参数：气球状态bst", null, 'need_bst');
         }
         if(!array_key_exists($apid, $this->problemIdMap['abc2id'])) {
-            $this->error('No such problem', null, 'pro_not_exists');
+            $this->error('没有这个题目', null, 'pro_not_exists');
         }
         $pid = $this->problemIdMap['abc2id'][$apid];
         $ContestBalloon = db('contest_balloon');
