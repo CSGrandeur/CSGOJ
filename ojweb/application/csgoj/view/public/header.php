@@ -27,11 +27,12 @@ $('#hidden_user_panel').click(function (event) {
 </script>
 {/if}
 <script>
+console.log(window.innerWidth, window.innerHeight);
 const updateZoom = () => {
     if(window.innerWidth < 1900) {
         document.body.style.zoom = window.innerWidth / 1900;
-    } else if(window.innerHeight < 1000) {
-        document.body.style.zoom = window.innerHeight / 1000;
+    } else if(window.innerHeight < 900) {
+        document.body.style.zoom = window.innerHeight / 900;
     } else {
         document.body.style.zoom = '';
     }
