@@ -111,11 +111,11 @@ class Contest extends Csgojbase
             // 比赛隐藏，且又不是该比赛管理员
             $this->error('You cannot open this contest.', null, '', 1);
         }
-        if ($this->CanJoin() || $this->IsContestAdmin()) {
+        if ($this->CanJoin() || $this->IsContestAdmin() || $this->IsContestAdmin('admin')) {
             // 有参赛权或是该比赛管理员
             $this->canJoin= true;
         }
-        if ($this->contestStatus == -1 && !$this->IsContestAdmin()) {
+        if ($this->contestStatus == -1 && !$this->IsContestAdmin() && !$this->IsContestAdmin('admin')) {
             // 比赛尚未开始，且不是该比赛管理员
             $action = strtolower($this->request->action());
             // 处理printer和balloon的特殊情况，在cpcsys里有重载IsContestAdmin
