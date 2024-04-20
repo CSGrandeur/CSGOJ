@@ -244,7 +244,7 @@ function SheetSimple(team_list, ctitle, worksheet) {
         }
 
         // 设置行高和文本自动换行
-        row.height = 62;  // 设置行高
+        row.height = 38;  // 设置行高
         row.alignment = { wrapText: true, vertical: 'middle', horizontal: 'center'  };  // 设置文本自动换行
 
         // 设置单元格边框
