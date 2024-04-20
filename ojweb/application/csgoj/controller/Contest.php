@@ -1255,8 +1255,6 @@ class Contest extends Csgojbase
         $min_solution_id = input('min_solution_id/d');
         $cid_list_str = input('cid_list/s');
         $cid_list = explode(',', $cid_list_str);
-        // print_r($cid_list_str);
-        // print_r($cid_list);
         if(count($cid_list) == 0) {
             $this->error("没有提供比赛ID");
         } else if(count($cid_list) > 5) {

@@ -69,9 +69,6 @@ class Sso extends UserBase {
                 ];
                 $user_local_type['school'] = $this->ProcessSchool($user_local_type['school']);
                 $local_user = $User->where('user_id', $user_local_type['user_id'])->find();
-                // print_r($user_local_type);
-                // print_r(gettype($user_local_type));
-                // print_r(gettype($user_local_type['ip']));
                 if($local_user == null) {
                     $User->insert($user_local_type);
                     $userinfo = $user_local_type;

@@ -125,7 +125,6 @@ class Contest extends Adminbase
         //过滤时间格式，否则插入数据库可能出错
         $contest_info['start_time'] = date('Y-m-d H:i:s', $starttime);
         $contest_info['end_time'] = date('Y-m-d H:i:s', $endtime);
-        $contest_info['attach']     = $this->AttachFolderCalculation(session('user_id')); // 计算附件文件夹名称，固定后导入导出题目不会有路径变化问题
 		return [$contest_info, $contest_md_info];
 
 	}
@@ -158,6 +157,8 @@ class Contest extends Adminbase
 		$ret = $this->contest_addedit_ajax_process();
 		$contest_add = $ret[0];
 		$contest_md_add = $ret[1];
+        
+        $contest_add['attach']     = $this->AttachFolderCalculation(session('user_id')); // 计算附件文件夹名称，固定后导入导出题目不会有路径变化问题
 		$contest_add['defunct'] = '1';  // 默认隐藏防泄漏
 		
         $contest_id = db('contest')->insertGetId($contest_add);
@@ -281,6 +282,7 @@ class Contest extends Adminbase
 		$ret = $this->contest_addedit_ajax_process();
 		$contest_edit = $ret[0];
 		$contest_md_edit = $ret[1];
+
 		
         $contestinfo = array_replace($contestinfo, $contest_edit);
 

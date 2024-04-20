@@ -10,8 +10,6 @@ trait ContestAdminTrait {
         $this->AdminInit();
     }
     public function AdminInit() {
-        // print_r($this->IsContestAdmin('admin'));
-        // exit();
         if(!$this->IsContestAdmin() && !$this->IsContestAdmin('admin')) {
             $this->error("You are not admin.", '/' . $this->module . '/contest/contest?cid=' . $this->contest['contest_id'], '', 1);
         }
