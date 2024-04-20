@@ -27,8 +27,10 @@ $('#hidden_user_panel').click(function (event) {
 </script>
 {/if}
 <script>
-console.log(window.innerWidth, window.innerHeight);
 const updateZoom = () => {
+    const userAgent = window.navigator.userAgent;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+
     if(window.innerWidth < 1900) {
         document.body.style.zoom = window.innerWidth / 1900;
     } else if(window.innerHeight < 900) {

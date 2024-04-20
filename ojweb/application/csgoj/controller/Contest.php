@@ -36,7 +36,7 @@ class Contest extends Csgojbase
     public function ContestInit()
     {
         $this->assign('pagetitle', 'Contest');
-        $this->outsideContestAction = ['index', 'contest_list_ajax'];
+        $this->outsideContestAction = ['index', 'contest_list_ajax', 'contest_data_joint_ajax'];
         $this->allowPublicVisitAction = ['ranklist', 'ranklist_ajax', 'scorerank', 'scorerank_ajax', 'schoolrank', 'schoolrank_ajax', 'contest', 'contest_auth_ajax', 'team_auth_type_ajax', 'contest_data_ajax'];
         $this->ojLang = config('CsgojConfig.OJ_LANGUAGE');
         $this->ojResults = config('CsgojConfig.OJ_RESULTS');
@@ -1168,20 +1168,30 @@ class Contest extends Csgojbase
         return $ret['rows'];
     }
     
-    public function GetContestTeam($contest, $solution, $cid) {
-        if(in_array($contest['private'], [2, 12])) {
-            return db('cpc_team')->where(['contest_id' => $cid, 'privilege' => ['exp', Db::raw('is null')]])->field('password', true)->select();
-        } else {
-            $cuser = [];
-            if($solution == null) {
-                $solution = db('solution')->where(['contest_id' => $cid, 'result' => ['egt', 4]])->field(['solution_id', 'problem_id', 'user_id', 'in_date', 'result', 'contest_id'])->select();
+    public function GetContestTeam($contest_list, $solution) {
+        $team_map = array();
+        foreach($contest_list as $contest) {
+            if(in_array($contest['private'], [2, 12])) {
+                $team_list = db('cpc_team')->where(['contest_id' => $contest['contest_id'], 'privilege' => ['exp', Db::raw('is null')]])->field('password', true)->select();
+            } else {
+                $cuser = [];
+                if($solution == null) {
+                    $solution = db('solution')->where(['contest_id' => $contest['contest_id'], 'result' => ['egt', 4]])->field(['solution_id', 'problem_id', 'user_id', 'in_date', 'result', 'contest_id'])->select();
+                }
+                foreach($solution as $sol) {
+                    $cuser[] = $sol['user_id'];
+                }
+                $cuser = array_unique($cuser);
+                $team_list = db('users')->where('user_id', 'in', $cuser)->field(['user_id as team_id', 'school', 'nick as name', '0 as contest_id','0 as tkind'])->select();
             }
-            foreach($solution as $sol) {
-                $cuser[] = $sol['user_id'];
+            foreach ($team_list as $team) {
+                $key = $team['team_id'] . '_' . $team['contest_id'];
+                if (!isset($team_map[$key])) {
+                    $team_map[$key] = $team;
+                }
             }
-            $cuser = array_unique($cuser);
-            return db('users')->where('user_id', 'in', $cuser)->field(['user_id as team_id', 'school', 'nick as name', '0 as tkind'])->select();
         }
+        return array_values($team_map);
     }
     public function contest_data_ajax() {
         // 新版rank使用
@@ -1220,7 +1230,7 @@ class Contest extends Csgojbase
             $contest_data = [
                 'contest'           => $this->contest,
                 'problem'           => db('contest_problem')->where('contest_id', $this->contest['contest_id'])->select(),
-                'team'              => $this->GetContestTeam($this->contest, $solution, $this->contest['contest_id']),
+                'team'              => $this->GetContestTeam([$this->contest], $solution, ),
                 'solution'          => $solution
             ];
         }
@@ -1235,6 +1245,116 @@ class Contest extends Csgojbase
         // if(!$this->isContestAdmin && !$this->IsContestAdmin('watcher')) {
         //     cache($cache_name, $contest_data, $cache_option);
         // }        
+        $this->success("ok", null, $contest_data);
+    }
+    
+    public function contest_data_joint_ajax() {
+        // 多contest rank融合 （仅支持题目一致、起止时间一致的contest）
+        $witout_solution = input('without_solution/d');
+        $only_solution = input('only_solution/d');
+        $min_solution_id = input('min_solution_id/d');
+        $cid_list_str = input('cid_list/s');
+        $cid_list = explode(',', $cid_list_str);
+        // print_r($cid_list_str);
+        // print_r($cid_list);
+        if(count($cid_list) == 0) {
+            $this->error("没有提供比赛ID");
+        } else if(count($cid_list) > 5) {
+            $this->error("比赛ID过多");
+        }
+        $cid_list_str = join(',', $cid_list);
+        if(strlen($cid_list_str) > 50) {
+            $this->error("比赛ID不合法");
+        }
+        $query_param = ($witout_solution == null ? '0' : $witout_solution) . '_' .
+                        ($only_solution == null ? '0' : $only_solution) . '_' .
+                        ($min_solution_id == null ? '0' : $min_solution_id) . '_' .
+                        $cid_list_str;
+        
+        $cache_option = config('CsgojConfig.OJ_RANKDYNAMIC_CACHE_OPTION');
+        $cache_name = $this->OJ_MODE . '_drk_' . $query_param;
+        if(!IsAdmin()) {
+            //非管理员则使用cache
+            $contest_data = cache($cache_name, '', $cache_option);
+            if($contest_data) {
+                $this->success("ok", null, $contest_data);
+                return;
+            }
+        }
+        $contest_list = db('contest')->where('contest_id', 'in', $cid_list)->select();
+        $contest_num = count($contest_list);
+        if($contest_num == 0) {
+            $this->error("不存在的比赛");
+        }
+        $base_contest = $contest_list[0];
+        for($i = 1; $i < $contest_num; $i ++) {
+            $tmp_contest = $contest_list[$i];
+            if($base_contest['start_time'] != $tmp_contest['start_time'] || $base_contest['end_time'] != $tmp_contest['end_time']) {
+                $this->error("存在时间不一致的比赛");
+            }
+        }
+        if($contest_list instanceof \think\Collection) {
+            $contest_list = $contest_list->toArray();
+        }
+        if($contest_num > 0) {
+            $titles = array_map(function($contest) {
+                return $contest['title'];
+            }, $contest_list);
+            
+            $commonPrefix = array_reduce($titles, function($carry, $item) {
+                return $carry === null ? $item : substr($item, 0, strspn($item ^ $carry, "\0"));
+            });
+            $commonPrefix = trim(preg_replace('/^[\p{P}]+|[\p{P}]+$/u', '', $commonPrefix));
+            if($commonPrefix == '') {
+                $base_contest['title'] = '融合比赛：' . $cid_list_str;
+            } else {
+                $base_contest['title'] = $commonPrefix;
+            }
+        }
+        $sol_map = [
+            'contest_id' => ['in', $cid_list] 
+        ];
+        if($min_solution_id != null) {
+            $sol_map['solution_id'] = ['gt', $min_solution_id];
+        }
+        $solution = $witout_solution ? null : db('solution')->where($sol_map)->field(['solution_id', 'problem_id', 'user_id', 'in_date', 'result', 'contest_id'])->order('solution_id', 'asc')->select();
+        if($only_solution) {
+            $contest_data = [
+                'solution'          => $solution
+            ];
+        } else {
+            $contest_data = [
+                'contest'           => $base_contest,
+                'problem'           => db('contest_problem')->where('contest_id', $base_contest['contest_id'])->select(),
+                'team'              => $this->GetContestTeam($contest_list, $solution),
+                'solution'          => $solution
+            ];
+        }
+        
+        $now = time();
+        // $start_time = strtotime($base_contest['start_time']);
+        $end_time = strtotime($base_contest['end_time']);
+        $closeRankTime = $end_time - ($base_contest['frozen_minute'] > 0 ? $base_contest['frozen_minute'] : 0) * 60; 
+        $frozen_end_time = $end_time + ($base_contest['frozen_after'] > 0 ? $base_contest['frozen_after'] : 0) * 60; 
+        $rankFrozen = false;
+        if($now > $closeRankTime && $now < $frozen_end_time) {  // 封榜时间段
+            $rankFrozen = true;
+        }
+        if(IsAdmin()) {
+            $rankFrozen = false;
+        }
+
+        if($rankFrozen) {
+            $closeRankTimeStr = date('Y-m-d H:i:s', $this->closeRankTime);
+            foreach($contest_data['solution'] as &$s) {
+                if($s['in_date'] > $closeRankTimeStr) {
+                    $s['result'] = -1;
+                }
+            }
+        }
+        if(!IsAdmin()) {
+            cache($cache_name, $contest_data, $cache_option);
+        }        
         $this->success("ok", null, $contest_data);
     }
     /**************************************************/

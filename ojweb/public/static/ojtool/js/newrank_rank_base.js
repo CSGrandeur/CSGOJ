@@ -54,12 +54,13 @@ const RES_CODE = {
     3:  '<div style="height:60px;padding:5px;margin:2px;" class="alert alert-info">     <strong>正在运行<br/>（R J）</strong></div>',
 }
 function LoadData() {
-    if(cid == null) {
-        return;
-    }
+    console.log(3333);
+    let param = csg.Url2Json();
     let requests = [
-        csg.get(`/${QUERY_MODULE}/contest/contest_data_ajax?cid=${cid}`)
+        param?.cid ? csg.get(`/${QUERY_MODULE}/contest/contest_data_ajax?cid=${param.cid}`) : 
+        csg.get(`/${QUERY_MODULE}/contest/contest_data_joint_ajax?cid_list=${param?.cid_list}`)
     ];
+    console.log(12121, requests);
     Promise.all(requests)
     .then(responses => Promise.all(responses.map(r => r.json())))
     .then(data => {
@@ -233,8 +234,8 @@ $(document).ready(function() {
     loading_div = $('#loading_div');
     rankroll_div = $("#rankroll_div");
     rank_grid_div = $('#rank_grid_div');
-    $('#alink_school').attr('href', 'schoolrank?cid=' + cid);
-    $('#alink_team').attr('href', 'rank?cid=' + cid);
+    $('#alink_school').attr('href', `schoolrank?${cid ? 'cid' : 'cid_list'}=${cid ? cid : cid_list}`);
+    $('#alink_team').attr('href', `rank?${cid ? 'cid' : 'cid_list'}=${cid ? cid : cid_list}`);
     loading_div.show();
     InitData(true);
     $('#with_star_team').change(function() {

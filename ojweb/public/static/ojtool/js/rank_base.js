@@ -1,5 +1,6 @@
 let param = csg.Url2Json();
-let cid = param.cid;
+let cid = param?.cid;
+let cid_list = param?.cid_list;
 let cdata = null;  // 比赛原始数据
 let cnt_base = null;    // 过题队数量作为评奖基数，金银铜向上取整
 let map_team_sol, map_team, map_p2num, map_num2p, map_fb; // data maps
