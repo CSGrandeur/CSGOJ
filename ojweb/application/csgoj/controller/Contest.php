@@ -1818,7 +1818,7 @@ class Contest extends Csgojbase
         if(!$topic || $topic['reply'] > 0)
             $this->error("No such topic");
         $topic['user_id'] = $this->SolutionUser($topic['user_id'], false);
-        if($topic['public_show'] != 1 && $topic['user_id'] != $this->contest_user && !$this->IsContestAdmin())
+        if($topic['public_show'] != 1 && $topic['user_id'] != $this->contest_user && !$this->IsContestAdmin('admin'))
             $this->error("Permission denied to see this topic");
         $replyList = $Topic->where(['contest_id' => $this->contest['contest_id'], 'reply' => $topic_id])->select();
         foreach($replyList as $key=>&$rep) {
@@ -1844,7 +1844,7 @@ class Contest extends Csgojbase
         if(!$topic)
             $this->error("No such topic");
         $topicUserID = $this->SolutionUser($topic['user_id'], false);
-        if($topicUserID != $this->contest_user && !$this->IsContestAdmin())
+        if($topicUserID != $this->contest_user && !$this->IsContestAdmin('admin'))
             $this->error("Permission denied to reply to this topic");
         if($topic['public_show'] == 1 && !$this->IsContestAdmin())
             $this->error("This topic has been changed to public, reply is forbidden to avoid information change between teams.");
@@ -1882,7 +1882,7 @@ class Contest extends Csgojbase
     public function topic_del_ajax()
     {
         $this->TopicAuth();
-        if(!$this->IsContestAdmin())
+        if(!$this->IsContestAdmin('admin'))
             $this->error("Permission denied to delete this topic item");
         $topic_id = input('topic_id/d');
         $Topic = db('contest_topic');
@@ -1911,7 +1911,7 @@ class Contest extends Csgojbase
     }
     public function TopicSubmitDelay()
     {
-        if(!$this->IsContestAdmin() && session('?last_topic_submit'))
+        if(!$this->IsContestAdmin('admin') && session('?last_topic_submit'))
         {
             $now = time();
             $submitWaitTime = config('CsgojConfig.OJ_TOPIC_WAIT_TIME');
@@ -1955,7 +1955,7 @@ class Contest extends Csgojbase
     public function topic_change_status_ajax()
     {
         $this->TopicAuth();
-        if(!$this->IsContestAdmin())
+        if(!$this->IsContestAdmin('admin'))
             $this->error("Permission denied");
         $topic_id = input('topic_id/d');
         $Topic = db('contest_topic');
@@ -2009,7 +2009,7 @@ class Contest extends Csgojbase
             $ordertype[$sort] = $order;
         }
         $Topic = db('contest_topic');
-        if(!$this->IsContestAdmin())
+        if(!$this->IsContestAdmin('admin'))
         {
             $orMap = [
                 'user_id'         => $this->SolutionUser($this->contest_user, true),
