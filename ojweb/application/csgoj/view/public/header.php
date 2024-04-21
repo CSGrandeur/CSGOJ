@@ -39,6 +39,6 @@ const updateZoom = () => {
         document.body.style.zoom = '';
     }
 }
-updateZoom();
+// updateZoom();
 </script>
 </header>
