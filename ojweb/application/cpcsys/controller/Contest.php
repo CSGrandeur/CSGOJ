@@ -24,7 +24,7 @@ class Contest extends Contestbase
     public function ContestInit()
     {
         $this->assign('pagetitle', 'Standard Contest');
-        $this->outsideContestAction = ['index', 'contest_list_ajax'];
+        $this->outsideContestAction = ['index', 'contest_list_ajax', 'contest_data_joint_ajax'];
         $this->allowPublicVisitAction = ['contest_login', 'ranklist', 'ranklist_ajax', 'scorerank', 'scorerank_ajax', 'schoolrank', 'schoolrank_ajax', 'contest', 'contest_auth_ajax', 'team_auth_type_ajax', 'contest_data_ajax'];
         $this->ojLang = config('CsgojConfig.OJ_LANGUAGE');
         $this->ojResults = config('CsgojConfig.OJ_RESULTS');
