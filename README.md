@@ -1,3 +1,8 @@
+
+最新更新请前往分支： 
+- [CCPCOJ(github)](https://github.com/CSGrandeur/CCPCOJ) 
+- [CCPCOJ(gitee)](https://gitee.com/csgrandeur/CCPCOJ)
+
 # CSGOJ - 一站式XCPC比赛系统
 
 集成抽签、气球、打印、滚榜
